@@ -10,12 +10,20 @@
 - Styling:
   - Bootstrap 5.3.2 (via CDN) for UI components and responsive layout.
   - Minimal custom CSS for app-specific styling.
+- Testing infrastructure:
+  - Vitest for unit testing JavaScript and React components.
+  - Stryker Mutator for mutation testing to ensure test quality.
+  - Test-driven development (TDD) workflow enforced through clean code rules.
 - Data storage:
   - Browser local storage for:
     - User configuration (CardDAV URL, first day of week).
     - Cached birthday data needed for the 14-day view.
 - External integration:
   - CardDAV-compatible server as the single external data source for birthday information.
+- Deployment:
+  - GitHub Actions for CI/CD pipeline.
+  - FTPS deployment to demo.boos.systems.
+  - Node.js 24.x (LTS) for build environment.
 
 The focus of this file is to capture the overall technical direction and constraints, without going into low-level implementation details.
 
@@ -26,8 +34,9 @@ The focus of this file is to capture the overall technical direction and constra
   - No external storage of birthday or contact data on application-controlled servers.
   - All sensitive data remains in the user’s browser and in the user’s chosen CardDAV system.
 - Open-source and licensing:
-  - The project is intended to be open-source under the MIT license.
+  - The project is open-source under the MIT license (LICENSE file formally added).
   - This encourages transparency and allows others to audit the implementation for privacy and correctness.
+  - Copyright held by Stefan Boos (2025).
 - Multi-device access:
   - The web app should behave well on a variety of screen sizes.
   - The same URL can be opened on different devices; configuration and data are stored per browser.
@@ -37,11 +46,16 @@ The focus of this file is to capture the overall technical direction and constra
 - Learning and experimentation:
   - The project serves as a learning environment for React and frontend development.
   - Keep the stack simple to avoid unnecessary complexity while focusing on core concepts and UX.
+  - Practice TDD (Test-Driven Development) workflow and mutation testing.
 - Maintainability:
   - Use clear component and file structures so that future contributors (or future sessions) can understand the app quickly.
   - Align with the patterns described in `systemPatterns.md` to separate configuration, synchronization, and view concerns.
-- Testability (conceptual):
+  - Follow clean code principles documented in `.cursor/rules/clean-code/`.
+- Testability:
   - Structure code so that data processing (for example, transforming CardDAV events into birthdays within a 14-day window) can be tested without depending on the browser UI.
+  - Maintain high test coverage with unit tests (Vitest).
+  - Ensure test quality through mutation testing (Stryker).
+  - Follow pre-commit workflow: tests → mutation tests → memory bank update → commit.
 
 ## Tools and Dependencies (High-Level)
 

@@ -46,7 +46,23 @@
   - Birthdays filtered and sorted chronologically
   - Only days with birthdays are displayed
 
-### 3. Connect Real CardDAV Data (Next Priority)
+### 3. Testing Infrastructure (🔄 Current Priority)
+
+- Set up comprehensive testing framework:
+  - Vitest for unit testing JavaScript/React components
+  - Stryker Mutator for mutation testing to ensure test quality
+  - Configure test scripts in package.json
+  - Establish baseline test coverage targets
+- Testing strategy:
+  - Focus on business logic and data transformation functions
+  - Test React components for correct rendering and user interactions
+  - Use mutation testing to verify test suite effectiveness
+- Integration with clean code practices:
+  - Follow TDD (Test-Driven Development) workflow as per clean-code rules
+  - Ensure mutation test scores meet quality thresholds
+  - Run tests before every commit as per workflow orchestrator
+
+### 4. Connect Real CardDAV Data (Next Priority)
 
 - Replace hardcoded birthday data with CardDAV integration:
   - Implement CardDAV client for fetching birthday data
@@ -61,23 +77,44 @@
   - Ensure CardDAV URL is properly formatted
   - Provide helpful error messages if validation fails
 
-### 4. Deployment Infrastructure (✅ Completed)
+### 5. Deployment Infrastructure (✅ Completed)
 
 - Automated deployment pipeline implemented:
   - GitHub Actions workflow for continuous deployment
-  - Deploys to demo.boos.systems via FTPS
+  - Deploys to demo.boos.systems via FTPS (secure FTP over TLS)
   - Triggers on push to main branch or manual dispatch
   - Uses Node.js 24.x (LTS - Krypton) for builds
   - Builds project and deploys dist/ folder contents
 - Configuration via GitHub Secrets:
-  - FTPS_SERVER, FTPS_USERNAME, FTPS_PASSWORD, FTPS_PORT
+  - FTPS_SERVER, FTPS_USERNAME, FTPS_PASSWORD (required)
+  - FTPS_DANGEROUS_CLEAN_SLATE: deployment troubleshooting option
   - Secure credential management through GitHub
+- Deployment troubleshooting:
+  - dangerous-clean-slate option allows complete server cleanup
+  - Set to false by default for safety
+  - Can be temporarily enabled to resolve upload issues
 - Documentation added to README.md:
   - Deployment setup instructions
   - GitHub Secrets configuration guide
   - Deployment trigger information
+  - Troubleshooting section for upload problems
 
-### 5. Configuration and Error Handling (Future)
+### 6. Development Workflow and Quality Standards (✅ Completed)
+
+- Clean code rules established in `.cursor/rules/clean-code/`:
+  - Development principles and practices
+  - Mutation testing guidelines (340-mutation-testing.mdc)
+  - Strict TDD workflow (600-strict-tdd.mdc)
+  - Absolute priority premise for refactoring (610-absolute-priority-premise.mdc)
+  - Workflow orchestrator for pre-commit checks (390-workflow-orchestrator.mdc)
+- MIT License formally added (LICENSE file)
+- Pre-commit workflow defined:
+  - Run unit tests
+  - Run mutation tests
+  - Update memory bank
+  - Create single commit with all changes
+
+### 7. Configuration and Error Handling (Future)
 
 - Decide how users can:
   - Change their CardDAV URL later
@@ -129,18 +166,25 @@ If user testing reveals issues, consider alternative layouts:
 
 ## Next Steps (Implementation)
 
-- Immediate next steps:
+- Immediate next steps (Testing Infrastructure):
+  - Install and configure Vitest for unit testing
+  - Install and configure Stryker Mutator for mutation testing
+  - Create initial test structure and example tests
+  - Set up test scripts in package.json (test, test:watch, test:mutate)
+  - Document testing approach and conventions
+  - Establish baseline mutation score targets
+- Short-term (CardDAV Integration):
   - Implement CardDAV client library integration
   - Connect FirstTimeSetup form to capture and store configuration
   - Replace hardcoded birthday data with real CardDAV fetching
   - Implement local storage for configuration persistence
-- Short-term:
+  - Write tests for CardDAV data processing logic (following TDD)
   - Add URL validation for CardDAV input
   - Implement first-day-of-week preference (currently hardcoded to Monday)
+- Medium-term (Data Sync and Polish):
   - Build data synchronization and caching layer
   - Add loading states during data fetch
   - Handle empty state (no birthdays in 14-day window)
-- Medium-term:
   - Add comprehensive error handling:
     - CardDAV connection failures
     - Authentication errors

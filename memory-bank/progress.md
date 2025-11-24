@@ -22,7 +22,13 @@
   - GitHub Actions workflow for automated FTPS deployment.
   - Deploys to demo.boos.systems on push to main or manual trigger.
   - Uses Node.js 24.x (LTS - Krypton) for builds.
-  - Documentation added to README.md for deployment setup.
+  - Includes dangerous-clean-slate troubleshooting option for deployment issues.
+  - Documentation added to README.md for deployment setup and troubleshooting.
+- Development workflow and quality:
+  - Clean code rules established in `.cursor/rules/clean-code/`.
+  - TDD workflow, mutation testing guidelines, and pre-commit checks defined.
+  - MIT License file properly added to repository.
+  - Workflow orchestrator defines pre-commit process (tests, mutation tests, memory bank update).
 
 ## Key Achievements So Far
 
@@ -56,7 +62,14 @@
   - Automated builds using Node.js 24.x (latest LTS).
   - Secure credential management through GitHub Secrets.
   - Live deployment target: demo.boos.systems.
+  - Deployment troubleshooting with dangerous-clean-slate option.
   - Comprehensive deployment documentation in README.md.
+- Established development workflow and quality standards:
+  - Clean code rules implemented following TDD principles.
+  - Mutation testing guidelines established.
+  - Pre-commit workflow orchestrator defined (tests → mutation tests → memory bank → commit).
+  - MIT License formally added to repository.
+  - Development principles and practices documented for consistency.
 
 ## Assumptions and Risks
 
@@ -74,13 +87,23 @@
 
 ## Next Milestones
 
-- Immediate (Current Sprint):
-  - Implement CardDAV client library integration.
+- Immediate (Current Sprint - Testing Infrastructure):
+  - Install and configure Vitest for unit testing.
+  - Install and configure Stryker Mutator for mutation testing.
+  - Create initial test structure and test utilities.
+  - Set up test scripts in package.json.
+  - Write example tests for existing components.
+  - Establish baseline mutation score targets.
+  - Document testing conventions and best practices.
+- Short term (CardDAV Integration with TDD):
+  - Implement CardDAV client library integration (test-first approach).
   - Connect FirstTimeSetup form to capture and persist configuration.
   - Replace hardcoded birthday data with real CardDAV data fetching.
   - Add URL validation for CardDAV input.
   - Implement first-day-of-week preference handling.
-- Short term:
+  - Write comprehensive tests for all CardDAV data processing logic.
+  - Achieve target mutation score for new code.
+- Medium term (Data Sync and Error Handling):
   - Build data synchronization and caching layer:
     - Local storage for birthday data cache.
     - Background refresh on app open.
@@ -89,20 +112,17 @@
     - Loading indicator during CardDAV fetch.
     - Message when no birthdays in 14-day window.
     - Error messages for connection failures.
-- Medium term:
-  - Research and implement CardDAV client functionality:
-    - Authentication handling.
-    - Data fetching and parsing (vCard format).
-    - Birthday extraction from contact records.
-  - Build data synchronization layer:
-    - Caching strategy for offline-first experience.
-    - Background refresh logic.
-    - Error handling and retry strategies.
-- Longer term:
+  - Add comprehensive error handling:
+    - CardDAV connection failures.
+    - Authentication errors.
+    - Invalid or incomplete data.
+  - Maintain test coverage and mutation scores.
+- Longer term (Polish and Release):
   - Implement settings screen for updating configuration.
   - Add comprehensive error states and messaging.
   - Performance optimization and final polish.
   - Conduct user testing with live deployment.
+  - Final documentation and release preparation.
 
 ## Memory Bank and Documentation Practices
 

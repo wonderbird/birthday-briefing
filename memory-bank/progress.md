@@ -29,6 +29,11 @@
   - TDD workflow, mutation testing guidelines, and pre-commit checks defined.
   - MIT License file properly added to repository.
   - Workflow orchestrator defines pre-commit process (tests, mutation tests, memory bank update).
+- Testing infrastructure (in progress):
+  - Phased implementation: Vitest first, then Stryker Mutator
+  - Phase 1 focuses on unit testing with HTML coverage reports
+  - Phase 2 adds mutation testing with JSON reporter output
+  - Target: comprehensive test framework ready for TDD workflow
 
 ## Key Achievements So Far
 
@@ -88,13 +93,22 @@
 ## Next Milestones
 
 - Immediate (Current Sprint - Testing Infrastructure):
-  - Install and configure Vitest for unit testing.
-  - Install and configure Stryker Mutator for mutation testing.
-  - Create initial test structure and test utilities.
-  - Set up test scripts in package.json.
-  - Write example tests for existing components.
-  - Establish baseline mutation score targets.
-  - Document testing conventions and best practices.
+  - Phase 1: Vitest Setup and Validation
+    - Install Vitest and testing libraries (@testing-library/react, jsdom, @vitest/ui)
+    - Configure vitest.config.js with jsdom environment and HTML coverage reporting
+    - Add test scripts to package.json (test, test:watch, test:ui, test:coverage)
+    - Create initial test file for date calculation logic
+    - Run tests and generate HTML coverage report to confirm setup works
+  - Phase 2: Stryker Mutator Setup (after Phase 1 success)
+    - Install @stryker-mutator/core and @stryker-mutator/vitest-runner
+    - Configure stryker.config.json with JSON reporter output per rule 340-mutation-testing.mdc
+    - Add test:mutate script to package.json
+    - Run mutation tests and establish baseline mutation score targets
+  - Phase 3: Documentation and Finalization
+    - Update memory bank with testing conventions and results
+    - Document baseline mutation scores and testing approach
+    - Verify all test scripts work correctly
+    - Confirm pre-commit workflow can be followed
 - Short term (CardDAV Integration with TDD):
   - Implement CardDAV client library integration (test-first approach).
   - Connect FirstTimeSetup form to capture and persist configuration.

@@ -46,21 +46,30 @@
   - Birthdays filtered and sorted chronologically
   - Only days with birthdays are displayed
 
-### 3. Testing Infrastructure (🔄 Current Priority)
+### 3. Testing Infrastructure (🔄 Current Priority - In Progress)
 
-- Set up comprehensive testing framework:
-  - Vitest for unit testing JavaScript/React components
-  - Stryker Mutator for mutation testing to ensure test quality
-  - Configure test scripts in package.json
-  - Establish baseline test coverage targets
+- Phased implementation approach:
+  - Phase 1: Vitest setup and validation (priority)
+    - Install Vitest and testing libraries (@testing-library/react, jsdom, etc.)
+    - Configure vitest.config.js with jsdom environment and HTML coverage
+    - Add test scripts to package.json (test, test:watch, test:ui, test:coverage)
+    - Create initial test to verify setup
+    - Generate HTML coverage report to confirm success
+  - Phase 2: Stryker Mutator setup (only after Phase 1 success)
+    - Install @stryker-mutator/core and @stryker-mutator/vitest-runner
+    - Configure stryker.config.json with JSON reporter output
+    - Add test:mutate script to package.json
+    - Verify mutation testing works with existing tests
 - Testing strategy:
-  - Focus on business logic and data transformation functions
+  - Focus on business logic and data transformation functions (e.g., date calculations)
   - Test React components for correct rendering and user interactions
   - Use mutation testing to verify test suite effectiveness
+  - Start with simple tests, expand coverage incrementally
 - Integration with clean code practices:
   - Follow TDD (Test-Driven Development) workflow as per clean-code rules
   - Ensure mutation test scores meet quality thresholds
   - Run tests before every commit as per workflow orchestrator
+  - Commit after each phase completion
 
 ### 4. Connect Real CardDAV Data (Next Priority)
 
@@ -166,13 +175,18 @@ If user testing reveals issues, consider alternative layouts:
 
 ## Next Steps (Implementation)
 
-- Immediate next steps (Testing Infrastructure):
-  - Install and configure Vitest for unit testing
-  - Install and configure Stryker Mutator for mutation testing
-  - Create initial test structure and example tests
-  - Set up test scripts in package.json (test, test:watch, test:mutate)
-  - Document testing approach and conventions
-  - Establish baseline mutation score targets
+- Immediate next steps (Testing Infrastructure - Phase 1: Vitest):
+  - Install Vitest and related testing libraries
+  - Create vitest.config.js with jsdom environment and HTML coverage
+  - Add Vitest scripts to package.json
+  - Create initial test file for date calculation logic
+  - Run tests and generate HTML coverage report to verify success
+- Immediate next steps (Testing Infrastructure - Phase 2: Stryker):
+  - Install Stryker Mutator packages (after Phase 1 success)
+  - Create stryker.config.json with JSON reporter
+  - Add test:mutate script to package.json
+  - Run mutation tests and establish baseline scores
+  - Update memory bank with results and testing conventions
 - Short-term (CardDAV Integration):
   - Implement CardDAV client library integration
   - Connect FirstTimeSetup form to capture and store configuration

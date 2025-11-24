@@ -44,7 +44,3 @@ The deployment workflow runs:
 
 - Automatically on every push to the `main` branch
 - Manually via GitHub Actions UI (workflow_dispatch)
-
-## License
-
-MIT

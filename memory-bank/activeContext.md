@@ -65,12 +65,12 @@
 
 - Automated deployment pipeline implemented:
   - GitHub Actions workflow for continuous deployment
-  - Deploys to demo.boos.systems via SFTP
+  - Deploys to demo.boos.systems via FTPS
   - Triggers on push to main branch or manual dispatch
   - Uses Node.js 24.x (LTS - Krypton) for builds
   - Builds project and deploys dist/ folder contents
 - Configuration via GitHub Secrets:
-  - SFTP_SERVER, SFTP_USERNAME, SFTP_PASSWORD, SFTP_PORT
+  - FTPS_SERVER, FTPS_USERNAME, FTPS_PASSWORD, FTPS_PORT
   - Secure credential management through GitHub
 - Documentation added to README.md:
   - Deployment setup instructions

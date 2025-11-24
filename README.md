@@ -25,7 +25,7 @@ npm run preview
 
 ## Deployment
 
-The project includes automated deployment to SFTP via GitHub Actions.
+The project includes automated deployment to FTPS via GitHub Actions.
 
 ### GitHub Secrets Configuration
 
@@ -33,10 +33,9 @@ To enable automated deployment, configure the following secrets in your GitHub r
 
 1. Navigate to repository Settings → Secrets and variables → Actions
 2. Add the following secrets:
-   - `SFTP_SERVER`: Your SFTP server hostname
-   - `SFTP_USERNAME`: Your SFTP username
-   - `SFTP_PASSWORD`: Your SFTP password
-   - `SFTP_PORT`: Your SFTP port number (typically 22)
+   - `FTPS_SERVER`: Your FTPS server hostname
+   - `FTPS_USERNAME`: Your FTPS username
+   - `FTPS_PASSWORD`: Your FTPS password
 
 ### Deployment Triggers
 

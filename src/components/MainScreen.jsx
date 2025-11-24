@@ -1,3 +1,5 @@
+import { formatDate, getDateClasses, getStartOfWeek } from '../utils/dateUtils';
+
 function MainScreen({ onEditConfig }) {
   // Hardcoded birthday data: 6 people with birthdays spread across the 14-day window
   // Format: { name: string, month: number (1-12), day: number }
@@ -11,18 +13,7 @@ function MainScreen({ onEditConfig }) {
   ];
 
   // Calculate the 14-day window starting from Monday of current week
-  const today = new Date();
-  const currentDayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-  
-  // Calculate days to subtract to get to Monday (assuming Monday = first day)
-  // If today is Sunday (0), we need to go back 6 days
-  // If today is Monday (1), we need to go back 0 days
-  // If today is Tuesday (2), we need to go back 1 day, etc.
-  const daysToMonday = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
-  
-  const startDate = new Date(today);
-  startDate.setDate(today.getDate() - daysToMonday);
-  startDate.setHours(0, 0, 0, 0);
+  const startDate = getStartOfWeek();
   
   const endDate = new Date(startDate);
   endDate.setDate(startDate.getDate() + 13); // 14 days total (0-13)
@@ -47,37 +38,6 @@ function MainScreen({ onEditConfig }) {
       });
     }
   }
-
-  // Helper function to format date as "Mon, Nov 25"
-  const formatDate = (date) => {
-    const options = { weekday: 'short', month: 'short', day: 'numeric' };
-    return date.toLocaleDateString('en-US', options);
-  };
-
-  // Helper function to determine if a date is today
-  const isToday = (date) => {
-    const todayDate = new Date();
-    return date.getDate() === todayDate.getDate() &&
-           date.getMonth() === todayDate.getMonth() &&
-           date.getFullYear() === todayDate.getFullYear();
-  };
-
-  // Helper function to determine if a date is in the past
-  const isPast = (date) => {
-    const todayDate = new Date();
-    todayDate.setHours(0, 0, 0, 0);
-    return date < todayDate;
-  };
-
-  // Helper function to get CSS classes for date styling
-  const getDateClasses = (date) => {
-    if (isToday(date)) {
-      return 'text-primary fw-bold';
-    } else if (isPast(date)) {
-      return 'text-muted';
-    }
-    return '';
-  };
 
   return (
     <div className="container">

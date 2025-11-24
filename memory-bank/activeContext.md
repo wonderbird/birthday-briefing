@@ -61,7 +61,23 @@
   - Ensure CardDAV URL is properly formatted
   - Provide helpful error messages if validation fails
 
-### 4. Configuration and Error Handling (Future)
+### 4. Deployment Infrastructure (✅ Completed)
+
+- Automated deployment pipeline implemented:
+  - GitHub Actions workflow for continuous deployment
+  - Deploys to demo.boos.systems via SFTP
+  - Triggers on push to main branch or manual dispatch
+  - Uses Node.js 24.x (LTS - Krypton) for builds
+  - Builds project and deploys dist/ folder contents
+- Configuration via GitHub Secrets:
+  - SFTP_SERVER, SFTP_USERNAME, SFTP_PASSWORD, SFTP_PORT
+  - Secure credential management through GitHub
+- Documentation added to README.md:
+  - Deployment setup instructions
+  - GitHub Secrets configuration guide
+  - Deployment trigger information
+
+### 5. Configuration and Error Handling (Future)
 
 - Decide how users can:
   - Change their CardDAV URL later

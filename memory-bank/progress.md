@@ -18,6 +18,11 @@
   - Main screen with 14-day birthday view implemented.
   - Component structure established under `src/components/`.
   - App-level state management for view navigation.
+- Deployment infrastructure:
+  - GitHub Actions workflow for automated SFTP deployment.
+  - Deploys to demo.boos.systems on push to main or manual trigger.
+  - Uses Node.js 24.x (LTS - Krypton) for builds.
+  - Documentation added to README.md for deployment setup.
 
 ## Key Achievements So Far
 
@@ -46,6 +51,12 @@
   - Color-coded visual distinction (gray/past, blue-bold/today, default/future).
   - Short date format "Mon, Nov 25".
   - Comma-separated names for multiple birthdays on same day.
+- Established deployment infrastructure:
+  - GitHub Actions workflow for continuous deployment via SFTP.
+  - Automated builds using Node.js 24.x (latest LTS).
+  - Secure credential management through GitHub Secrets.
+  - Live deployment target: demo.boos.systems.
+  - Comprehensive deployment documentation in README.md.
 
 ## Assumptions and Risks
 
@@ -91,7 +102,7 @@
   - Implement settings screen for updating configuration.
   - Add comprehensive error states and messaging.
   - Performance optimization and final polish.
-  - Prepare for deployment and user testing.
+  - Conduct user testing with live deployment.
 
 ## Memory Bank and Documentation Practices
 

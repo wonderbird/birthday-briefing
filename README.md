@@ -36,6 +36,13 @@ To enable automated deployment, configure the following secrets in your GitHub r
    - `FTPS_SERVER`: Your FTPS server hostname
    - `FTPS_USERNAME`: Your FTPS username
    - `FTPS_PASSWORD`: Your FTPS password
+   - `FTPS_DANGEROUS_CLEAN_SLATE`: `false` - see section on trouble shooting.
+
+### Deployment Trouble Shooting
+
+If you have problems uploading some files to the server, set the variable `FTPS_DANGEROUS_CLEAN_SLATE` to `true`, trigger a deployment and then reset it to `false`. This will cause the deployment action to delete all files from the server before uploading the build result.
+
+See [SamKirkland / FTP-Deploy-Action](https://github.com/SamKirkland/FTP-Deploy-Action) for more information.
 
 ### Deployment Triggers
 

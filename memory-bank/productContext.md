@@ -31,7 +31,7 @@ This project exists to provide a small, focused, privacy-first tool that restore
 - Getting automated birthday reminders from major platforms usually requires sharing detailed personal information about contacts.
 - Privacy-conscious users may be unwilling to grant that level of access, even if they value the functionality.
 
-This product aims to address these issues by offering a dedicated, privacy-respecting birthday overview tied to a CalDAV source that the user controls.
+This product aims to address these issues by offering a dedicated, privacy-respecting birthday overview tied to a CardDAV source that the user controls.
 
 ## Target User Context and Behaviors
 
@@ -67,7 +67,7 @@ The birthday app becomes one more intentional check in this planning routine: �
 - A clear, single-purpose 14-day birthday overview:
   - Anchored to the first day of the current week (Monday or Sunday, user preference).
   - Always shows “this week and next week” together as a continuous period.
-- Reliable alignment with the user’s CalDAV-based birthday data.
+- Reliable alignment with the user’s CardDAV-based birthday data.
 - Quick understanding of “who has a birthday when” in the short-term horizon.
 
 ### Emotional Value
@@ -80,7 +80,7 @@ The birthday app becomes one more intentional check in this planning routine: �
 
 - No server-side storage of birthday data.
 - No accounts, no ads, and no tracking.
-- Data remains on the device, apart from the necessary access to the user’s CalDAV resource.
+- Data remains on the device, apart from the necessary access to the user’s CardDAV resource.
 - Open-source under an MIT license, allowing others to inspect and trust the implementation.
 
 ## User Experience Goals
@@ -88,7 +88,7 @@ The birthday app becomes one more intentional check in this planning routine: �
 ### Simplicity
 
 - Minimal configuration:
-  - CalDAV URL (with required credentials if necessary)
+  - CardDAV URL (with required credentials if necessary)
   - First day of the week (Monday or Sunday)
 - Limited number of screens and decisions.
 - Clear language that aligns with how users think: “birthdays in the next 14 days.”

@@ -6,45 +6,61 @@
   - The view always starts on the first day of the current week.
   - The first day of the week (Monday or Sunday) is user-configurable.
   - The visible range covers 14 consecutive days, effectively “this week and next week.”
-- Use a CalDAV URL as the single configuration input for birthday data, plus the first-day-of-week preference.
+- Use a CardDAV URL as the single configuration input for birthday data, plus the first-day-of-week preference.
 - Keep the experience calm and privacy-first:
   - No notifications.
   - No accounts, no tracking, and no server-side birthday storage.
 
 ## Current Priorities (Business and User Perspective)
 
-### 1. Define the 14-Day View
+### 1. First-Time Setup Screen (✅ Completed)
 
-- Clarify the main framing and wording, for example:
-  - Title such as “Birthdays this and next week” or similar.
-  - Subtext that reinforces privacy and the 14-day scope if needed.
+- Implemented minimal first-time setup UI with:
+  - App title: "Birthday Briefing"
+  - Brief privacy message: "Your data stays on your device. No tracking."
+  - CardDAV URL input field
+  - First-day-of-week selection (Monday/Sunday radio buttons)
+  - "Get Started" button
+  - Footer note about open-source MIT license
+- Design decisions made:
+  - Single-screen approach (minimal, focused on configuration)
+  - Bootstrap 5.3.2 for consistent, responsive UI
+  - Vertically centered layout with max-width 500px
+  - Clean card-based form design
+
+### 2. Connect Configuration to Logic (Next Priority)
+
+- Implement form submission handling:
+  - Capture CardDAV URL from input
+  - Capture first-day-of-week preference
+  - Validate inputs before proceeding
+  - Store configuration in browser local storage
+- Add basic input validation:
+  - Ensure CardDAV URL is properly formatted
+  - Provide helpful error messages if validation fails
+
+### 3. Define the 14-Day View
+
+- Clarify the main framing and wording:
+  - Title such as "Birthdays this and next week" or similar
+  - Subtext that reinforces privacy and the 14-day scope if needed
 - Design how birthdays are displayed:
-  - Primary reading order: date → name.
-  - Include weekday and date information for each birthday.
+  - Primary reading order: date → name
+  - Include weekday and date information for each birthday
 - Ensure it is easy to see:
-  - Which birthdays are today.
-  - Which have already passed within the 14-day window.
-  - Which are upcoming.
+  - Which birthdays are today
+  - Which have already passed within the 14-day window
+  - Which are upcoming
 
-### 2. Onboarding and Privacy Messaging
-
-- First-run configuration flow:
-  - Request CalDAV URL (and credentials only if necessary).
-  - Ask for first-day-of-week preference (Monday or Sunday).
-- Provide a concise, clear privacy explanation:
-  - Data stays on the device and in local storage.
-  - No accounts, ads, or tracking.
-  - Open-source under MIT license.
-
-### 3. Configuration and Error Handling
+### 4. Configuration and Error Handling (Future)
 
 - Decide how users can:
-  - Change their CalDAV URL later.
-  - Change the first-day-of-week setting.
+  - Change their CardDAV URL later
+  - Change the first-day-of-week setting
 - Define behavior and messaging when:
-  - The CalDAV source is unreachable.
-  - No birthdays are found in the 14-day window.
-  - Calendar data appears incomplete or inconsistent (for example, birthdays with missing names).
+  - The CardDAV source is unreachable
+  - No birthdays are found in the 14-day window
+  - Address book data appears incomplete or inconsistent
 
 ## Layout and View Experiments
 
@@ -83,30 +99,33 @@ For each layout, two day-inclusion strategies will be compared:
 
 ## Open Questions
 
-- CalDAV usability:
-  - How easy is it for typical users to obtain and enter a CalDAV URL?
+- CardDAV usability:
+  - How easy is it for typical users to obtain and enter a CardDAV URL?
   - Is brief guidance or a help link needed?
 - Multiple calendars:
-  - Should V1 support only a single CalDAV source?
+  - Should V1 support only a single CardDAV source?
   - How should multiple birthday sources be handled in later versions?
 - Edge cases:
   - What is the best wording when there are no birthdays in the next 14 days?
-  - How should the app behave if the CalDAV source is intermittently unavailable?
+  - How should the app behave if the CardDAV source is intermittently unavailable?
 
-## Next Steps (Business and UX)
+## Next Steps (Implementation)
 
-- Finalize wording for:
-  - Screen titles and subtitles in the 14-day view.
-  - Empty states (no birthdays in the 14-day period).
-  - Privacy explanation on first use.
-  - Configuration labels and any brief help text.
-- Sketch low-fidelity versions of:
-  - First-run setup screen (CalDAV + first-day-of-week).
-  - 14-day view in the different layout variants.
-  - Simple settings screen for changing configuration.
-- Prototype layout variants with realistic sample data to:
-  - Compare continuous vs. “this week/next week” vs. 2-row views.
-  - Compare full timeline vs. birthday-only days.
+- Immediate next steps:
+  - Add form handling logic to FirstTimeSetup component
+  - Implement local storage persistence for configuration
+  - Add basic URL validation for CardDAV input
+  - Create routing/state logic to transition from setup to main view
+- Short-term:
+  - Design and implement the 14-day birthday view UI (static/mock data first)
+  - Create sample birthday data structure for prototyping
+  - Experiment with layout variants:
+    - Continuous list vs. week blocks vs. compact grid
+    - Full timeline vs. birthday-only days
+- Medium-term:
+  - Implement CardDAV client for fetching birthday data
+  - Build data synchronization and caching layer
+  - Add error handling for network and data issues
 
 ## Memory Bank Update Practices
 

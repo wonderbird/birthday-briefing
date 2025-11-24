@@ -2,7 +2,7 @@
 
 ## Core Idea
 
-Create a calm, privacy-first birthday overview app that shows who has a birthday in the next 14 days, based on a CalDAV source, so users can reliably remember and celebrate the people who matter to them.
+Create a calm, privacy-first birthday overview app that shows who has a birthday in the next 14 days, based on a CardDAV source, so users can reliably remember and celebrate the people who matter to them.
 
 ## Problem Statement
 
@@ -35,8 +35,8 @@ Help users confidently know whose birthday is coming up in the next 14 days, wit
 
 ### Success Criteria – Product
 
-- First-time setup can be completed in under two minutes, using only a CalDAV URL and minimal additional inputs.
-- If a birthday exists in the configured CalDAV source and falls within the visible 14-day period, it appears correctly in the app.
+- First-time setup can be completed in under two minutes, using only a CardDAV URL and minimal additional inputs.
+- If a birthday exists in the configured CardDAV source and falls within the visible 14-day period, it appears correctly in the app.
 - The main 14-day view remains stable and predictable, anchored to the user’s configured first day of the week.
 
 ### Success Criteria – Personal Learning
@@ -78,16 +78,16 @@ Help users confidently know whose birthday is coming up in the next 14 days, wit
 
 - Simple onboarding
   - On first open, the app asks for minimal configuration:
-    - CalDAV URL (with only the necessary credentials if required to read birthday data)
+    - CardDAV URL (with only the necessary credentials if required to read birthday data)
     - First day of the week (Monday or Sunday)
   - After configuration, the app:
-    - Fetches birthdays from the CalDAV source
+    - Fetches birthdays from the CardDAV source
     - Stores relevant birthday data and configuration locally in the browser
 
 - Data handling and caching
   - On subsequent opens, the app:
     - Immediately shows the cached 14-day birthday view based on local storage
-    - Checks in the background for updates from the CalDAV source
+    - Checks in the background for updates from the CardDAV source
     - Updates the visible list if changes affect birthdays in the current 14-day period
 
 - Privacy commitments (experience level)
@@ -104,14 +104,14 @@ Help users confidently know whose birthday is coming up in the next 14 days, wit
 - Gift suggestions, message templates, or sending birthday messages.
 - Month, quarter, or year views of birthdays.
 - Complex contact management features (adding, editing, or deleting contacts).
-- Cross-device synchronization beyond what CalDAV itself provides.
+- Cross-device synchronization beyond what CardDAV itself provides.
 - Any server-side user account system or multi-user features.
 
 ## Constraints and Principles
 
 - Privacy-first by design:
   - All birthday and contact-related data stays in the user’s browser storage.
-  - The only external interaction is with the user-configured CalDAV source.
+  - The only external interaction is with the user-configured CardDAV source.
 
 - Simplicity:
   - Minimal number of screens and configuration steps.

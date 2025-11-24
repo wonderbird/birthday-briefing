@@ -5,15 +5,17 @@
 - Platform:
   - Browser-based web application, usable on phones, tablets, and desktop computers.
 - Frontend framework:
-  - React (planned) for building the user interface and managing component state.
+  - React 19.1 for building the user interface and managing component state.
+  - Vite as the build tool and development server.
 - Styling:
-  - Standard web technologies (HTML, CSS, and JavaScript) with React.
+  - Bootstrap 5.3.2 (via CDN) for UI components and responsive layout.
+  - Minimal custom CSS for app-specific styling.
 - Data storage:
   - Browser local storage for:
-    - User configuration (CalDAV URL, first day of week).
+    - User configuration (CardDAV URL, first day of week).
     - Cached birthday data needed for the 14-day view.
 - External integration:
-  - CalDAV-compatible server as the single external data source for birthday information.
+  - CardDAV-compatible server as the single external data source for birthday information.
 
 The focus of this file is to capture the overall technical direction and constraints, without going into low-level implementation details.
 
@@ -22,7 +24,7 @@ The focus of this file is to capture the overall technical direction and constra
 - Privacy requirements:
   - No analytics or tracking libraries.
   - No external storage of birthday or contact data on application-controlled servers.
-  - All sensitive data remains in the user’s browser and in the user’s chosen CalDAV system.
+  - All sensitive data remains in the user’s browser and in the user’s chosen CardDAV system.
 - Open-source and licensing:
   - The project is intended to be open-source under the MIT license.
   - This encourages transparency and allows others to audit the implementation for privacy and correctness.
@@ -39,7 +41,7 @@ The focus of this file is to capture the overall technical direction and constra
   - Use clear component and file structures so that future contributors (or future sessions) can understand the app quickly.
   - Align with the patterns described in `systemPatterns.md` to separate configuration, synchronization, and view concerns.
 - Testability (conceptual):
-  - Structure code so that data processing (for example, transforming CalDAV events into birthdays within a 14-day window) can be tested without depending on the browser UI.
+  - Structure code so that data processing (for example, transforming CardDAV events into birthdays within a 14-day window) can be tested without depending on the browser UI.
 
 ## Tools and Dependencies (High-Level)
 
@@ -62,7 +64,7 @@ Specific dependency versions and configuration details will be captured in the p
   - Keeping the implementation focused on a clear 14-day view.
 - Provides the technical foundation for the patterns outlined in `systemPatterns.md`:
   - Client-side architecture.
-  - Local storage and CalDAV integration.
+  - Local storage and CardDAV integration.
 - Informs the current implementation strategies and next steps in `activeContext.md` and the status tracking in `progress.md`.
 
 

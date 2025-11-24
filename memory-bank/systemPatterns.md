@@ -6,10 +6,10 @@
   - Runs entirely in the user’s browser.
   - No dedicated backend service for user data.
 - External data source:
-  - A CalDAV-compatible server that exposes calendar and birthday information, configured via a URL.
+  - A CardDAV-compatible server that exposes address book and birthday information, configured via a URL.
 - Local storage:
   - Browser storage holds:
-    - Configuration (CalDAV URL, first day of week).
+    - Configuration (CardDAV URL, first day of week).
     - Cached birthday data needed for the 14-day view.
 
 This architecture supports the privacy goal: birthday and contact information are fetched directly to the client and stored locally, without an intermediate application server.
@@ -19,7 +19,7 @@ This architecture supports the privacy goal: birthday and contact information ar
 ### Configuration Component
 
 - Responsibilities:
-  - Collect the CalDAV URL and minimal required credentials (if any).
+  - Collect the CardDAV URL and minimal required credentials (if any).
   - Collect the first-day-of-week preference (Monday or Sunday).
   - Validate basic input format where possible.
   - Persist configuration to local storage.
@@ -30,14 +30,14 @@ This architecture supports the privacy goal: birthday and contact information ar
 ### Data Synchronization and Caching Component
 
 - Responsibilities:
-  - Use the stored CalDAV configuration to:
+  - Use the stored CardDAV configuration to:
     - Fetch birthday-related data from the external source.
     - Extract the information needed for the 14-day view (dates and associated names).
   - Cache the processed data in local storage.
   - Decide when to refresh data (for example, on app open, with background updates when possible).
 - Interactions:
   - Provides the 14-day view component with a ready-to-use list of birthdays.
-  - Handles error states (unreachable CalDAV, invalid data) and reports them to the UI layer in a user-friendly manner.
+  - Handles error states (unreachable CardDAV, invalid data) and reports them to the UI layer in a user-friendly manner.
 
 ### 14-Day View Component
 
@@ -61,7 +61,7 @@ The 14-day view component can be structured to make it straightforward to plug i
 ## Data Flow Patterns
 
 - One-way data flow from configuration and sync to presentation:
-  - Configuration → determines how CalDAV is accessed.
+  - Configuration → determines how CardDAV is accessed.
   - Synchronization → fetches and processes data into a normalized format.
   - View → consumes the normalized data for rendering.
 - Local storage as a central persistence mechanism:
@@ -79,7 +79,7 @@ This separation helps keep the rendering logic focused on presentation and inter
 - Avoid unnecessary duplication:
   - Refer back to configuration rather than copying credentials or URLs in multiple places.
 - Explicit boundaries:
-  - CalDAV access is isolated to a specific part of the system that can be audited for privacy implications.
+  - CardDAV access is isolated to a specific part of the system that can be audited for privacy implications.
 
 ### Separation of Concerns
 
@@ -91,7 +91,7 @@ This separation helps keep the rendering logic focused on presentation and inter
 - The core patterns are chosen to allow:
   - Adding new layout variants without large changes to data fetching.
   - Introducing optional features (for example, multi-week views) by extending the view logic while reusing configuration and sync patterns.
-  - Evolving the CalDAV handling (for example, supporting multiple sources) without changing how the 14-day view is rendered.
+  - Evolving the CardDAV handling (for example, supporting multiple sources) without changing how the 14-day view is rendered.
 
 ## Relationship to Other Memory Bank Files
 

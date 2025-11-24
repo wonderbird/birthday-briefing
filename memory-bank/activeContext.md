@@ -20,7 +20,7 @@
   - Brief privacy message: "Your data stays on your device. No tracking."
   - CardDAV URL input field
   - First-day-of-week selection (Monday/Sunday radio buttons)
-  - "Get Started" button
+  - "Save" button
   - Footer note about open-source MIT license
 - Design decisions made:
   - Single-screen approach (minimal, focused on configuration)
@@ -39,7 +39,7 @@
   - Visual distinction: Color-coded (gray for past, blue/bold for today, default for future)
 - App-level state management implemented:
   - Bidirectional navigation between FirstTimeSetup and MainScreen
-  - "Get Started" button triggers transition to main view
+  - "Save" button triggers transition to main view
   - Settings gear icon returns to configuration screen
 - Date calculation logic:
   - 14-day window starts from Monday of current week

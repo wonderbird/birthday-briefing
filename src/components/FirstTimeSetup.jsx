@@ -62,17 +62,11 @@ function FirstTimeSetup({ onComplete }) {
 
                 <div className="d-grid">
                   <button type="button" className="btn btn-primary btn-lg" onClick={onComplete}>
-                    Get Started
+                    Save
                   </button>
                 </div>
               </form>
             </div>
-          </div>
-
-          <div className="text-center mt-3">
-            <small className="text-muted">
-              Open source • MIT License
-            </small>
           </div>
         </div>
       </div>

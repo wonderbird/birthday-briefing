@@ -10,10 +10,14 @@ function App() {
     setCurrentView('main')
   }
 
+  const handleEditConfig = () => {
+    setCurrentView('setup')
+  }
+
   return (
     <>
       {currentView === 'setup' && <FirstTimeSetup onComplete={handleSetupComplete} />}
-      {currentView === 'main' && <MainScreen />}
+      {currentView === 'main' && <MainScreen onEditConfig={handleEditConfig} />}
     </>
   )
 }

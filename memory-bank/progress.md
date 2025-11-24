@@ -33,6 +33,7 @@
 - Implemented core UI components:
   - Created `FirstTimeSetup.jsx` - minimal, single-screen configuration form.
   - Created `MainScreen.jsx` - 14-day birthday view with hardcoded data.
+  - Added settings navigation - gear icon button returns to configuration screen.
   - Integrated Bootstrap 5.3.2 for consistent, responsive styling.
   - Established UI design direction: clean, centered, card-based layouts.
 - Made key technical decisions:

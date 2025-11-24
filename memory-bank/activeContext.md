@@ -34,12 +34,13 @@
 - Design decisions finalized:
   - Layout: Continuous list showing only days with birthdays
   - Date format: Short format "Mon, Nov 25"
-  - Header: Simple title "Birthday Briefing"
+  - Header: Title with settings gear icon in top right corner
   - Multiple birthdays on same day: Comma-separated names
   - Visual distinction: Color-coded (gray for past, blue/bold for today, default for future)
 - App-level state management implemented:
-  - Navigation between FirstTimeSetup and MainScreen
-  - "Get Started" button triggers view transition
+  - Bidirectional navigation between FirstTimeSetup and MainScreen
+  - "Get Started" button triggers transition to main view
+  - Settings gear icon returns to configuration screen
 - Date calculation logic:
   - 14-day window starts from Monday of current week
   - Birthdays filtered and sorted chronologically

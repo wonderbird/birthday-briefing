@@ -1,4 +1,4 @@
-function MainScreen() {
+function MainScreen({ onEditConfig }) {
   // Hardcoded birthday data: 6 people with birthdays spread across the 14-day window
   // Format: { name: string, month: number (1-12), day: number }
   const hardcodedBirthdays = [
@@ -83,8 +83,17 @@ function MainScreen() {
     <div className="container">
       <div className="row justify-content-center">
         <div className="col-12 col-md-10 col-lg-8" style={{ maxWidth: '700px' }}>
-          <div className="text-center my-4">
-            <h1>Birthday Briefing</h1>
+          <div className="d-flex justify-content-between align-items-center my-4">
+            <h1 className="mb-0">Birthday Briefing</h1>
+            <button 
+              type="button" 
+              className="btn btn-link text-secondary" 
+              onClick={onEditConfig}
+              style={{ fontSize: '1.5rem', textDecoration: 'none' }}
+              aria-label="Edit configuration"
+            >
+              ⚙
+            </button>
           </div>
 
           <div className="card shadow-sm">

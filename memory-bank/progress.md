@@ -29,11 +29,14 @@
   - TDD workflow, mutation testing guidelines, and pre-commit checks defined.
   - MIT License file properly added to repository.
   - Workflow orchestrator defines pre-commit process (tests, mutation tests, memory bank update).
-- Testing infrastructure (in progress):
-  - Phased implementation: Vitest first, then Stryker Mutator
-  - Phase 1 focuses on unit testing with HTML coverage reports
-  - Phase 2 adds mutation testing with JSON reporter output
-  - Target: comprehensive test framework ready for TDD workflow
+- Testing infrastructure (completed):
+  - Vitest configured with jsdom environment and HTML coverage reporting
+  - Stryker Mutator configured with JSON and HTML reporters
+  - Test scripts available: test, test:watch, test:ui, test:coverage, test:mutate
+  - Initial test suite created with 14 tests for date utility functions
+  - Baseline metrics established: 100% code coverage, 90.48% mutation score
+  - Date utility functions extracted to src/utils/dateUtils.js for testability
+  - Ready for TDD workflow (red-green-refactor cycles)
 
 ## Key Achievements So Far
 
@@ -75,6 +78,14 @@
   - Pre-commit workflow orchestrator defined (tests → mutation tests → memory bank → commit).
   - MIT License formally added to repository.
   - Development principles and practices documented for consistency.
+- Implemented comprehensive testing infrastructure:
+  - Vitest unit testing framework with jsdom for React component testing.
+  - Stryker Mutator for mutation testing to ensure test quality.
+  - Test coverage: 100% on dateUtils.js with HTML reports.
+  - Mutation score: 90.48% baseline established (38/42 mutants killed).
+  - Date utility functions extracted and thoroughly tested (14 test cases).
+  - Testing conventions documented for consistent approach.
+  - All test scripts integrated and verified working.
 
 ## Assumptions and Risks
 
@@ -92,23 +103,28 @@
 
 ## Next Milestones
 
-- Immediate (Current Sprint - Testing Infrastructure):
-  - Phase 1: Vitest Setup and Validation
-    - Install Vitest and testing libraries (@testing-library/react, jsdom, @vitest/ui)
-    - Configure vitest.config.js with jsdom environment and HTML coverage reporting
-    - Add test scripts to package.json (test, test:watch, test:ui, test:coverage)
-    - Create initial test file for date calculation logic
-    - Run tests and generate HTML coverage report to confirm setup works
-  - Phase 2: Stryker Mutator Setup (after Phase 1 success)
-    - Install @stryker-mutator/core and @stryker-mutator/vitest-runner
-    - Configure stryker.config.json with JSON reporter output per rule 340-mutation-testing.mdc
-    - Add test:mutate script to package.json
-    - Run mutation tests and establish baseline mutation score targets
-  - Phase 3: Documentation and Finalization
-    - Update memory bank with testing conventions and results
-    - Document baseline mutation scores and testing approach
-    - Verify all test scripts work correctly
-    - Confirm pre-commit workflow can be followed
+- Immediate (Current Sprint - CardDAV Integration with TDD):
+  - Follow strict TDD workflow for all new functionality:
+    - Red: Write failing test for smallest increment
+    - Green: Write minimum code to pass test
+    - Refactor: Improve design while keeping tests green
+    - Commit after each green and refactor step
+  - Implement CardDAV client library integration (test-first):
+    - Research and select CardDAV library (tsdav, dav, or similar)
+    - Write tests for vCard birthday parsing
+    - Implement birthday data extraction from vCard format
+    - Write tests for date format conversion
+    - Handle authentication requirements
+  - Connect FirstTimeSetup form:
+    - Write tests for configuration persistence
+    - Implement local storage for CardDAV URL and preferences
+    - Add URL validation with tests
+    - Implement first-day-of-week preference handling
+  - Replace hardcoded data:
+    - Write tests for birthday data fetching
+    - Integrate real CardDAV data into MainScreen
+    - Maintain or improve test coverage (target: >95%)
+    - Maintain or improve mutation score (target: >90%)
 - Short term (CardDAV Integration with TDD):
   - Implement CardDAV client library integration (test-first approach).
   - Connect FirstTimeSetup form to capture and persist configuration.

@@ -1,4 +1,4 @@
-function FirstTimeSetup() {
+function FirstTimeSetup({ onComplete }) {
   return (
     <div className="container">
       <div className="row justify-content-center align-items-center min-vh-100">
@@ -61,7 +61,7 @@ function FirstTimeSetup() {
                 </div>
 
                 <div className="d-grid">
-                  <button type="button" className="btn btn-primary btn-lg">
+                  <button type="button" className="btn btn-primary btn-lg" onClick={onComplete}>
                     Get Started
                   </button>
                 </div>

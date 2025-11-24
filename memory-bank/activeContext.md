@@ -28,29 +28,37 @@
   - Vertically centered layout with max-width 500px
   - Clean card-based form design
 
-### 2. Connect Configuration to Logic (Next Priority)
+### 2. Main Screen with 14-Day View (✅ Completed)
 
+- Implemented MainScreen component with hardcoded birthday data for prototyping
+- Design decisions finalized:
+  - Layout: Continuous list showing only days with birthdays
+  - Date format: Short format "Mon, Nov 25"
+  - Header: Simple title "Birthday Briefing"
+  - Multiple birthdays on same day: Comma-separated names
+  - Visual distinction: Color-coded (gray for past, blue/bold for today, default for future)
+- App-level state management implemented:
+  - Navigation between FirstTimeSetup and MainScreen
+  - "Get Started" button triggers view transition
+- Date calculation logic:
+  - 14-day window starts from Monday of current week
+  - Birthdays filtered and sorted chronologically
+  - Only days with birthdays are displayed
+
+### 3. Connect Real CardDAV Data (Next Priority)
+
+- Replace hardcoded birthday data with CardDAV integration:
+  - Implement CardDAV client for fetching birthday data
+  - Parse vCard format to extract birthday information
+  - Handle authentication if required
 - Implement form submission handling:
   - Capture CardDAV URL from input
-  - Capture first-day-of-week preference
+  - Capture first-day-of-week preference (currently hardcoded to Monday)
   - Validate inputs before proceeding
   - Store configuration in browser local storage
 - Add basic input validation:
   - Ensure CardDAV URL is properly formatted
   - Provide helpful error messages if validation fails
-
-### 3. Define the 14-Day View
-
-- Clarify the main framing and wording:
-  - Title such as "Birthdays this and next week" or similar
-  - Subtext that reinforces privacy and the 14-day scope if needed
-- Design how birthdays are displayed:
-  - Primary reading order: date → name
-  - Include weekday and date information for each birthday
-- Ensure it is easy to see:
-  - Which birthdays are today
-  - Which have already passed within the 14-day window
-  - Which are upcoming
 
 ### 4. Configuration and Error Handling (Future)
 
@@ -62,40 +70,33 @@
   - No birthdays are found in the 14-day window
   - Address book data appears incomplete or inconsistent
 
-## Layout and View Experiments
+## Layout and View Decisions
 
-The project will intentionally explore multiple layouts for the 14-day view to find the version that best supports quick understanding of “who has a birthday when.”
+The initial layout has been implemented and can be refined based on user feedback.
 
-### Layout Variants
+### Current Implementation
 
-- Continuous 14-day list:
-  - A single, chronological list from Day 1 to Day 14.
-- “This week” and “Next week” blocks:
-  - Two sections:
-    - This week (days 1–7)
-    - Next week (days 8–14)
-- Two-row compact overview:
-  - Two rows, each representing one week.
-  - Each day represented as a small cell with birthdays indicated.
+- **Layout chosen**: Continuous list
+  - Single chronological list showing days with birthdays
+  - Clean, scannable format
+- **Day inclusion chosen**: Birthday-only days
+  - Shows only days that have at least one birthday
+  - Reduces visual clutter and focuses attention on relevant dates
+- **Visual hierarchy**:
+  - Date information comes first, followed by names
+  - Color coding provides quick visual scanning:
+    - Past days: Muted gray
+    - Today: Bold blue
+    - Future days: Default black text
 
-### Day Inclusion Variants
+### Future Layout Refinements (Optional)
 
-For each layout, two day-inclusion strategies will be compared:
+If user testing reveals issues, consider alternative layouts:
 
-- Full timeline:
-  - Show all 14 days, including those without birthdays.
-- Birthday-only days:
-  - Show only days that have at least one birthday.
-
-### Evaluation Approach
-
-- Main decision criterion:
-  - How quickly and effortlessly it feels to answer the question: “Who has a birthday when in the next 14 days?”
-- Evaluation method:
-  - Rely on subjective feeling of ease and effort when scanning each layout.
-  - Prefer the variant that feels most natural, fast, and low-friction to read.
-- Current hypothesis:
-  - Birthday-only days lists may be faster to scan than full 14-day timelines, because they contain less visual information and focus only on relevant dates.
+- "This week" and "Next week" blocks for clearer week separation
+- Full 14-day timeline if users prefer seeing empty days for context
+- Two-row compact grid for more compact overview
+- Additional visual enhancements (icons, spacing, grouping)
 
 ## Open Questions
 
@@ -112,20 +113,24 @@ For each layout, two day-inclusion strategies will be compared:
 ## Next Steps (Implementation)
 
 - Immediate next steps:
-  - Add form handling logic to FirstTimeSetup component
-  - Implement local storage persistence for configuration
-  - Add basic URL validation for CardDAV input
-  - Create routing/state logic to transition from setup to main view
+  - Implement CardDAV client library integration
+  - Connect FirstTimeSetup form to capture and store configuration
+  - Replace hardcoded birthday data with real CardDAV fetching
+  - Implement local storage for configuration persistence
 - Short-term:
-  - Design and implement the 14-day birthday view UI (static/mock data first)
-  - Create sample birthday data structure for prototyping
-  - Experiment with layout variants:
-    - Continuous list vs. week blocks vs. compact grid
-    - Full timeline vs. birthday-only days
-- Medium-term:
-  - Implement CardDAV client for fetching birthday data
+  - Add URL validation for CardDAV input
+  - Implement first-day-of-week preference (currently hardcoded to Monday)
   - Build data synchronization and caching layer
-  - Add error handling for network and data issues
+  - Add loading states during data fetch
+  - Handle empty state (no birthdays in 14-day window)
+- Medium-term:
+  - Add comprehensive error handling:
+    - CardDAV connection failures
+    - Authentication errors
+    - Invalid or incomplete data
+  - Implement settings/configuration screen for updating CardDAV URL
+  - Add data refresh functionality
+  - Consider adding manual refresh button
 
 ## Memory Bank Update Practices
 

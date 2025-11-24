@@ -11,11 +11,13 @@
 - Documentation:
   - Complete memory bank established: `projectbrief.md`, `productContext.md`, `activeContext.md`, `systemPatterns.md`, `techContext.md`, and `progress.md`.
   - All documentation correctly uses CardDAV (address book protocol) for birthday data access.
-- Implementation begun:
+- Implementation progressing:
   - React 19.1 project initialized with Vite build tooling.
   - Bootstrap 5.3.2 integrated for UI styling.
-  - First-time setup screen implemented as presentational component.
+  - First-time setup screen implemented with form and navigation.
+  - Main screen with 14-day birthday view implemented.
   - Component structure established under `src/components/`.
+  - App-level state management for view navigation.
 
 ## Key Achievements So Far
 
@@ -28,14 +30,21 @@
 - Established complete memory bank documentation:
   - All core files created and aligned with project vision.
   - Corrected protocol from CalDAV to CardDAV throughout project.
-- Implemented first UI component:
+- Implemented core UI components:
   - Created `FirstTimeSetup.jsx` - minimal, single-screen configuration form.
+  - Created `MainScreen.jsx` - 14-day birthday view with hardcoded data.
   - Integrated Bootstrap 5.3.2 for consistent, responsive styling.
   - Established UI design direction: clean, centered, card-based layouts.
 - Made key technical decisions:
   - React 19.1 with Vite for development.
   - Bootstrap for UI framework (default theme via CDN).
   - Component-based architecture with separation of concerns.
+- Made key UX decisions for birthday view:
+  - Continuous list layout (not blocks or grid).
+  - Birthday-only days (not full 14-day timeline).
+  - Color-coded visual distinction (gray/past, blue-bold/today, default/future).
+  - Short date format "Mon, Nov 25".
+  - Comma-separated names for multiple birthdays on same day.
 
 ## Assumptions and Risks
 
@@ -54,19 +63,20 @@
 ## Next Milestones
 
 - Immediate (Current Sprint):
-  - Add state management and form handling to FirstTimeSetup component.
-  - Implement local storage for persisting configuration.
-  - Add basic URL validation for CardDAV input.
-  - Create app-level routing/state to handle transition from setup to main view.
+  - Implement CardDAV client library integration.
+  - Connect FirstTimeSetup form to capture and persist configuration.
+  - Replace hardcoded birthday data with real CardDAV data fetching.
+  - Add URL validation for CardDAV input.
+  - Implement first-day-of-week preference handling.
 - Short term:
-  - Design and implement 14-day view component (UI only, with mock data):
-    - Create sample birthday data structure.
-    - Implement multiple layout variants for comparison.
-    - Test responsive behavior on different screen sizes.
-  - Choose preferred layout variant based on:
-    - Speed of comprehension ("who has birthday when?").
-    - Visual clarity and minimal cognitive load.
-    - Responsive behavior across devices.
+  - Build data synchronization and caching layer:
+    - Local storage for birthday data cache.
+    - Background refresh on app open.
+    - Offline-first approach with cached data.
+  - Add loading and empty states:
+    - Loading indicator during CardDAV fetch.
+    - Message when no birthdays in 14-day window.
+    - Error messages for connection failures.
 - Medium term:
   - Research and implement CardDAV client functionality:
     - Authentication handling.

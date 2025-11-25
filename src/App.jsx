@@ -27,7 +27,7 @@ function App() {
   return (
     <>
       {currentView === 'setup' && <FirstTimeSetup onComplete={handleSetupComplete} />}
-      {currentView === 'main' && <MainScreen onEditConfig={handleEditConfig} />}
+      {currentView === 'main' && <MainScreen config={config} onEditConfig={handleEditConfig} />}
     </>
   )
 }

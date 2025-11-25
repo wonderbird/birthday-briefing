@@ -5,6 +5,7 @@ import * as storage from './utils/storage';
 
 describe('App', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     vi.spyOn(storage, 'isConfigured').mockReturnValue(false);
     vi.spyOn(storage, 'loadConfig').mockReturnValue(null);
   });
@@ -33,6 +34,23 @@ describe('App', () => {
     
     expect(container.textContent).toContain('Birthday Briefing');
     expect(container.textContent).not.toContain('CardDAV URL');
+  });
+
+  it('should load and store config when configuration exists', () => {
+    const mockConfig = {
+      carddavUrl: 'https://example.com/carddav',
+      firstDayOfWeek: 'sunday'
+    };
+    vi.spyOn(storage, 'isConfigured').mockReturnValue(true);
+    vi.spyOn(storage, 'loadConfig').mockReturnValue(mockConfig);
+    
+    render(<App />);
+    
+    // Verify config was loaded from storage
+    expect(storage.loadConfig).toHaveBeenCalled();
+    // Verify MainScreen is rendered (not FirstTimeSetup)
+    expect(document.body.textContent).toContain('Birthday Briefing');
+    expect(document.body.textContent).not.toContain('CardDAV URL');
   });
 });
 

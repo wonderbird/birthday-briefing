@@ -167,3 +167,29 @@ describe('isConfigured', () => {
   });
 });
 
+describe('error scenarios', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+  });
+
+  it('should handle corrupted data when loading config', () => {
+    localStorage.setItem('birthday-briefing-config', 'invalid-json{');
+
+    const result = loadConfig();
+
+    expect(result).toBeNull();
+  });
+
+  it('should return false for corrupted data in isConfigured', () => {
+    localStorage.setItem('birthday-briefing-config', 'invalid-json{');
+
+    const result = isConfigured();
+
+    expect(result).toBe(false);
+  });
+});
+

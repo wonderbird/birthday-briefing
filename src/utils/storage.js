@@ -44,7 +44,14 @@ export function saveConfig(config) {
  */
 export function loadConfig() {
   const json = localStorage.getItem('birthday-briefing-config');
-  return JSON.parse(json);
+  if (!json) {
+    return null;
+  }
+  try {
+    return JSON.parse(json);
+  } catch {
+    return null;
+  }
 }
 
 /**

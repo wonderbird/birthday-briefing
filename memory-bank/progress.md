@@ -37,6 +37,16 @@
   - Baseline metrics established: 100% code coverage, 90.48% mutation score
   - Date utility functions extracted to src/utils/dateUtils.js for testability
   - Ready for TDD workflow (red-green-refactor cycles)
+- Configuration persistence strategy (completed):
+  - Research completed on localStorage patterns and React integration
+  - Data structure defined: carddavUrl and firstDayOfWeek
+  - Storage key chosen: 'birthday-briefing-config'
+  - Validation rules established for URL and enum values
+  - Error handling strategy defined for all edge cases
+  - Security decisions documented (origin-based protection sufficient)
+  - TDD test plan created with >95% coverage target
+  - Component integration plan documented
+  - Ready for implementation phase following TDD workflow
 
 ## Key Achievements So Far
 
@@ -86,6 +96,15 @@
   - Date utility functions extracted and thoroughly tested (14 test cases).
   - Testing conventions documented for consistent approach.
   - All test scripts integrated and verified working.
+- Completed configuration persistence research and planning:
+  - Researched localStorage API, React patterns, and security considerations.
+  - Designed data structure: carddavUrl and firstDayOfWeek in 'birthday-briefing-config' key.
+  - Established validation rules for URL format and enum values.
+  - Defined comprehensive error handling strategy for all edge cases.
+  - Made security decisions: origin-based protection sufficient, no encryption needed for V1.
+  - Created detailed TDD test plan with >95% coverage and >90% mutation score targets.
+  - Documented component integration approach for FirstTimeSetup and App.jsx.
+  - Strategy fully documented in memory bank, ready for TDD implementation.
 
 ## Assumptions and Risks
 
@@ -95,36 +114,55 @@
   - Users are willing to use a dedicated birthday tool alongside their main calendar.
   - A birthday-only days list will feel faster to read than a full 14-day timeline, because it contains less information.
   - Bootstrap's default styling will provide a clean, professional appearance without extensive custom CSS.
+  - Browser localStorage is available in most user environments (5-10MB per origin is sufficient for configuration data).
+  - Origin-based security provided by browsers is adequate protection for CardDAV URLs with embedded credentials in V1.
+  - Users will accept that private/incognito browsing mode requires reconfiguration each session (configuration not persisted).
 - Risks:
   - CardDAV configuration may be too technical or confusing for some users.
   - If birthdays are not reliably stored in the underlying address book or contacts, the 14-day view may appear incomplete or misleading.
   - Without notifications, some users may forget to open the app regularly, reducing its impact.
   - CardDAV implementation complexity may be higher than anticipated (authentication, data parsing, error handling).
+  - Users in private/incognito mode will have degraded experience (no persistence across sessions).
+  - Storing CardDAV URLs with embedded credentials in localStorage could be exploited via XSS attacks (mitigated by React's built-in XSS protection).
+  - Browser storage could become corrupted, requiring clear error messages and recovery path to FirstTimeSetup.
 
 ## Next Milestones
 
-- Immediate (Current Sprint - CardDAV Integration with TDD):
+- Immediate (Current Sprint - Configuration Persistence Implementation with TDD):
   - Follow strict TDD workflow for all new functionality:
     - Red: Write failing test for smallest increment
     - Green: Write minimum code to pass test
     - Refactor: Improve design while keeping tests green
     - Commit after each green and refactor step
-  - Implement CardDAV client library integration (test-first):
-    - Research and select CardDAV library (tsdav, dav, or similar)
-    - Write tests for vCard birthday parsing
-    - Implement birthday data extraction from vCard format
-    - Write tests for date format conversion
-    - Handle authentication requirements
-  - Connect FirstTimeSetup form:
-    - Write tests for configuration persistence
-    - Implement local storage for CardDAV URL and preferences
-    - Add URL validation with tests
-    - Implement first-day-of-week preference handling
-  - Replace hardcoded data:
-    - Write tests for birthday data fetching
-    - Integrate real CardDAV data into MainScreen
+  - Implement storage utility module (test-first):
+    - Write tests for validateConfig function
+    - Implement validateConfig (URL and enum validation)
+    - Write tests for saveConfig function
+    - Implement saveConfig (serialize and store to localStorage)
+    - Write tests for loadConfig function
+    - Implement loadConfig (retrieve and deserialize from localStorage)
+    - Write tests for clearConfig function
+    - Implement clearConfig (remove from localStorage)
+    - Write tests for isConfigured function
+    - Implement isConfigured (check for valid config)
+    - Write tests for error scenarios (disabled storage, quota exceeded, corrupted data)
     - Maintain or improve test coverage (target: >95%)
     - Maintain or improve mutation score (target: >90%)
+  - Integrate with FirstTimeSetup component (test-first):
+    - Write tests for form state management
+    - Implement useState hooks for form values
+    - Write tests for form validation
+    - Implement validation on Save button click
+    - Write tests for storage integration
+    - Connect Save button to saveConfig utility
+  - Integrate with App.jsx (test-first):
+    - Write tests for configuration detection on mount
+    - Implement isConfigured check in useEffect
+    - Write tests for conditional rendering
+    - Show FirstTimeSetup or MainScreen based on config state
+    - Write tests for config prop passing
+    - Pass configuration to MainScreen as props
+  - Run mutation tests and improve as needed
 - Short term (CardDAV Integration with TDD):
   - Implement CardDAV client library integration (test-first approach).
   - Connect FirstTimeSetup form to capture and persist configuration.

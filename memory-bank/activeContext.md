@@ -79,22 +79,99 @@
   - Test scripts integrated into development workflow
   - Supports pre-commit workflow requirements
 
-### 4. Connect Real CardDAV Data (🔄 Next Priority)
+### 4. Configuration Persistence (✅ Completed - Strategy)
+
+Research and planning completed for local storage implementation:
+
+#### Implementation Strategy
+
+**Storage Module Design:**
+- Location: `src/utils/storage.js`
+- Functions to implement:
+  - `saveConfig(config)` - Serialize and store configuration
+  - `loadConfig()` - Load and deserialize configuration
+  - `clearConfig()` - Remove configuration (for testing/reset)
+  - `isConfigured()` - Check if valid configuration exists
+  - `validateConfig(config)` - Validate configuration structure and values
+
+**Data Structure:**
+- Storage key: `'birthday-briefing-config'`
+- Configuration object:
+  ```javascript
+  {
+    carddavUrl: string,    // CardDAV URL, may contain embedded credentials
+    firstDayOfWeek: 'monday' | 'sunday'  // User's week start preference
+  }
+  ```
+
+**Validation Rules:**
+- CardDAV URL: Must be valid URL format (validated using URL constructor)
+- firstDayOfWeek: Must be 'monday' or 'sunday' (enum validation)
+- Validate on both save and load operations
+
+**Error Handling Strategy:**
+- localStorage disabled (private browsing): Use in-memory state, app works for session only
+- Corrupted data: Clear storage and return to FirstTimeSetup
+- Validation failures: Clear storage and return to FirstTimeSetup
+- QuotaExceededError: Log error and return to FirstTimeSetup
+- All errors handled gracefully with user-friendly fallbacks
+
+**Security Decisions:**
+- No encryption needed for V1: Browser's same-origin policy provides adequate protection
+- CardDAV URLs with embedded credentials are protected by origin-based security
+- All loaded data will be validated and sanitized
+- XSS prevention through proper React practices (avoid dangerouslySetInnerHTML)
+
+**Component Integration Plan:**
+- FirstTimeSetup.jsx:
+  - Capture form values using React useState hooks
+  - Validate inputs on Save button click
+  - Call saveConfig() utility function
+  - Pass configuration to parent via onComplete callback
+- App.jsx:
+  - Call isConfigured() on component mount
+  - Show FirstTimeSetup if no valid config exists
+  - Show MainScreen if valid config exists
+  - Pass configuration as props to MainScreen
+- MainScreen.jsx:
+  - Accept configuration as props
+  - Use firstDayOfWeek for 14-day calculation
+  - Store carddavUrl for future CardDAV data fetching
+
+**TDD Test Coverage Plan:**
+- Unit tests for all storage utility functions
+- Tests for successful operations (save, load, clear)
+- Tests for error conditions (disabled storage, quota exceeded, corrupted data)
+- Tests for validation (valid/invalid URLs, valid/invalid enum values)
+- Mock localStorage in all tests
+- Target: >95% code coverage, >90% mutation score
+
+#### Next Steps for Implementation
+
+1. Write failing test for validateConfig with valid URL (RED)
+2. Implement validateConfig to pass test (GREEN)
+3. Refactor if needed
+4. Write failing test for saveConfig (RED)
+5. Implement saveConfig (GREEN)
+6. Continue TDD cycle for loadConfig, clearConfig, isConfigured
+7. Integrate with FirstTimeSetup component (TDD approach)
+8. Integrate with App.jsx for config detection (TDD approach)
+9. Run mutation tests and improve as needed
+
+### 5. Connect Real CardDAV Data (🔄 Next Priority After Storage)
 
 - Replace hardcoded birthday data with CardDAV integration:
   - Implement CardDAV client for fetching birthday data
   - Parse vCard format to extract birthday information
   - Handle authentication if required
-- Implement form submission handling:
-  - Capture CardDAV URL from input
-  - Capture first-day-of-week preference (currently hardcoded to Monday)
-  - Validate inputs before proceeding
-  - Store configuration in browser local storage
-- Add basic input validation:
-  - Ensure CardDAV URL is properly formatted
-  - Provide helpful error messages if validation fails
+- Use stored configuration from local storage:
+  - Retrieve CardDAV URL and firstDayOfWeek preference
+  - Use configuration to fetch birthday data
+- Add basic error handling:
+  - Handle connection failures
+  - Provide helpful error messages
 
-### 5. Deployment Infrastructure (✅ Completed)
+### 6. Deployment Infrastructure (✅ Completed)
 
 - Automated deployment pipeline implemented:
   - GitHub Actions workflow for continuous deployment
@@ -116,7 +193,7 @@
   - Deployment trigger information
   - Troubleshooting section for upload problems
 
-### 6. Development Workflow and Quality Standards (✅ Completed)
+### 7. Development Workflow and Quality Standards (✅ Completed)
 
 - Clean code rules established in `.cursor/rules/clean-code/`:
   - Development principles and practices
@@ -131,7 +208,7 @@
   - Update memory bank
   - Create single commit with all changes
 
-### 7. Configuration and Error Handling (Future)
+### 8. Configuration and Error Handling (Future)
 
 - Decide how users can:
   - Change their CardDAV URL later
@@ -183,25 +260,27 @@ If user testing reveals issues, consider alternative layouts:
 
 ## Next Steps (Implementation)
 
-- Immediate next steps (CardDAV Integration - following TDD):
-  - Identify smallest testable increment for CardDAV functionality
-  - Write failing test for CardDAV data parsing (red phase)
-  - Implement minimum code to pass test (green phase)
-  - Refactor if needed, maintaining test pass
-  - Repeat TDD cycle for each feature increment
-  - Connect FirstTimeSetup form to capture and store configuration
-  - Replace hardcoded birthday data with real CardDAV fetching
-  - Implement local storage for configuration persistence
-  - Add URL validation for CardDAV input
-  - Implement first-day-of-week preference (currently hardcoded to Monday)
+- Immediate next steps (Configuration Persistence Implementation - following TDD):
+  - Create src/utils/storage.js with storage utility functions
+  - Write failing test for validateConfig function (red phase)
+  - Implement validateConfig to pass test (green phase)
+  - Write failing test for saveConfig function (red phase)
+  - Implement saveConfig to pass test (green phase)
+  - Write failing test for loadConfig function (red phase)
+  - Implement loadConfig to pass test (green phase)
+  - Continue TDD cycle for clearConfig and isConfigured
+  - Write tests for error scenarios (disabled storage, corrupted data, quota exceeded)
+  - Integrate with FirstTimeSetup: capture form values and call saveConfig
+  - Integrate with App.jsx: check isConfigured and render appropriate component
+  - Run mutation tests and improve as needed
+  - Achieve target metrics: >95% coverage, >90% mutation score
 - Short-term (CardDAV Integration):
-  - Implement CardDAV client library integration
-  - Connect FirstTimeSetup form to capture and store configuration
+  - Research and select CardDAV library (tsdav, dav, or similar)
+  - Implement CardDAV client for fetching birthday data (following TDD)
+  - Parse vCard format to extract birthday information
   - Replace hardcoded birthday data with real CardDAV fetching
-  - Implement local storage for configuration persistence
-  - Write tests for CardDAV data processing logic (following TDD)
-  - Add URL validation for CardDAV input
-  - Implement first-day-of-week preference (currently hardcoded to Monday)
+  - Handle authentication if required
+  - Add error handling for connection failures
 - Medium-term (Data Sync and Polish):
   - Build data synchronization and caching layer
   - Add loading states during data fetch

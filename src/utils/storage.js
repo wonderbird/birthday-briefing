@@ -29,3 +29,12 @@ export function validateConfig(config) {
   return true;
 }
 
+/**
+ * Saves configuration to localStorage.
+ * @param {Object} config - The configuration to save
+ */
+export function saveConfig(config) {
+  const json = JSON.stringify(config);
+  localStorage.setItem('birthday-briefing-config', json);
+}
+

@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { validateConfig } from './storage.js';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { validateConfig, saveConfig } from './storage.js';
 
 describe('validateConfig', () => {
   it('should return true for valid configuration', () => {
@@ -53,6 +53,32 @@ describe('validateConfig', () => {
     const result = validateConfig(invalidConfig);
 
     expect(result).toBe(false);
+  });
+});
+
+describe('saveConfig', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+  });
+
+  it('should save valid configuration to localStorage', () => {
+    const config = {
+      carddavUrl: 'https://example.com/carddav',
+      firstDayOfWeek: 'monday'
+    };
+
+    saveConfig(config);
+
+    const stored = localStorage.getItem('birthday-briefing-config');
+    expect(stored).toBeTruthy();
+    
+    const parsed = JSON.parse(stored);
+    expect(parsed.carddavUrl).toBe('https://example.com/carddav');
+    expect(parsed.firstDayOfWeek).toBe('monday');
   });
 });
 

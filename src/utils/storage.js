@@ -47,3 +47,10 @@ export function loadConfig() {
   return JSON.parse(json);
 }
 
+/**
+ * Clears configuration from localStorage.
+ */
+export function clearConfig() {
+  localStorage.removeItem('birthday-briefing-config');
+}
+

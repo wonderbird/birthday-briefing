@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { validateConfig, saveConfig, loadConfig } from './storage.js';
+import { validateConfig, saveConfig, loadConfig, clearConfig } from './storage.js';
 
 describe('validateConfig', () => {
   it('should return true for valid configuration', () => {
@@ -101,6 +101,29 @@ describe('loadConfig', () => {
     const loaded = loadConfig();
 
     expect(loaded).toEqual(config);
+  });
+});
+
+describe('clearConfig', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+  });
+
+  it('should remove configuration from localStorage', () => {
+    const config = {
+      carddavUrl: 'https://example.com/carddav',
+      firstDayOfWeek: 'monday'
+    };
+    localStorage.setItem('birthday-briefing-config', JSON.stringify(config));
+
+    clearConfig();
+
+    const stored = localStorage.getItem('birthday-briefing-config');
+    expect(stored).toBeNull();
   });
 });
 

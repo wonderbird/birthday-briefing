@@ -1,4 +1,12 @@
+import { useState } from 'react';
+
 function FirstTimeSetup({ onComplete }) {
+  const [carddavUrl, setCarddavUrl] = useState('');
+
+  const handleSave = () => {
+    onComplete({ carddavUrl });
+  };
+
   return (
     <div className="container">
       <div className="row justify-content-center align-items-center min-vh-100">
@@ -22,7 +30,8 @@ function FirstTimeSetup({ onComplete }) {
                     className="form-control"
                     id="carddavUrl"
                     placeholder="https://example.com/contacts/user/addressbook"
-                    defaultValue=""
+                    value={carddavUrl}
+                    onChange={(e) => setCarddavUrl(e.target.value)}
                   />
                   <div className="form-text">
                     Enter the URL to your CardDAV address book containing birthdays
@@ -61,7 +70,7 @@ function FirstTimeSetup({ onComplete }) {
                 </div>
 
                 <div className="d-grid">
-                  <button type="button" className="btn btn-primary btn-lg" onClick={onComplete}>
+                  <button type="button" className="btn btn-primary btn-lg" onClick={handleSave}>
                     Save
                   </button>
                 </div>

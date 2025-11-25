@@ -37,7 +37,7 @@
   - Baseline metrics established: 100% code coverage, 90.48% mutation score
   - Date utility functions extracted to src/utils/dateUtils.js for testability
   - Ready for TDD workflow (red-green-refactor cycles)
-- Configuration persistence (completed):
+- Configuration persistence (completed with known issue):
   - Storage module implemented: validateConfig, saveConfig, loadConfig, clearConfig, isConfigured
   - Data structure: carddavUrl and firstDayOfWeek stored in 'birthday-briefing-config' key
   - FirstTimeSetup integration: form state management and saveConfig calls
@@ -46,6 +46,7 @@
   - Mutation score: 83.50% overall (storage: 78.69%, dateUtils: 90.48%)
   - 6 git commits following strict TDD (red-green-refactor cycles)
   - All code review checks passed
+  - Known issue discovered through user testing: settings screen doesn't pre-populate with existing values when editing configuration
 
 ## Key Achievements So Far
 
@@ -133,7 +134,15 @@
   - ✅ 41 tests passing with 83.50% mutation score
   - ✅ Strict TDD workflow followed (6 commits)
   - ✅ All code review checks passed
-- Immediate (CardDAV Integration with TDD):
+- Immediate (Configuration Editing Support with TDD):
+  - Add initialConfig prop to FirstTimeSetup component
+  - Initialize form state from prop when editing existing configuration
+  - Pass config from App to FirstTimeSetup in edit mode
+  - Reload config in App state after successful save
+  - Write comprehensive tests for both first-time and edit modes
+  - Target: maintain >80% mutation score, all tests passing
+  - Follow strict TDD with red-green-refactor cycles
+- Short term (CardDAV Integration with TDD):
   - Research and select CardDAV client library (tsdav, dav, or similar).
   - Implement CardDAV client for fetching birthday data (test-first approach).
   - Parse vCard format to extract birthday information.

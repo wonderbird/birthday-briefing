@@ -139,7 +139,61 @@ Implementation completed using strict TDD workflow.
 - All commits follow conventional commit format with Co-authored-by trailers
 - Code review completed - all rules compliant
 
-### 5. Connect Real CardDAV Data (🔄 Next Priority After Storage)
+### 5. Configuration Editing Support (🔄 Next Priority)
+
+User testing revealed that clicking the settings gear icon from MainScreen shows empty form fields instead of current configuration values.
+
+#### Problem Statement
+
+**Current Behavior:**
+- FirstTimeSetup component always initializes with default empty values
+- Form displays: carddavUrl = '' and firstDayOfWeek = 'monday'
+- User cannot see their existing configuration when editing
+- Creates poor UX: users must re-enter all settings to make a single change
+
+**Expected Behavior:**
+- When editing configuration, form should pre-populate with current values
+- User can modify existing settings and save changes
+- Changes persist to localStorage and update App state
+
+#### Implementation Requirements
+
+**FirstTimeSetup Component:**
+- Accept optional `initialConfig` prop with shape: `{ carddavUrl: string, firstDayOfWeek: 'monday' | 'sunday' }`
+- Initialize form state from `initialConfig` when provided
+- Fall back to empty/default values when `initialConfig` is not provided (first-time setup)
+- Component should work in both modes: initial setup and edit configuration
+
+**App Component:**
+- Pass loaded config to FirstTimeSetup when rendering in edit mode
+- After configuration is saved, reload config from storage to update App state
+- Ensure MainScreen receives updated config after edits
+
+#### TDD Test Coverage Plan
+
+**FirstTimeSetup.test.jsx:**
+- Test: should initialize with empty values when no initialConfig provided
+- Test: should initialize form with values from initialConfig prop
+- Test: should pre-populate CardDAV URL when initialConfig provided
+- Test: should pre-populate firstDayOfWeek when initialConfig provided
+- Test: should update localStorage with modified values on Save
+
+**App.test.jsx:**
+- Test: should pass config to FirstTimeSetup when editing existing configuration
+- Test: should reload config after FirstTimeSetup completes
+- Test: should pass updated config to MainScreen after edit
+
+**Integration Test:**
+- Test complete flow: load config → edit via settings → save → verify updated values
+
+#### Success Criteria
+
+- All 41+ tests passing (existing + new tests)
+- Mutation score maintained at >80%
+- Configuration editing works seamlessly from user perspective
+- No regression in first-time setup flow
+
+### 6. Connect Real CardDAV Data (Future Priority)
 
 - Replace hardcoded birthday data with CardDAV integration:
   - Implement CardDAV client for fetching birthday data
@@ -152,7 +206,7 @@ Implementation completed using strict TDD workflow.
   - Handle connection failures
   - Provide helpful error messages
 
-### 6. Deployment Infrastructure (✅ Completed)
+### 7. Deployment Infrastructure (✅ Completed)
 
 - Automated deployment pipeline implemented:
   - GitHub Actions workflow for continuous deployment
@@ -174,7 +228,7 @@ Implementation completed using strict TDD workflow.
   - Deployment trigger information
   - Troubleshooting section for upload problems
 
-### 7. Development Workflow and Quality Standards (✅ Completed)
+### 8. Development Workflow and Quality Standards (✅ Completed)
 
 - Clean code rules established in `.cursor/rules/clean-code/`:
   - Development principles and practices
@@ -189,7 +243,7 @@ Implementation completed using strict TDD workflow.
   - Update memory bank
   - Create single commit with all changes
 
-### 8. Configuration and Error Handling (Future)
+### 9. Configuration and Error Handling (Future)
 
 - Decide how users can:
   - Change their CardDAV URL later
@@ -241,10 +295,12 @@ If user testing reveals issues, consider alternative layouts:
 
 ## Next Steps (Implementation)
 
-- Immediate next steps (UI Integration with Storage - following TDD):
-  - Integrate with FirstTimeSetup: capture form values and call saveConfig
-  - Integrate with App.jsx: check isConfigured and render appropriate component
-  - Test the complete flow: setup → save → reload → main screen
+- Immediate next step (Configuration Editing Support - following TDD):
+  - Add initialConfig prop to FirstTimeSetup component
+  - Initialize form state from initialConfig when provided
+  - Update App.jsx to pass config when editing
+  - Reload config in App state after save
+  - Test complete edit flow: settings → modify → save → verify
 - Short-term (CardDAV Integration):
   - Research and select CardDAV library (tsdav, dav, or similar)
   - Implement CardDAV client for fetching birthday data (following TDD)
@@ -260,7 +316,6 @@ If user testing reveals issues, consider alternative layouts:
     - CardDAV connection failures
     - Authentication errors
     - Invalid or incomplete data
-  - Implement settings/configuration screen for updating CardDAV URL
   - Add data refresh functionality
   - Consider adding manual refresh button
 

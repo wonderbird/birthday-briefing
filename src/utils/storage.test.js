@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { validateConfig, saveConfig, loadConfig, clearConfig, isConfigured } from './storage.js';
 
 describe('validateConfig', () => {
-  it('should return true for valid configuration', () => {
+  it('should return true for valid configuration with monday', () => {
     const validConfig = {
       carddavUrl: 'https://example.com/carddav',
       firstDayOfWeek: 'monday'
@@ -11,6 +11,35 @@ describe('validateConfig', () => {
     const result = validateConfig(validConfig);
 
     expect(result).toBe(true);
+  });
+
+  it('should return true for valid configuration with sunday', () => {
+    const validConfig = {
+      carddavUrl: 'https://example.com/carddav',
+      firstDayOfWeek: 'sunday'
+    };
+
+    const result = validateConfig(validConfig);
+
+    expect(result).toBe(true);
+  });
+
+  it('should return false for null config', () => {
+    const result = validateConfig(null);
+
+    expect(result).toBe(false);
+  });
+
+  it('should return false for non-object config', () => {
+    const result = validateConfig('not an object');
+
+    expect(result).toBe(false);
+  });
+
+  it('should return false for empty config object', () => {
+    const result = validateConfig({});
+
+    expect(result).toBe(false);
   });
 
   it('should return false for invalid URL', () => {
@@ -48,6 +77,28 @@ describe('validateConfig', () => {
   it('should return false for missing firstDayOfWeek', () => {
     const invalidConfig = {
       carddavUrl: 'https://example.com/carddav'
+    };
+
+    const result = validateConfig(invalidConfig);
+
+    expect(result).toBe(false);
+  });
+
+  it('should return false for carddavUrl of wrong type', () => {
+    const invalidConfig = {
+      carddavUrl: 12345,
+      firstDayOfWeek: 'monday'
+    };
+
+    const result = validateConfig(invalidConfig);
+
+    expect(result).toBe(false);
+  });
+
+  it('should return false for firstDayOfWeek of wrong type', () => {
+    const invalidConfig = {
+      carddavUrl: 'https://example.com/carddav',
+      firstDayOfWeek: 12345
     };
 
     const result = validateConfig(invalidConfig);
@@ -101,6 +152,12 @@ describe('loadConfig', () => {
     const loaded = loadConfig();
 
     expect(loaded).toEqual(config);
+  });
+
+  it('should return null when no configuration exists', () => {
+    const result = loadConfig();
+
+    expect(result).toBeNull();
   });
 });
 

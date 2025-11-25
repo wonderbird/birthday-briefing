@@ -21,5 +21,23 @@ describe('FirstTimeSetup', () => {
       })
     );
   });
+
+  it('should pass firstDayOfWeek to onComplete when Save is clicked', async () => {
+    const user = userEvent.setup();
+    const onComplete = vi.fn();
+    render(<FirstTimeSetup onComplete={onComplete} />);
+    
+    const sundayRadio = screen.getByLabelText(/Sunday/i);
+    await user.click(sundayRadio);
+    
+    const saveButton = screen.getByRole('button', { name: /save/i });
+    await user.click(saveButton);
+    
+    expect(onComplete).toHaveBeenCalledWith(
+      expect.objectContaining({
+        firstDayOfWeek: 'sunday'
+      })
+    );
+  });
 });
 

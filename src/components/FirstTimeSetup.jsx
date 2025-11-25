@@ -2,9 +2,10 @@ import { useState } from 'react';
 
 function FirstTimeSetup({ onComplete }) {
   const [carddavUrl, setCarddavUrl] = useState('');
+  const [firstDayOfWeek, setFirstDayOfWeek] = useState('monday');
 
   const handleSave = () => {
-    onComplete({ carddavUrl });
+    onComplete({ carddavUrl, firstDayOfWeek });
   };
 
   return (
@@ -48,7 +49,8 @@ function FirstTimeSetup({ onComplete }) {
                         name="firstDayOfWeek"
                         id="monday"
                         value="monday"
-                        defaultChecked
+                        checked={firstDayOfWeek === 'monday'}
+                        onChange={(e) => setFirstDayOfWeek(e.target.value)}
                       />
                       <label className="form-check-label" htmlFor="monday">
                         Monday
@@ -61,6 +63,8 @@ function FirstTimeSetup({ onComplete }) {
                         name="firstDayOfWeek"
                         id="sunday"
                         value="sunday"
+                        checked={firstDayOfWeek === 'sunday'}
+                        onChange={(e) => setFirstDayOfWeek(e.target.value)}
                       />
                       <label className="form-check-label" htmlFor="sunday">
                         Sunday

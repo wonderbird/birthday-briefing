@@ -1,14 +1,19 @@
 import { useState, useEffect } from 'react'
 import FirstTimeSetup from './components/FirstTimeSetup'
 import MainScreen from './components/MainScreen'
-import { isConfigured } from './utils/storage'
+import { isConfigured, loadConfig } from './utils/storage'
 import './App.css'
 
 function App() {
   const [currentView, setCurrentView] = useState('setup')
+  const [config, setConfig] = useState(null)
 
   useEffect(() => {
-    isConfigured();
+    if (isConfigured()) {
+      const loadedConfig = loadConfig();
+      setConfig(loadedConfig);
+      setCurrentView('main');
+    }
   }, []);
 
   const handleSetupComplete = () => {

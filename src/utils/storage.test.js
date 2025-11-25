@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { validateConfig, saveConfig, loadConfig, clearConfig } from './storage.js';
+import { validateConfig, saveConfig, loadConfig, clearConfig, isConfigured } from './storage.js';
 
 describe('validateConfig', () => {
   it('should return true for valid configuration', () => {
@@ -124,6 +124,46 @@ describe('clearConfig', () => {
 
     const stored = localStorage.getItem('birthday-briefing-config');
     expect(stored).toBeNull();
+  });
+});
+
+describe('isConfigured', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+  });
+
+  it('should return true when valid configuration exists', () => {
+    const config = {
+      carddavUrl: 'https://example.com/carddav',
+      firstDayOfWeek: 'monday'
+    };
+    localStorage.setItem('birthday-briefing-config', JSON.stringify(config));
+
+    const result = isConfigured();
+
+    expect(result).toBe(true);
+  });
+
+  it('should return false when no configuration exists', () => {
+    const result = isConfigured();
+
+    expect(result).toBe(false);
+  });
+
+  it('should return false when configuration is invalid', () => {
+    const invalidConfig = {
+      carddavUrl: 'not-a-valid-url',
+      firstDayOfWeek: 'monday'
+    };
+    localStorage.setItem('birthday-briefing-config', JSON.stringify(invalidConfig));
+
+    const result = isConfigured();
+
+    expect(result).toBe(false);
   });
 });
 

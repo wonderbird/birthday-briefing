@@ -54,3 +54,15 @@ export function clearConfig() {
   localStorage.removeItem('birthday-briefing-config');
 }
 
+/**
+ * Checks if a valid configuration exists in localStorage.
+ * @returns {boolean} - True if valid configuration exists
+ */
+export function isConfigured() {
+  const config = loadConfig();
+  if (!config) {
+    return false;
+  }
+  return validateConfig(config);
+}
+

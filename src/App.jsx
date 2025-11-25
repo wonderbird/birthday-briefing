@@ -1,10 +1,15 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import FirstTimeSetup from './components/FirstTimeSetup'
 import MainScreen from './components/MainScreen'
+import { isConfigured } from './utils/storage'
 import './App.css'
 
 function App() {
   const [currentView, setCurrentView] = useState('setup')
+
+  useEffect(() => {
+    isConfigured();
+  }, []);
 
   const handleSetupComplete = () => {
     setCurrentView('main')

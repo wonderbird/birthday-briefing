@@ -38,3 +38,12 @@ export function saveConfig(config) {
   localStorage.setItem('birthday-briefing-config', json);
 }
 
+/**
+ * Loads configuration from localStorage.
+ * @returns {Object|null} - The loaded configuration, or null if not found
+ */
+export function loadConfig() {
+  const json = localStorage.getItem('birthday-briefing-config');
+  return JSON.parse(json);
+}
+

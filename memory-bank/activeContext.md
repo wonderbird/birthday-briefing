@@ -197,7 +197,48 @@ Followed strict TDD with 5 git commits:
 
 All commits follow conventional commit format with Co-authored-by trailers.
 
-### 6. Connect Real CardDAV Data (Future Priority)
+### 6. CardDAV Testing Infrastructure (✨ Current Iteration)
+
+**Iteration Goal**: Establish mock CardDAV server environment with representative test data to enable reliable integration testing.
+
+**Product Value**: Enable the team to develop and test CardDAV integration reliably before connecting to real servers.
+
+**Deliverables**:
+
+- Research document comparing mock server options:
+  - npm-based solutions (msw, Express-based mock servers, etc.)
+  - Docker-based solutions (standalone CardDAV test servers)
+  - Recommendation with rationale
+- Implemented mock CardDAV server using chosen approach:
+  - Runs reliably in test environment
+  - Serves representative birthday data in vCard format
+  - Documented setup and usage
+- Integration test suite with happy path test case:
+  - Test fetches birthday data from mock server
+  - Validates correct parsing of birthday information
+  - Confirms identification of past, today, and future birthdays
+- Representative test dataset:
+  - Birthdays in the past (within 14-day window)
+  - Birthday today
+  - Upcoming birthdays
+
+**Success Criteria**:
+
+- ✅ Mock server runs reliably in test environment
+- ✅ Integration test successfully fetches and validates birthday data
+- ✅ Test confirms correct categorization (past/today/future)
+- ✅ Documentation enables team to run tests and add scenarios
+- ✅ Ready for Product Owner approval before client implementation
+
+**Out of Scope**:
+
+- Actual CardDAV client implementation (next iteration)
+- Production CardDAV server configuration
+- Error handling beyond happy path
+- Multiple CardDAV sources
+- Complex authentication scenarios
+
+### 7. Connect Real CardDAV Data (Future Priority - After Iteration 6)
 
 - Replace hardcoded birthday data with CardDAV integration:
   - Implement CardDAV client for fetching birthday data
@@ -210,7 +251,7 @@ All commits follow conventional commit format with Co-authored-by trailers.
   - Handle connection failures
   - Provide helpful error messages
 
-### 7. Deployment Infrastructure (✅ Completed)
+### 8. Deployment Infrastructure (✅ Completed)
 
 - Automated deployment pipeline implemented:
   - GitHub Actions workflow for continuous deployment
@@ -232,7 +273,7 @@ All commits follow conventional commit format with Co-authored-by trailers.
   - Deployment trigger information
   - Troubleshooting section for upload problems
 
-### 8. Development Workflow and Quality Standards (✅ Completed)
+### 9. Development Workflow and Quality Standards (✅ Completed)
 
 - Clean code rules established in `.cursor/rules/clean-code/`:
   - Development principles and practices
@@ -247,7 +288,7 @@ All commits follow conventional commit format with Co-authored-by trailers.
   - Update memory bank
   - Create single commit with all changes
 
-### 9. Configuration and Error Handling (Future)
+### 10. Configuration and Error Handling (Future)
 
 - Decide how users can:
   - Change their CardDAV URL later
@@ -299,13 +340,24 @@ If user testing reveals issues, consider alternative layouts:
 
 ## Next Steps (Implementation)
 
-- Immediate next step (Configuration Editing Support - following TDD):
-  - Add initialConfig prop to FirstTimeSetup component
-  - Initialize form state from initialConfig when provided
-  - Update App.jsx to pass config when editing
-  - Reload config in App state after save
-  - Test complete edit flow: settings → modify → save → verify
-- Short-term (CardDAV Integration):
+- Immediate next step (CardDAV Testing Infrastructure - Current Iteration):
+  - Research mock CardDAV server options:
+    - Evaluate npm-based solutions (msw, Express mock server, etc.)
+    - Evaluate Docker-based solutions
+    - Document findings and recommendation
+  - Implement chosen mock CardDAV server:
+    - Set up server in test environment
+    - Create representative test dataset (past/today/future birthdays)
+    - Configure server to serve vCard format data
+  - Create integration test suite:
+    - Write happy path test case
+    - Test data fetching from mock server
+    - Validate birthday data parsing and categorization
+  - Document setup and usage:
+    - How to run tests
+    - How to extend test scenarios
+  - Obtain Product Owner approval before proceeding
+- Short-term (CardDAV Client Implementation - After PO Approval):
   - Research and select CardDAV library (tsdav, dav, or similar)
   - Implement CardDAV client for fetching birthday data (following TDD)
   - Parse vCard format to extract birthday information

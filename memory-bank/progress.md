@@ -138,6 +138,19 @@
 
 ## Next Milestones
 
+- Current Iteration (CardDAV Testing Infrastructure):
+  - 🎯 Iteration Goal: Establish mock CardDAV server environment with representative test data to enable reliable integration testing
+  - Research and document mock server options (npm-based vs Docker-based)
+  - Implement chosen mock CardDAV server solution
+  - Create integration test suite with happy path test case
+  - Develop representative test dataset (past/today/future birthdays)
+  - Document setup, usage, and how to extend test scenarios
+  - Obtain Product Owner approval before proceeding to client implementation
+  - Success criteria:
+    - Mock server runs reliably in test environment
+    - Integration test successfully fetches and validates birthday data
+    - Test confirms correct categorization (past/today/future)
+    - Documentation enables team to run tests and add scenarios
 - Completed (Configuration Persistence Implementation with TDD):
   - ✅ Storage utility module implemented with 5 functions
   - ✅ FirstTimeSetup component integration completed
@@ -153,7 +166,7 @@
   - ✅ 44 tests passing with 83.50% mutation score (maintained >80% target)
   - ✅ Strict TDD workflow followed (5 commits)
   - ✅ All code review checks passed
-- Short term (CardDAV Integration with TDD):
+- Short term (CardDAV Client Implementation - After PO Approval):
   - Research and select CardDAV client library (tsdav, dav, or similar).
   - Implement CardDAV client for fetching birthday data (test-first approach).
   - Parse vCard format to extract birthday information.

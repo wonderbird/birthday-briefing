@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import App from './App';
 import * as storage from './utils/storage';
 
@@ -51,6 +52,26 @@ describe('App', () => {
     // Verify MainScreen is rendered (not FirstTimeSetup)
     expect(document.body.textContent).toContain('Birthday Briefing');
     expect(document.body.textContent).not.toContain('CardDAV URL');
+  });
+
+  it('should pass config to FirstTimeSetup when editing configuration', async () => {
+    const user = userEvent.setup();
+    const mockConfig = {
+      carddavUrl: 'https://example.com/existing',
+      firstDayOfWeek: 'sunday'
+    };
+    vi.spyOn(storage, 'isConfigured').mockReturnValue(true);
+    vi.spyOn(storage, 'loadConfig').mockReturnValue(mockConfig);
+    
+    const { container } = render(<App />);
+    
+    // Click the settings gear icon to edit config
+    const settingsButton = container.querySelector('button[aria-label="Edit configuration"]');
+    await user.click(settingsButton);
+    
+    // Verify FirstTimeSetup is shown with existing config values
+    const urlInput = container.querySelector('input#carddavUrl');
+    expect(urlInput).toHaveValue('https://example.com/existing');
   });
 });
 

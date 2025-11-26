@@ -9,6 +9,17 @@ describe('FirstTimeSetup', () => {
     vi.spyOn(storage, 'saveConfig').mockImplementation(() => {});
   });
 
+  it('should initialize with empty values when no initialConfig provided', () => {
+    const onComplete = vi.fn();
+    render(<FirstTimeSetup onComplete={onComplete} />);
+    
+    const urlInput = screen.getByLabelText(/CardDAV URL/i);
+    expect(urlInput).toHaveValue('');
+    
+    const mondayRadio = screen.getByLabelText(/Monday/i);
+    expect(mondayRadio).toBeChecked();
+  });
+
   it('should pass CardDAV URL to onComplete when Save is clicked', async () => {
     const user = userEvent.setup();
     const onComplete = vi.fn();

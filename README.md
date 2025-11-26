@@ -2,6 +2,8 @@
 
 A calm, privacy-first birthday overview app that shows who has a birthday in the next 14 days based on a CardDAV source.
 
+The [Product Context](./memory-bank/productContext.md) gives a detailed product description.
+
 ## Prerequisites
 
 - Node.js 24.x (LTS) or later

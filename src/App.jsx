@@ -17,6 +17,8 @@ function App() {
   }, []);
 
   const handleSetupComplete = () => {
+    const loadedConfig = loadConfig();
+    setConfig(loadedConfig);
     setCurrentView('main')
   }
 
@@ -26,7 +28,7 @@ function App() {
 
   return (
     <>
-      {currentView === 'setup' && <FirstTimeSetup onComplete={handleSetupComplete} />}
+      {currentView === 'setup' && <FirstTimeSetup onComplete={handleSetupComplete} initialConfig={config} />}
       {currentView === 'main' && <MainScreen config={config} onEditConfig={handleEditConfig} />}
     </>
   )

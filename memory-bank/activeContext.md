@@ -333,5 +333,3 @@ If user testing reveals issues, consider alternative layouts:
   - What has been completed.
   - What is currently in progress.
   - What remains to be explored or built.
-
-

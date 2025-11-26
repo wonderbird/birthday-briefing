@@ -193,5 +193,3 @@
   - Keep them aligned with the actual state of the project.
   - Avoid duplication by referencing higher-level documents where appropriate.
   - Ensure that a future agent can understand the project and continue working effectively based solely on these files.
-
-

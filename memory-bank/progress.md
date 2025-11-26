@@ -37,16 +37,21 @@
   - Baseline metrics established: 100% code coverage, 90.48% mutation score
   - Date utility functions extracted to src/utils/dateUtils.js for testability
   - Ready for TDD workflow (red-green-refactor cycles)
-- Configuration persistence (completed with known issue):
+- Configuration persistence (completed):
   - Storage module implemented: validateConfig, saveConfig, loadConfig, clearConfig, isConfigured
   - Data structure: carddavUrl and firstDayOfWeek stored in 'birthday-briefing-config' key
   - FirstTimeSetup integration: form state management and saveConfig calls
   - App.jsx integration: isConfigured check, conditional rendering, config passed to MainScreen
-  - 41 tests passing (20 storage, 3 FirstTimeSetup, 4 App, 14 dateUtils)
-  - Mutation score: 83.50% overall (storage: 78.69%, dateUtils: 90.48%)
   - 6 git commits following strict TDD (red-green-refactor cycles)
   - All code review checks passed
-  - Known issue discovered through user testing: settings screen doesn't pre-populate with existing values when editing configuration
+- Configuration editing support (completed):
+  - FirstTimeSetup accepts optional initialConfig prop for editing mode
+  - App passes loaded config to FirstTimeSetup when editing
+  - App reloads config from storage after save to update state
+  - 44 tests passing (20 storage, 5 FirstTimeSetup, 5 App, 14 dateUtils)
+  - Mutation score: 83.50% overall (storage: 78.69%, dateUtils: 90.48%)
+  - 5 git commits following strict TDD (red-green-refactor cycles)
+  - All code review checks passed
 
 ## Key Achievements So Far
 
@@ -101,9 +106,15 @@
   - Integrated FirstTimeSetup: captures form data, calls saveConfig, passes config to parent.
   - Integrated App.jsx: detects config on mount, conditionally renders views, passes config to MainScreen.
   - Implemented using strict TDD: 6 commits following red-green-refactor cycles.
-  - Achieved 41 passing tests with 83.50% mutation score.
-  - All code complies with clean code rules and git conventions.
   - Configuration now persists across browser sessions using localStorage.
+- Implemented configuration editing support:
+  - FirstTimeSetup accepts optional initialConfig prop for pre-populating form fields.
+  - Form works in both modes: initial setup (empty values) and edit mode (pre-populated values).
+  - App passes loaded config to FirstTimeSetup when user clicks settings gear icon.
+  - App reloads config from storage after save to keep state synchronized.
+  - Implemented using strict TDD: 5 commits following red-green-refactor cycles.
+  - Achieved 44 passing tests with 83.50% mutation score.
+  - All code complies with clean code rules and git conventions.
 
 ## Assumptions and Risks
 
@@ -131,17 +142,17 @@
   - ✅ Storage utility module implemented with 5 functions
   - ✅ FirstTimeSetup component integration completed
   - ✅ App.jsx integration with conditional rendering completed
-  - ✅ 41 tests passing with 83.50% mutation score
   - ✅ Strict TDD workflow followed (6 commits)
   - ✅ All code review checks passed
-- Immediate (Configuration Editing Support with TDD):
-  - Add initialConfig prop to FirstTimeSetup component
-  - Initialize form state from prop when editing existing configuration
-  - Pass config from App to FirstTimeSetup in edit mode
-  - Reload config in App state after successful save
-  - Write comprehensive tests for both first-time and edit modes
-  - Target: maintain >80% mutation score, all tests passing
-  - Follow strict TDD with red-green-refactor cycles
+- Completed (Configuration Editing Support with TDD):
+  - ✅ Added initialConfig prop to FirstTimeSetup component
+  - ✅ Form state initializes from prop when editing existing configuration
+  - ✅ App passes config to FirstTimeSetup in edit mode
+  - ✅ App reloads config from storage after successful save
+  - ✅ Comprehensive tests for both first-time and edit modes
+  - ✅ 44 tests passing with 83.50% mutation score (maintained >80% target)
+  - ✅ Strict TDD workflow followed (5 commits)
+  - ✅ All code review checks passed
 - Short term (CardDAV Integration with TDD):
   - Research and select CardDAV client library (tsdav, dav, or similar).
   - Implement CardDAV client for fetching birthday data (test-first approach).

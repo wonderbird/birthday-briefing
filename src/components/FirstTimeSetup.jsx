@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { saveConfig } from '../utils/storage';
 
-function FirstTimeSetup({ onComplete }) {
-  const [carddavUrl, setCarddavUrl] = useState('');
-  const [firstDayOfWeek, setFirstDayOfWeek] = useState('monday');
+function FirstTimeSetup({ onComplete, initialConfig }) {
+  const [carddavUrl, setCarddavUrl] = useState(initialConfig?.carddavUrl || '');
+  const [firstDayOfWeek, setFirstDayOfWeek] = useState(initialConfig?.firstDayOfWeek || 'monday');
 
   const handleSave = () => {
     const config = { carddavUrl, firstDayOfWeek };

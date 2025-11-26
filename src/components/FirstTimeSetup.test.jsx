@@ -20,6 +20,21 @@ describe('FirstTimeSetup', () => {
     expect(mondayRadio).toBeChecked();
   });
 
+  it('should pre-populate form with values from initialConfig prop', () => {
+    const onComplete = vi.fn();
+    const initialConfig = {
+      carddavUrl: 'https://example.com/existing',
+      firstDayOfWeek: 'sunday'
+    };
+    render(<FirstTimeSetup onComplete={onComplete} initialConfig={initialConfig} />);
+    
+    const urlInput = screen.getByLabelText(/CardDAV URL/i);
+    expect(urlInput).toHaveValue('https://example.com/existing');
+    
+    const sundayRadio = screen.getByLabelText(/Sunday/i);
+    expect(sundayRadio).toBeChecked();
+  });
+
   it('should pass CardDAV URL to onComplete when Save is clicked', async () => {
     const user = userEvent.setup();
     const onComplete = vi.fn();

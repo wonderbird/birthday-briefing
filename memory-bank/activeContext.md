@@ -205,10 +205,8 @@ All commits follow conventional commit format with Co-authored-by trailers.
 
 **Deliverables**:
 
-- Research document comparing mock server options:
-  - npm-based solutions (msw, Express-based mock servers, etc.)
-  - Docker-based solutions (standalone CardDAV test servers)
-  - Recommendation with rationale
+- Research document comparing mock server options (Completed in ADR 001).
+- **Decision**: Use Mock Service Worker (MSW) for zero-infrastructure, fast integration tests.
 - Implemented mock CardDAV server using chosen approach:
   - Runs reliably in test environment
   - Serves representative birthday data in vCard format
@@ -341,22 +339,16 @@ If user testing reveals issues, consider alternative layouts:
 ## Next Steps (Implementation)
 
 - Immediate next step (CardDAV Testing Infrastructure - Current Iteration):
-  - Research mock CardDAV server options:
-    - Evaluate npm-based solutions (msw, Express mock server, etc.)
-    - Evaluate Docker-based solutions
-    - Document findings and recommendation
-  - Implement chosen mock CardDAV server:
-    - Set up server in test environment
-    - Create representative test dataset (past/today/future birthdays)
-    - Configure server to serve vCard format data
+  - **Research complete**: Mock Service Worker (MSW) selected via ADR 001.
+  - Implement mock CardDAV server (MSW):
+    - Install `msw`.
+    - Create vCard test fixtures (past, today, future, bad data).
+    - Implement response factories to generate valid XML `multistatus` responses.
+    - Set up MSW server and handlers in `src/mocks/`.
   - Create integration test suite:
-    - Write happy path test case
-    - Test data fetching from mock server
-    - Validate birthday data parsing and categorization
-  - Document setup and usage:
-    - How to run tests
-    - How to extend test scenarios
-  - Obtain Product Owner approval before proceeding
+    - Write happy path test case (fetching birthdays).
+    - Validate correct XML parsing.
+  - Document setup and usage.
 - Short-term (CardDAV Client Implementation - After PO Approval):
   - Research and select CardDAV library (tsdav, dav, or similar)
   - Implement CardDAV client for fetching birthday data (following TDD)

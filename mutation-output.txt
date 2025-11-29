@@ -1,0 +1,390 @@
+
+> birthday-briefing@0.0.0 test:mutate
+> stryker run
+
+[32m22:33:31 (30921) INFO ProjectReader[39m Found 4 of 42 file(s) to be mutated.
+[32m22:33:31 (30921) INFO Instrumenter[39m Instrumented 4 source file(s) with 130 mutant(s)
+[32m22:33:31 (30921) INFO ConcurrencyTokenProvider[39m Creating 4 test runner process(es).
+[32m22:33:31 (30921) INFO BroadcastReporter[39m Detected that current console does not support the "progress" reporter, downgrading to "progress-append-only" reporter
+[32m22:33:32 (30921) INFO DryRunExecutor[39m Starting initial test run (vitest test runner with "perTest" coverage analysis). This may take a while.
+[32m22:33:34 (30921) INFO DryRunExecutor[39m Initial test run succeeded. Ran 55 tests in 2 seconds (net 723.0912490000012 ms, overhead 1838.9087509999988 ms).
+Mutation testing 74% (elapsed: <1m, remaining: <1m) 54/130 tested (5 survived, 0 timed out)
+
+All tests
+  components/FirstTimeSetup.test.jsx
+    ✘ FirstTimeSetup should initialize with empty values when no initialConfig provided (covered 0)
+    ✘ FirstTimeSetup should pre-populate form with values from initialConfig prop (covered 0)
+    ✘ FirstTimeSetup should pass CardDAV URL to onComplete when Save is clicked (covered 0)
+    ✘ FirstTimeSetup should pass firstDayOfWeek to onComplete when Save is clicked (covered 0)
+    ✘ FirstTimeSetup should call saveConfig with form data when Save is clicked (covered 0)
+    ✘ FirstTimeSetup should render username input field (covered 0)
+    ✘ FirstTimeSetup should render password input field (covered 0)
+    ✘ FirstTimeSetup should display privacy help text about credentials (covered 0)
+    ✘ FirstTimeSetup should call saveCredentials with username and password when Save is clicked (covered 0)
+  utils
+    dateUtils.test.js
+      ✓ dateUtils formatDate should format date in short format with weekday, month, and day (killed 2)
+      ✓ dateUtils isToday should return true for today (killed 5)
+      ✓ dateUtils isToday should return false for yesterday (killed 5)
+      ~ dateUtils isToday should return false for tomorrow (covered 8)
+      ✓ dateUtils isPast should return false for today (killed 3)
+      ✓ dateUtils isPast should return true for yesterday (killed 1)
+      ~ dateUtils isPast should return false for tomorrow (covered 6)
+      ✓ dateUtils getDateClasses should return primary bold classes for today (killed 4)
+      ✓ dateUtils getDateClasses should return muted class for past dates (killed 4)
+      ✓ dateUtils getDateClasses should return empty string for future dates (killed 2)
+      ✓ dateUtils getStartOfWeek should return Monday for a Monday date (killed 5)
+      ✓ dateUtils getStartOfWeek should return Monday for a Wednesday date (killed 1)
+      ✓ dateUtils getStartOfWeek should return Monday for a Sunday date (killed 1)
+      ✓ dateUtils getStartOfWeek should set time to 00:00:00 (killed 1)
+    storage.test.js
+      ✓ validateConfig should return true for valid configuration with monday (killed 19)
+      ✓ validateConfig should return true for valid configuration with sunday (killed 3)
+      ✓ validateConfig should return false for null config (killed 4)
+      ~ validateConfig should return false for non-object config (covered 10)
+      ✓ validateConfig should return false for empty config object (killed 1)
+      ✓ validateConfig should return false for invalid URL (killed 3)
+      ✓ validateConfig should return false for invalid firstDayOfWeek (killed 3)
+      ~ validateConfig should return false for missing carddavUrl (covered 14)
+      ✓ validateConfig should return false for missing firstDayOfWeek (killed 1)
+      ~ validateConfig should return false for carddavUrl of wrong type (covered 17)
+      ~ validateConfig should return false for firstDayOfWeek of wrong type (covered 25)
+      ✓ saveConfig should save valid configuration to localStorage (killed 2)
+      ✓ loadConfig should load configuration from localStorage (killed 5)
+      ~ loadConfig should return null when no configuration exists (covered 6)
+      ✓ clearConfig should remove configuration from localStorage (killed 2)
+      ✓ isConfigured should return true when valid configuration exists (killed 3)
+      ✓ isConfigured should return false when no configuration exists (killed 1)
+      ~ isConfigured should return false when configuration is invalid (covered 28)
+      ✓ error scenarios should handle corrupted data when loading config (killed 1)
+      ~ error scenarios should return false for corrupted data in isConfigured (covered 13)
+      ✓ saveCredentials should save credentials to sessionStorage (killed 3)
+      ✓ loadCredentials should load credentials from sessionStorage (killed 5)
+      ~ loadCredentials should return null when no credentials exist (covered 6)
+      ✓ clearCredentials should remove credentials from sessionStorage (killed 2)
+      ✓ hasCredentials should return true when credentials exist (killed 4)
+      ✓ hasCredentials should return false when no credentials exist (killed 3)
+      ~ hasCredentials should return false when credentials are corrupted (covered 13)
+  App.test.jsx
+    ✘ App should check if configuration exists on mount (covered 0)
+    ✘ App should show FirstTimeSetup when no configuration exists (covered 0)
+    ✓ App should show MainScreen when configuration exists (killed 4)
+    ~ App should load and store config when configuration exists (covered 42)
+    ~ App should pass config to FirstTimeSetup when editing configuration (covered 42)
+
+[NoCoverage] BlockStatement
+src/mocks/handlers.js:7:66
+-     http.all('https://mock-carddav-server.com/*', ({ request }) => {
+-       // In a real app, we'd check for specific REPORT/PROPFIND methods and body content.
+-       // For now, we just return the fixture data for any request to this mock URL.
+-       
+-       const xmlResponse = createMultiStatusResponse([
+-         mockVCardPast,
+-         mockVCardToday,
+-         mockVCardFuture,
+-         mockVCardOutside
+-       ]);
+-       return new HttpResponse(xmlResponse, {
+-         headers: {
+-           'Content-Type': 'application/xml; charset=utf-8',
+-         },
+-       });
+-     }),
++     http.all('https://mock-carddav-server.com/*', ({ request }) => {}),
+
+[NoCoverage] ArrayDeclaration
+src/mocks/handlers.js:11:51
+-       const xmlResponse = createMultiStatusResponse([
+-         mockVCardPast,
+-         mockVCardToday,
+-         mockVCardFuture,
+-         mockVCardOutside
+-       ]);
++       const xmlResponse = createMultiStatusResponse([]);
+
+[NoCoverage] ObjectLiteral
+src/mocks/handlers.js:18:42
+-       return new HttpResponse(xmlResponse, {
+-         headers: {
+-           'Content-Type': 'application/xml; charset=utf-8',
+-         },
+-       });
++       return new HttpResponse(xmlResponse, {});
+
+[NoCoverage] ObjectLiteral
+src/mocks/handlers.js:19:16
+-         headers: {
+-           'Content-Type': 'application/xml; charset=utf-8',
+-         },
++         headers: {},
+
+[NoCoverage] StringLiteral
+src/mocks/handlers.js:20:25
+-           'Content-Type': 'application/xml; charset=utf-8',
++           'Content-Type': "",
+
+[Survived] ArrayDeclaration
+src/mocks/handlers.js:5:25
+-   export const handlers = [
+-     // Intercept PROPFIND/REPORT requests to the CardDAV URL
+-     http.all('https://mock-carddav-server.com/*', ({ request }) => {
+-       // In a real app, we'd check for specific REPORT/PROPFIND methods and body content.
+-       // For now, we just return the fixture data for any request to this mock URL.
+-       
+-       const xmlResponse = createMultiStatusResponse([
+-         mockVCardPast,
+-         mockVCardToday,
+-         mockVCardFuture,
+-         mockVCardOutside
+-       ]);
+-       return new HttpResponse(xmlResponse, {
+-         headers: {
+-           'Content-Type': 'application/xml; charset=utf-8',
+-         },
+-       });
+-     }),
+-   ];
++   export const handlers = [];
+Ran all tests for this mutant.
+
+[Survived] StringLiteral
+src/mocks/handlers.js:7:12
+-     http.all('https://mock-carddav-server.com/*', ({ request }) => {
++     http.all("", ({ request }) => {
+Ran all tests for this mutant.
+
+[Survived] ConditionalExpression
+src/utils/dateUtils.js:19:10
+-            date.getMonth() === todayDate.getMonth() &&
++            true &&
+Tests ran:
+    App should show MainScreen when configuration exists
+    App should load and store config when configuration exists
+    App should pass config to FirstTimeSetup when editing configuration
+  and 2 more tests!
+
+
+[Survived] ConditionalExpression
+src/utils/dateUtils.js:20:10
+-            date.getFullYear() === todayDate.getFullYear();
++            true;
+Tests ran:
+    App should show MainScreen when configuration exists
+    App should load and store config when configuration exists
+    App should pass config to FirstTimeSetup when editing configuration
+  and 2 more tests!
+
+
+[Survived] MethodExpression
+src/utils/dateUtils.js:30:3
+-     todayDate.setHours(0, 0, 0, 0);
++     todayDate.setMinutes(0, 0, 0, 0);
+Tests ran:
+    App should show MainScreen when configuration exists
+    App should load and store config when configuration exists
+    App should pass config to FirstTimeSetup when editing configuration
+  and 5 more tests!
+
+
+[Survived] EqualityOperator
+src/utils/dateUtils.js:31:10
+-     return date < todayDate;
++     return date <= todayDate;
+Tests ran:
+    App should show MainScreen when configuration exists
+    App should load and store config when configuration exists
+    App should pass config to FirstTimeSetup when editing configuration
+  and 5 more tests!
+
+
+[Survived] ConditionalExpression
+src/utils/storage.js:7:18
+-     if (!config || typeof config !== 'object') {
++     if (!config || false) {
+Tests ran:
+    validateConfig should return true for valid configuration with monday
+    validateConfig should return true for valid configuration with sunday
+    validateConfig should return false for non-object config
+  and 9 more tests!
+
+
+[Survived] ConditionalExpression
+src/utils/storage.js:11:7
+-     if (!config.carddavUrl || typeof config.carddavUrl !== 'string') {
++     if (false) {
+Tests ran:
+    validateConfig should return true for valid configuration with monday
+    validateConfig should return true for valid configuration with sunday
+    validateConfig should return false for empty config object
+  and 8 more tests!
+
+
+[Survived] LogicalOperator
+src/utils/storage.js:11:7
+-     if (!config.carddavUrl || typeof config.carddavUrl !== 'string') {
++     if (!config.carddavUrl && typeof config.carddavUrl !== 'string') {
+Tests ran:
+    validateConfig should return true for valid configuration with monday
+    validateConfig should return true for valid configuration with sunday
+    validateConfig should return false for empty config object
+  and 8 more tests!
+
+
+[Survived] ConditionalExpression
+src/utils/storage.js:11:29
+-     if (!config.carddavUrl || typeof config.carddavUrl !== 'string') {
++     if (!config.carddavUrl || false) {
+Tests ran:
+    validateConfig should return true for valid configuration with monday
+    validateConfig should return true for valid configuration with sunday
+    validateConfig should return false for invalid URL
+  and 6 more tests!
+
+
+[Survived] BlockStatement
+src/utils/storage.js:11:68
+-     if (!config.carddavUrl || typeof config.carddavUrl !== 'string') {
+-       return false;
+-     }
++     if (!config.carddavUrl || typeof config.carddavUrl !== 'string') {}
+Tests ran:
+    validateConfig should return false for empty config object
+    validateConfig should return false for missing carddavUrl
+    validateConfig should return false for carddavUrl of wrong type
+
+
+[Survived] ConditionalExpression
+src/utils/storage.js:21:7
+-     if (!config.firstDayOfWeek || typeof config.firstDayOfWeek !== 'string') {
++     if (false) {
+Tests ran:
+    validateConfig should return true for valid configuration with monday
+    validateConfig should return true for valid configuration with sunday
+    validateConfig should return false for invalid firstDayOfWeek
+  and 3 more tests!
+
+
+[Survived] LogicalOperator
+src/utils/storage.js:21:7
+-     if (!config.firstDayOfWeek || typeof config.firstDayOfWeek !== 'string') {
++     if (!config.firstDayOfWeek && typeof config.firstDayOfWeek !== 'string') {
+Tests ran:
+    validateConfig should return true for valid configuration with monday
+    validateConfig should return true for valid configuration with sunday
+    validateConfig should return false for invalid firstDayOfWeek
+  and 3 more tests!
+
+
+[Survived] ConditionalExpression
+src/utils/storage.js:21:33
+-     if (!config.firstDayOfWeek || typeof config.firstDayOfWeek !== 'string') {
++     if (!config.firstDayOfWeek || false) {
+Tests ran:
+    validateConfig should return true for valid configuration with monday
+    validateConfig should return true for valid configuration with sunday
+    validateConfig should return false for invalid firstDayOfWeek
+  and 2 more tests!
+
+
+[Survived] BlockStatement
+src/utils/storage.js:21:76
+-     if (!config.firstDayOfWeek || typeof config.firstDayOfWeek !== 'string') {
+-       return false;
+-     }
++     if (!config.firstDayOfWeek || typeof config.firstDayOfWeek !== 'string') {}
+Tests ran:
+    validateConfig should return false for missing firstDayOfWeek
+    validateConfig should return false for firstDayOfWeek of wrong type
+
+
+[Survived] ConditionalExpression
+src/utils/storage.js:47:7
+-     if (!json) {
++     if (false) {
+Tests ran:
+    loadConfig should load configuration from localStorage
+    loadConfig should return null when no configuration exists
+    isConfigured should return true when valid configuration exists
+  and 4 more tests!
+
+
+[Survived] BlockStatement
+src/utils/storage.js:47:14
+-     if (!json) {
+-       return null;
+-     }
++     if (!json) {}
+Tests ran:
+    loadConfig should return null when no configuration exists
+    isConfigured should return false when no configuration exists
+
+
+[Survived] BlockStatement
+src/utils/storage.js:70:16
+-     if (!config) {
+-       return false;
+-     }
++     if (!config) {}
+Tests ran:
+    isConfigured should return false when no configuration exists
+    error scenarios should return false for corrupted data in isConfigured
+
+
+[Survived] ConditionalExpression
+src/utils/storage.js:70:7
+-     if (!config) {
++     if (false) {
+Tests ran:
+    isConfigured should return true when valid configuration exists
+    isConfigured should return false when no configuration exists
+    isConfigured should return false when configuration is invalid
+  and 1 more test!
+
+
+[Survived] ConditionalExpression
+src/utils/storage.js:93:7
+-     if (!json) {
++     if (false) {
+Tests ran:
+    loadCredentials should load credentials from sessionStorage
+    loadCredentials should return null when no credentials exist
+    hasCredentials should return true when credentials exist
+  and 2 more tests!
+
+
+[Survived] BlockStatement
+src/utils/storage.js:98:11
+-     } catch {
+-       return null;
+-     }
++     } catch {}
+Tests ran:
+    hasCredentials should return false when credentials are corrupted
+
+
+[Survived] BlockStatement
+src/utils/storage.js:93:14
+-     if (!json) {
+-       return null;
+-     }
++     if (!json) {}
+Tests ran:
+    loadCredentials should return null when no credentials exist
+    hasCredentials should return false when no credentials exist
+
+
+Ran 2.01 tests per mutant on average.
+---------------|------------------|----------|-----------|------------|----------|----------|
+               | % Mutation score |          |           |            |          |          |
+File           |  total | covered | # killed | # timeout | # survived | # no cov | # errors |
+---------------|--------|---------|----------|-----------|------------|----------|----------|
+All files      |  79.23 |   82.40 |      103 |         0 |         22 |        5 |        0 |
+ mocks         |   0.00 |    0.00 |        0 |         0 |          2 |        5 |        0 |
+  handlers.js  |   0.00 |    0.00 |        0 |         0 |          2 |        5 |        0 |
+ utils         |  83.74 |   83.74 |      103 |         0 |         20 |        0 |        0 |
+  dateUtils.js |  90.48 |   90.48 |       38 |         0 |          4 |        0 |        0 |
+  storage.js   |  80.25 |   80.25 |       65 |         0 |         16 |        0 |        0 |
+---------------|--------|---------|----------|-----------|------------|----------|----------|
+[32m22:33:54 (30921) INFO JsonReporter[39m Your report can be found at: file:///home/galadriel/Documents/Cline/birthday-briefing/reports/mutation/mutation.json
+[32m22:33:54 (30921) INFO HtmlReporter[39m Your report can be found at: file:///home/galadriel/Documents/Cline/birthday-briefing/reports/mutation/mutation.html
+[32m22:33:54 (30921) INFO MutationTestExecutor[39m Done in 23 seconds.

@@ -235,51 +235,55 @@ All commits follow conventional commit format with Co-authored-by trailers.
 - Implement E2E tests in `src/test/e2e/`
 - Configure CI to run Docker service before E2E tests
 
-### 7. Authentication Strategy Decision (✨ Current Focus)
+### 7. Authentication Integration (✅ Completed)
 
-**Decision**: Session-based credentials for CardDAV authentication.
+**Implementation completed using strict TDD workflow.**
 
-**Rationale**:
-- CardDAV servers require authentication (username/password)
-- Privacy-first principle: avoid persistent credential storage
-- Balance security with user experience
+#### Storage Module Extensions
 
-**Selected Approach**: Session-Based Credentials
+**Module**: `src/utils/storage.js` with `src/utils/storage.test.js`
 
-Store credentials in `sessionStorage` (not `localStorage`):
-- Username and password cleared when browser closes
-- User enters credentials once per browser session
-- Acceptable UX trade-off for privacy benefit
-- Browser password managers can still assist users
+**Functions Implemented**:
+- `saveCredentials(username, password)` - Saves to sessionStorage
+- `loadCredentials()` - Loads from sessionStorage with error handling
+- `clearCredentials()` - Removes credentials from sessionStorage
+- `hasCredentials()` - Checks for valid credentials in sessionStorage
 
-**Implementation Plan**:
-- Extend FirstTimeSetup component to include username and password fields
-- Add clear help text: "Credentials will be deleted when you close the browser"
-- Store CardDAV URL and firstDayOfWeek in localStorage (persist across sessions)
-- Store username and password in sessionStorage (cleared on browser close)
-- Update storage module with new functions:
-  - `saveCredentials(username, password)` → sessionStorage
-  - `loadCredentials()` → returns credentials from sessionStorage
-  - `clearCredentials()` → removes credentials from sessionStorage
-  - `hasCredentials()` → checks if credentials exist in sessionStorage
-- Modify CardDAV data fetching to retrieve credentials from sessionStorage
-- Handle missing credentials case: redirect to FirstTimeSetup with appropriate message
+**Data Structure**:
+- Storage key: `'birthday-briefing-credentials'`
+- Credential object: `{ username: string, password: string }`
+- Session-based storage (cleared on browser close)
 
-**Testing Strategy (ADR 001)**:
-- **Hybrid approach** balances speed and reliability:
-  - **MSW** (~90% of tests): Fast integration tests for logic, UI flows, error handling, edge cases
-  - **Docker/Radicale** (~10% of tests): E2E verification of auth handshake and protocol compliance
-- **Workflow**: Use MSW during TDD cycles; run Docker E2E before commits/deployment
+**Test Coverage**:
+- 7 new test cases for credential functions
+- All tests pass (60 total tests)
+- Mutation score: 80.25% on storage.js (exceeds >75% target)
+
+#### UI Integration
+
+**FirstTimeSetup Component**:
+- Added username text input field
+- Added password input field (type='password')
+- Added privacy help text: "Credentials will be deleted when you close the browser"
+- Integrated saveCredentials call in handleSave
+- 4 new test cases covering credential fields and save integration
+
+**Implementation Process**:
+- Followed strict TDD with 8 git commits (one per green phase)
+- All commits follow conventional commit format with Co-authored-by trailers
+- Code review completed - all rules compliant
+- No linter errors
+
+**Test Results**:
+- Total: 60 tests passing
+- storage.test.js: 27 tests (7 new for credentials)
+- FirstTimeSetup.test.jsx: 9 tests (4 new for credentials)
+- Mutation score: 79.23% overall, 80.25% on storage.js
 
 **User Experience**:
 - First time: Enter CardDAV URL, username, password, and firstDayOfWeek
-- Subsequent opens (same session): App works immediately with cached credentials
-- After browser close: App prompts for username/password again (URL and settings retained)
-
-**Alternative Approaches Considered**:
-- URL-embedded credentials: Still stores password (in localStorage)
-- Prompt every time: Poor UX, conflicts with "calm usage" goal
-- OAuth/tokens: Not widely supported by CardDAV servers
+- Subsequent opens (same session): Credentials available in sessionStorage
+- After browser close: Credentials cleared, URL and settings retained
 
 ### 8. Connect Real CardDAV Data (Next Priority)
 

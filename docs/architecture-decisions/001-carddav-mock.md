@@ -5,49 +5,50 @@
 
 ## Summary
 
-We will use **Mock Service Worker (MSW)** to mock CardDAV server responses in our integration tests. This decision prioritizes CI/CD compatibility and ease of integration with our React/Vite stack, ensuring robust testing of our client-side parsing logic without external dependencies.
+To enable robust integration testing of our client-side Birthday Briefing app, we will use **Mock Service Worker (MSW)** to simulate CardDAV server responses. This decision prioritizes our need for a lightweight, CI/CD-friendly testing infrastructure that runs seamlessly within our existing Node.js and Vitest environment.
 
 ## Decision Drivers
 
-1.  **CI/CD Compatibility** (Priority 1): Must run headless in GitHub Actions without complex orchestration.
-2.  **Correctness & Reliability** (Priority 2): We value a reliable test signal and are willing to trade some speed for it.
-3.  **Test Framework Integration** (Priority 3): Seamless integration with Vitest is preferred.
-4.  **Control over Test Data** (Priority 4): Need precise control to simulate specific edge cases.
+1.  **CI/CD Compatibility** (Priority 1): The solution must run purely headless in GitHub Actions, avoiding complex service orchestration (like Docker Compose) to prevent flakiness.
+2.  **Correctness & Reliability** (Priority 2): We need a reliable test signal. We accept that mocking is "simulated" correctness, provided we mitigate the risk of bad mock data.
+3.  **Test Framework Integration** (Priority 3): The tool should integrate natively with Vitest to lower the barrier for developers writing tests.
+4.  **Control over Test Data** (Priority 4): We require precise control to inject specific vCard edge cases (e.g., leap years, bad data) that are hard to reproduce with a real server.
 
 ## Considered Options
 
-*   **Mock Service Worker (MSW)**: A pure Node.js/browser API mocking library.
-*   **WireMock**: A powerful, Java-based mock server.
-*   **Radicale (Docker)**: A real CardDAV server running in a container.
+*   **Mock Service Worker (MSW)**: A library that intercepts requests at the network level (Node.js/Browser). Pure JavaScript.
+*   **WireMock**: A robust, standalone mock server (Java-based) with advanced recording/playback features.
+*   **Radicale (Docker)**: A compliant, open-source CardDAV server running in a Docker container.
 
 ## Decision Outcome
 
 Chosen option: **Mock Service Worker (MSW)**.
 
-It offers the best balance of integration, speed, and simplicity. It fulfills our top priority (CI/CD) by requiring zero external infrastructure, unlike WireMock (Java) or Radicale (Docker).
+**Why?**
+It is the only option that satisfies our top priority (CI/CD Compatibility) with **zero** additional infrastructure. It runs directly inside the test process. WireMock and Radicale would introduce Java or Docker dependencies, increasing the complexity and maintenance cost of our CI pipeline.
 
 ### Consequences & Mitigation
 
-| Consequence | Description | Mitigation |
+| Consequence | Description | Mitigation Strategy |
 |:---|:---|:---|
-| **Positive** | Zero Infrastructure | No Docker/Java needed in CI. |
-| **Positive** | Fast Execution | Runs in-process; no network latency. |
-| **Positive** | Stack Alignment | Uses JavaScript/TypeScript. |
-| **Negative** | Manual XML Handling | We must manually construct CardDAV XML responses. | **Response Factories**: Use helper functions to generate valid XML.<br>**Golden Master**: Validate factories against real server responses once. |
+| **Positive** | **Zero Infrastructure** | No Docker containers or Java runtimes required in CI. |
+| **Positive** | **Speed** | Requests are intercepted in-process (ms latency). |
+| **Positive** | **Stack Alignment** | Written in TypeScript/JS, matching our team's expertise. |
+| **Negative** | **Manual XML Handling** | MSW returns exactly what we tell it to. We must manually construct valid CardDAV XML (e.g., `multistatus` responses). | **Response Factories**: We will build helper functions to generate compliant XML from simple JSON fixtures.<br>**Golden Master**: We will validate our factories against a real CardDAV server response once to ensure accuracy. |
 
 ## Detailed Analysis
 
 ### Mock Service Worker (MSW)
-*   **Pros**: Extremely fast, runs in-process, inspects request details natively.
-*   **Cons**: Does not simulate server statefulness automatically.
+*   **Pros**: Fastest execution; native inspection of request headers/body; easy setup in Vitest `setup.js`.
+*   **Cons**: Stateless by default (doesn't remember "saved" contacts unless we code it); requires manual protocol mimicking.
 
 ### WireMock
-*   **Pros**: Powerful request matching, stateful simulation.
-*   **Cons**: "Overkill" complexity; typically requires Java runtime or Docker.
+*   **Pros**: Powerful stateful simulation; record/playback capability.
+*   **Cons**: Java dependency makes it "heavy" for a Node.js project; typically requires a separate process.
 
 ### Docker-based CardDAV Server (e.g., Radicale)
-*   **Pros**: Tests against a compliant server implementation.
-*   **Cons**: Slower startup, complex CI/CD setup, state management issues.
+*   **Pros**: High correctness (tests against a real server implementation).
+*   **Cons**: Slowest startup; complex database state management (resetting between tests); requires Docker-in-CI.
 
 ## Links
 * [Mock Service Worker Documentation](https://mswjs.io/)

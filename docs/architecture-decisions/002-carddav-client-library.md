@@ -25,13 +25,6 @@ The **Birthday Briefing** project is a privacy-centric web application designed 
 * dav (npm: dav)
 * Custom Implementation (fetch + XML parsing)
 
-## Links
-
-* [tsdav GitHub Repository](https://github.com/natelindev/tsdav)
-* [dav GitHub Repository](https://github.com/pimutils/dav)
-* [WebDAV RFC 4918](https://datatracker.ietf.org/doc/html/rfc4918)
-* [CardDAV RFC 6352](https://datatracker.ietf.org/doc/html/rfc6352)
-
 ## Decision Outcome
 
 Undecided.
@@ -48,6 +41,10 @@ A modern, TypeScript-based library for WebDAV, CalDAV, and CardDAV.
 * **Bad, because** it might include code for WebDAV/CalDAV that is not needed (larger bundle size).
 * **Bad, because** it is relatively new and might have fewer users than established (but old) libraries.
 
+**Mitigations for Negative Consequences:**
+* **Tree Shaking:** Ensure that the build process (Vite) is configured to tree-shake unused exports from `tsdav` to minimize the final bundle size.
+* **Testing:** Implement comprehensive integration tests (using the already established MSW mock server) to verify behavior across different CardDAV response scenarios.
+
 ### dav (npm: dav)
 
 A mature JavaScript library for WebDAV, CalDAV, and CardDAV.
@@ -57,6 +54,11 @@ A mature JavaScript library for WebDAV, CalDAV, and CardDAV.
 * **Bad, because** it appears to be unmaintained (last publish >5 years ago).
 * **Bad, because** it relies on older XHR or polyfills that might bloat the bundle or cause issues in modern React 19 environments.
 * **Bad, because** it lacks TypeScript definitions out of the box.
+
+**Mitigations for Negative Consequences:**
+* **Forking:** If critical bugs are found or modern browser compatibility issues arise, the project could fork the repository to apply fixes.
+* **Polyfills:** Use modern polyfills only where strictly necessary.
+* **Type Definitions:** Create a `d.ts` declaration file for the specific subset of the API used by the project.
 
 ### Custom Implementation (fetch + XML parsing)
 
@@ -69,23 +71,14 @@ Implementing a minimal CardDAV client using the browser's native `fetch` API and
 * **Bad, because** it increases the maintenance burden on the project team.
 * **Bad, because** edge cases in XML responses from different servers might be missed.
 
-## Mitigation of Negative Consequences
+**Mitigations for Negative Consequences:**
+* **Scope Limitation:** Strictly limit the implementation to the minimum required features (fetching birthdays for a date range).
+* **Standard parsers:** Use the browser's built-in `DOMParser` to handle XML parsing safely and robustly.
+* **Reference Implementation:** Use open-source libraries (like `tsdav` or `dav`) as reference implementations to understand the correct XML structures.
 
-### Mitigations for tsdav's Bundle Size and Novelty
+## Links
 
-* **Tree Shaking:** Ensure that the build process (Vite) is configured to tree-shake unused exports from `tsdav` to minimize the final bundle size.
-* **Testing:** Implement comprehensive integration tests (using the already established MSW mock server) to verify behavior across different CardDAV response scenarios, mitigating the risk of undiscovered bugs in a newer library.
-
-### Mitigations for dav's Lack of Maintenance
-
-* **Forking:** If critical bugs are found or modern browser compatibility issues arise, the project could fork the repository to apply fixes, although this increases maintenance effort.
-* **Polyfills:** Use modern polyfills only where strictly necessary to support the older library code without importing heavy legacy dependencies.
-* **Type Definitions:** Create a `d.ts` declaration file for the specific subset of the API used by the project to ensure type safety in our codebase.
-
-### Mitigations for Custom Implementation Complexity
-
-* **Scope Limitation:** Strictly limit the implementation to the minimum required features (fetching birthdays for a date range), ignoring complex write operations or full sync protocols unless absolutely needed.
-* **Standard parsers:** Use the browser's built-in `DOMParser` to handle XML parsing safely and robustly, rather than writing custom regex or string parsing logic.
-* **Reference Implementation:** Use open-source libraries (like `tsdav` or `dav`) as reference implementations to understand the correct XML structures and request headers, without taking on their full codebase.
-
-
+* [tsdav GitHub Repository](https://github.com/natelindev/tsdav)
+* [dav GitHub Repository](https://github.com/pimutils/dav)
+* [WebDAV RFC 4918](https://datatracker.ietf.org/doc/html/rfc4918)
+* [CardDAV RFC 6352](https://datatracker.ietf.org/doc/html/rfc6352)

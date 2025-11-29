@@ -14,10 +14,10 @@ We need a testing infrastructure that allows us to verify the client-side CardDA
 
 ## Decision Drivers
 
-* **CI/CD Compatibility**: The solution must run headless in GitHub Actions without requiring complex service orchestration if possible.
-* **Test Framework Integration**: The solution should integrate seamlessly with Vitest, our chosen test runner.
-* **Lightweight / Low Overhead**: We prefer a solution that keeps the project lightweight and easy to onboard (Node.js/React stack).
-* **Control over Test Data**: We need precise control to simulate specific scenarios (past birthdays, today, future birthdays, edge cases) by returning custom vCard responses.
+* **CI/CD Compatibility** (Priority 1): The solution must run headless in GitHub Actions without requiring complex service orchestration or introducing flakiness.
+* **Correctness & Reliability** (Priority 2): We value a reliable test signal. While we prefer speed, we are willing to accept slight delays if it ensures the test environment accurately reflects necessary behaviors.
+* **Test Framework Integration** (Priority 3): The solution should integrate seamlessly with Vitest to minimize developer friction.
+* **Control over Test Data** (Priority 4): We need precise control to simulate specific scenarios (past birthdays, today, future birthdays, edge cases) by returning custom vCard responses.
 
 ## Considered Options
 

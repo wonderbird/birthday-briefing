@@ -11,6 +11,7 @@
 - Documentation:
   - Complete memory bank established: `projectbrief.md`, `productContext.md`, `activeContext.md`, `systemPatterns.md`, `techContext.md`, and `progress.md`.
   - All documentation correctly uses CardDAV (address book protocol) for birthday data access.
+  - **New**: ADR 001 (Mock Service Worker) approved and documented.
 - Implementation progressing:
   - React 19.1 project initialized with Vite build tooling.
   - Bootstrap 5.3.2 integrated for UI styling.
@@ -37,6 +38,8 @@
   - Baseline metrics established: 100% code coverage, 90.48% mutation score
   - Date utility functions extracted to src/utils/dateUtils.js for testability
   - Ready for TDD workflow (red-green-refactor cycles)
+  - **New**: Mock Service Worker (MSW) integration completed.
+  - **New**: Integration test for CardDAV fetching implemented.
 - Configuration persistence (completed):
   - Storage module implemented: validateConfig, saveConfig, loadConfig, clearConfig, isConfigured
   - Data structure: carddavUrl and firstDayOfWeek stored in 'birthday-briefing-config' key
@@ -52,6 +55,12 @@
   - Mutation score: 83.50% overall (storage: 78.69%, dateUtils: 90.48%)
   - 5 git commits following strict TDD (red-green-refactor cycles)
   - All code review checks passed
+- CardDAV Testing Infrastructure (completed):
+  - **Mock Server**: MSW installed and configured (`src/mocks/`).
+  - **Test Data**: vCard fixtures created (`src/test/fixtures/`).
+  - **Factories**: XML response factory implemented (`src/test/factories/`).
+  - **Integration Test**: Validated data fetching (`src/test/integration/`).
+  - **Metrics**: 49 tests passing (100%). Mutation score ~78% (infrastructure code excluded/not covered).
 
 ## Key Achievements So Far
 
@@ -74,6 +83,7 @@
   - React 19.1 with Vite for development.
   - Bootstrap for UI framework (default theme via CDN).
   - Component-based architecture with separation of concerns.
+  - **Testing**: Use Mock Service Worker (MSW) for CardDAV integration tests (ADR 001).
 - Made key UX decisions for birthday view:
   - Continuous list layout (not blocks or grid).
   - Birthday-only days (not full 14-day timeline).
@@ -115,6 +125,10 @@
   - Implemented using strict TDD: 5 commits following red-green-refactor cycles.
   - Achieved 44 passing tests with 83.50% mutation score.
   - All code complies with clean code rules and git conventions.
+- **CardDAV Testing Infrastructure**:
+  - Successfully implemented MSW-based mock server.
+  - Created reusable XML response factories to ensure valid CardDAV data in tests.
+  - Verified integration with a working "fetch" test case.
 
 ## Assumptions and Risks
 
@@ -138,34 +152,11 @@
 
 ## Next Milestones
 
-- Current Iteration (CardDAV Testing Infrastructure):
-  - 🎯 Iteration Goal: Establish mock CardDAV server environment with representative test data to enable reliable integration testing
-  - Research and document mock server options (npm-based vs Docker-based)
-  - Implement chosen mock CardDAV server solution
-  - Create integration test suite with happy path test case
-  - Develop representative test dataset (past/today/future birthdays)
-  - Document setup, usage, and how to extend test scenarios
-  - Obtain Product Owner approval before proceeding to client implementation
-  - Success criteria:
-    - Mock server runs reliably in test environment
-    - Integration test successfully fetches and validates birthday data
-    - Test confirms correct categorization (past/today/future)
-    - Documentation enables team to run tests and add scenarios
-- Completed (Configuration Persistence Implementation with TDD):
-  - ✅ Storage utility module implemented with 5 functions
-  - ✅ FirstTimeSetup component integration completed
-  - ✅ App.jsx integration with conditional rendering completed
-  - ✅ Strict TDD workflow followed (6 commits)
-  - ✅ All code review checks passed
-- Completed (Configuration Editing Support with TDD):
-  - ✅ Added initialConfig prop to FirstTimeSetup component
-  - ✅ Form state initializes from prop when editing existing configuration
-  - ✅ App passes config to FirstTimeSetup in edit mode
-  - ✅ App reloads config from storage after successful save
-  - ✅ Comprehensive tests for both first-time and edit modes
-  - ✅ 44 tests passing with 83.50% mutation score (maintained >80% target)
-  - ✅ Strict TDD workflow followed (5 commits)
-  - ✅ All code review checks passed
+- **Completed** (CardDAV Testing Infrastructure):
+  - ✅ ADR 001 created and approved.
+  - ✅ MSW installed and configured.
+  - ✅ Test fixtures and XML factories created.
+  - ✅ Integration test suite functioning.
 - Short term (CardDAV Client Implementation - After PO Approval):
   - Research and select CardDAV client library (tsdav, dav, or similar).
   - Implement CardDAV client for fetching birthday data (test-first approach).

@@ -20,6 +20,7 @@
     - Cached birthday data needed for the 14-day view.
 - External integration:
   - CardDAV-compatible server as the single external data source for birthday information.
+  - **Library**: `tsdav` for handling CardDAV protocol communication (per ADR 002).
 - Deployment:
   - GitHub Actions for CI/CD pipeline.
   - FTPS deployment to demo.boos.systems.

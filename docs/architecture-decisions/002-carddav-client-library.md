@@ -1,6 +1,6 @@
 # Selection of CardDAV Client Library
 
-* Status: proposed
+* Status: accepted
 * Date: 2025-11-29
 
 ## Context and Problem Statement
@@ -39,7 +39,7 @@ We recommend **tsdav**. It is the only actively maintained library with native T
 
 ## Decision Outcome
 
-Undecided.
+Chosen option: "tsdav", because it offers the best balance of active maintenance, modern developer experience (TypeScript), and functionality, with acceptable trade-offs in bundle size that can be mitigated.
 
 ## Pros and Cons of the Options
 

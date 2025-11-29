@@ -338,12 +338,11 @@ If user testing reveals issues, consider alternative layouts:
 
 ## Next Steps (Implementation)
 
-- Immediate next step (CardDAV Client Library Selection):
-  - **In Progress**: Drafting ADR 002 for CardDAV client library selection.
-  - **Options Added**: tsdav, dav (npm), Custom Implementation.
-  - **Next**: Add mitigations and verify decision drivers.
-- Short-term (CardDAV Client Implementation - After ADR Approval):
-  - Implement CardDAV client for fetching birthday data (test-first approach).
+- Immediate next step (CardDAV Client Implementation):
+  - **Completed**: ADR 002 approved. `tsdav` selected as CardDAV client library.
+  - **Next**: Install `tsdav` and implement CardDAV client for fetching birthday data (test-first approach).
+- Short-term (CardDAV Client Implementation):
+  - Implement CardDAV client for fetching birthday data (following TDD)
   - Parse vCard format to extract birthday information
   - Replace hardcoded birthday data with real CardDAV fetching
   - Handle authentication if required

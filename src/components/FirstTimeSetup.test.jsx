@@ -90,5 +90,14 @@ describe('FirstTimeSetup', () => {
       firstDayOfWeek: 'sunday'
     });
   });
+
+  it('should render username input field', () => {
+    const onComplete = vi.fn();
+    render(<FirstTimeSetup onComplete={onComplete} />);
+    
+    const usernameInput = screen.getByLabelText(/Username/i);
+    expect(usernameInput).toBeInTheDocument();
+    expect(usernameInput).toHaveAttribute('type', 'text');
+  });
 });
 

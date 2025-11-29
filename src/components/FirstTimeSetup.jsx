@@ -4,6 +4,7 @@ import { saveConfig } from '../utils/storage';
 function FirstTimeSetup({ onComplete, initialConfig }) {
   const [carddavUrl, setCarddavUrl] = useState(initialConfig?.carddavUrl || '');
   const [firstDayOfWeek, setFirstDayOfWeek] = useState(initialConfig?.firstDayOfWeek || 'monday');
+  const [username, setUsername] = useState('');
 
   const handleSave = () => {
     const config = { carddavUrl, firstDayOfWeek };
@@ -40,6 +41,20 @@ function FirstTimeSetup({ onComplete, initialConfig }) {
                   <div className="form-text">
                     Enter the URL to your CardDAV address book containing birthdays
                   </div>
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="username" className="form-label">
+                    Username
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="username"
+                    placeholder="your-username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
                 </div>
 
                 <div className="mb-4">

@@ -40,6 +40,11 @@ Chosen option: **Mock Service Worker (MSW)**, because it offers the best balance
 
 * **Manual XML Handling**: MSW requires us to construct the CardDAV XML responses (e.g., `multistatus` bodies) manually. We are responsible for ensuring the mock response matches the CardDAV protocol specification.
 
+### Mitigation Strategies
+
+* **Response Factories**: To mitigate the risk of malformed XML, we will create re-usable helper functions (factories) that generate valid `multistatus` XML strings from simple JavaScript objects (the vCard fixtures). This centralizes the XML construction logic and reduces the chance of typos in individual tests.
+* **Golden Master**: We can optionally capture a real server's response once and use it as a template to ensure our factory output matches a compliant server.
+
 ## Pros and Cons of the Options
 
 ### Mock Service Worker (MSW)
@@ -62,4 +67,3 @@ Chosen option: **Mock Service Worker (MSW)**, because it offers the best balance
 * **Bad**: Requires Docker integration in CI/CD.
 * **Bad**: Slower startup and teardown times.
 * **Bad**: Managing state (resetting the database) between tests is complex.
-

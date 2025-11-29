@@ -338,20 +338,12 @@ If user testing reveals issues, consider alternative layouts:
 
 ## Next Steps (Implementation)
 
-- Immediate next step (CardDAV Testing Infrastructure - Current Iteration):
-  - **Research complete**: Mock Service Worker (MSW) selected via ADR 001.
-  - Implement mock CardDAV server (MSW):
-    - Install `msw`.
-    - Create vCard test fixtures (past, today, future, bad data).
-    - Implement response factories to generate valid XML `multistatus` responses.
-    - Set up MSW server and handlers in `src/mocks/`.
-  - Create integration test suite:
-    - Write happy path test case (fetching birthdays).
-    - Validate correct XML parsing.
-  - Document setup and usage.
-- Short-term (CardDAV Client Implementation - After PO Approval):
-  - Research and select CardDAV library (tsdav, dav, or similar)
-  - Implement CardDAV client for fetching birthday data (following TDD)
+- Immediate next step (CardDAV Client Library Selection):
+  - **In Progress**: Drafting ADR 002 for CardDAV client library selection.
+  - **Options Added**: tsdav, dav (npm), Custom Implementation.
+  - **Next**: Add mitigations and verify decision drivers.
+- Short-term (CardDAV Client Implementation - After ADR Approval):
+  - Implement CardDAV client for fetching birthday data (test-first approach).
   - Parse vCard format to extract birthday information
   - Replace hardcoded birthday data with real CardDAV fetching
   - Handle authentication if required

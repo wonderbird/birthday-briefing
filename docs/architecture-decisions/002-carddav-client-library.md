@@ -19,8 +19,7 @@ The **Birthday Briefing** project is a privacy-centric web application designed 
 ## Considered Options
 
 * tsdav
-* dav
-* vdir
+* dav (npm: dav)
 * Custom Implementation (fetch + XML parsing)
 
 ## Decision Outcome
@@ -31,17 +30,32 @@ Undecided.
 
 ### tsdav
 
-[To be evaluated]
+A modern, TypeScript-based library for WebDAV, CalDAV, and CardDAV.
 
-### dav
+* **Good, because** it is actively maintained and modern (TypeScript support).
+* **Good, because** it is designed to work in both browser and Node.js environments.
+* **Good, because** it abstracts the complexity of XML parsing and CardDAV protocol details.
+* **Bad, because** it might include code for WebDAV/CalDAV that is not needed (larger bundle size).
+* **Bad, because** it is relatively new and might have fewer users than established (but old) libraries.
 
-[To be evaluated]
+### dav (npm: dav)
 
-### vdir
+A mature JavaScript library for WebDAV, CalDAV, and CardDAV.
 
-[To be evaluated]
+* **Good, because** it has been around for a long time.
+* **Good, because** it covers the full protocol stack.
+* **Bad, because** it appears to be unmaintained (last publish >5 years ago).
+* **Bad, because** it relies on older XHR or polyfills that might bloat the bundle or cause issues in modern React 19 environments.
+* **Bad, because** it lacks TypeScript definitions out of the box.
 
 ### Custom Implementation (fetch + XML parsing)
 
-[To be evaluated]
+Implementing a minimal CardDAV client using the browser's native `fetch` API and a lightweight XML parser (e.g., `fast-xml-parser` or DOMParser).
+
+* **Good, because** it offers the smallest possible bundle size (only what is needed).
+* **Good, because** it gives full control over the implementation and error handling.
+* **Good, because** it avoids dependencies on unmaintained or heavy libraries.
+* **Bad, because** it requires implementing the CardDAV protocol (REPORT, PROPFIND, vCard parsing) manually, which is complex and error-prone.
+* **Bad, because** it increases the maintenance burden on the project team.
+* **Bad, because** edge cases in XML responses from different servers might be missed.
 

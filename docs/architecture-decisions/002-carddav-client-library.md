@@ -9,11 +9,14 @@ The **Birthday Briefing** project is a privacy-centric web application designed 
 
 ## Decision Drivers
 
-* **Privacy:** The library must run entirely in the browser (client-side) to ensure no user credentials or data are sent to an intermediate server.
-* **Bundle Size:** The library should be lightweight to maintain fast load times and optimal performance on mobile devices.
-* **Maintenance:** The library should be actively maintained to ensure compatibility with modern browser standards and security updates.
-* **Ease of Use:** The API should be straightforward, ideally with good documentation or examples, to facilitate rapid implementation and maintenance.
-* **Browser Compatibility:** The library must function reliably across modern web browsers (CORS handling, XML parsing).
+* **Maintenance Status:** The library should be actively maintained to ensure compatibility with modern browser standards and security updates.
+* **Developer Experience:** Preference for TypeScript support, modern APIs, and good documentation to facilitate rapid implementation and maintenance.
+* **Bundle Size / Efficiency:** The library should be lightweight to maintain fast load times and optimal performance on mobile devices.
+
+## Constraints
+
+* **Privacy/Architecture:** The library must run entirely in the browser (client-side) to ensure no user credentials or data are sent to an intermediate server.
+* **Browser Compatibility:** The library must function reliably across modern web browsers (handling CORS, XML parsing).
 * **License:** The library must have a permissive license compatible with the project's MIT license.
 
 ## Considered Options

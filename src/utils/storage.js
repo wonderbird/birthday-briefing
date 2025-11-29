@@ -73,3 +73,14 @@ export function isConfigured() {
   return validateConfig(config);
 }
 
+/**
+ * Saves credentials to sessionStorage.
+ * @param {string} username - The username
+ * @param {string} password - The password
+ */
+export function saveCredentials(username, password) {
+  const credentials = { username, password };
+  const json = JSON.stringify(credentials);
+  sessionStorage.setItem('birthday-briefing-credentials', json);
+}
+

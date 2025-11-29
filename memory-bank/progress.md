@@ -12,7 +12,7 @@
   - Complete memory bank established: `projectbrief.md`, `productContext.md`, `activeContext.md`, `systemPatterns.md`, `techContext.md`, and `progress.md`.
   - All documentation correctly uses CardDAV (address book protocol) for birthday data access.
   - **New**: ADR 001 (Mock Service Worker) approved and documented.
-  - **In Progress**: ADR 002 (CardDAV Client Library) draft started.
+  - **New**: ADR 002 (CardDAV Client Library) drafted and ready for decision.
 - Implementation progressing:
   - React 19.1 project initialized with Vite build tooling.
   - Bootstrap 5.3.2 integrated for UI styling.

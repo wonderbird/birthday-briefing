@@ -67,3 +67,9 @@ Chosen option: **Mock Service Worker (MSW)**, because it offers the best balance
 * **Bad**: Requires Docker integration in CI/CD.
 * **Bad**: Slower startup and teardown times.
 * **Bad**: Managing state (resetting the database) between tests is complex.
+
+## Links
+
+* [Mock Service Worker Documentation](https://mswjs.io/)
+* [WireMock Documentation](https://wiremock.org/)
+* [Radicale Documentation](https://radicale.org/)

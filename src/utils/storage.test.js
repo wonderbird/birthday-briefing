@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { validateConfig, saveConfig, loadConfig, clearConfig, isConfigured, saveCredentials, loadCredentials, clearCredentials } from './storage.js';
+import { validateConfig, saveConfig, loadConfig, clearConfig, isConfigured, saveCredentials, loadCredentials, clearCredentials, hasCredentials } from './storage.js';
 
 describe('validateConfig', () => {
   it('should return true for valid configuration with monday', () => {
@@ -322,6 +322,42 @@ describe('clearCredentials', () => {
 
     const stored = sessionStorage.getItem('birthday-briefing-credentials');
     expect(stored).toBeNull();
+  });
+});
+
+describe('hasCredentials', () => {
+  beforeEach(() => {
+    sessionStorage.clear();
+  });
+
+  afterEach(() => {
+    sessionStorage.clear();
+  });
+
+  it('should return true when credentials exist', () => {
+    const credentials = {
+      username: 'testuser',
+      password: 'testpass'
+    };
+    sessionStorage.setItem('birthday-briefing-credentials', JSON.stringify(credentials));
+
+    const result = hasCredentials();
+
+    expect(result).toBe(true);
+  });
+
+  it('should return false when no credentials exist', () => {
+    const result = hasCredentials();
+
+    expect(result).toBe(false);
+  });
+
+  it('should return false when credentials are corrupted', () => {
+    sessionStorage.setItem('birthday-briefing-credentials', 'invalid-json{');
+
+    const result = hasCredentials();
+
+    expect(result).toBe(false);
   });
 });
 

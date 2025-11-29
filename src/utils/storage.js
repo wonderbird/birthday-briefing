@@ -107,3 +107,15 @@ export function clearCredentials() {
   sessionStorage.removeItem('birthday-briefing-credentials');
 }
 
+/**
+ * Checks if credentials exist in sessionStorage.
+ * @returns {boolean} - True if credentials exist
+ */
+export function hasCredentials() {
+  const credentials = loadCredentials();
+  if (!credentials) {
+    return false;
+  }
+  return true;
+}
+

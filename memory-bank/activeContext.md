@@ -197,7 +197,7 @@ Followed strict TDD with 5 git commits:
 
 All commits follow conventional commit format with Co-authored-by trailers.
 
-### 6. CardDAV Testing Infrastructure (✨ Current Iteration)
+### 6. CardDAV Testing Infrastructure (✅ Completed)
 
 **Iteration Goal**: Establish mock CardDAV server environment with representative test data to enable reliable integration testing.
 
@@ -228,15 +228,60 @@ All commits follow conventional commit format with Co-authored-by trailers.
 - ✅ Documentation enables team to run tests and add scenarios
 - ✅ Ready for Product Owner approval before client implementation
 
-**Out of Scope**:
+**Proof of Concept**:
 
-- Actual CardDAV client implementation (next iteration)
-- Production CardDAV server configuration
-- Error handling beyond happy path
-- Multiple CardDAV sources
-- Complex authentication scenarios
+- ✅ Standalone PoC script (`scripts/poc-carddav.js`) created and verified
+- ✅ Successfully connects to real CardDAV server using `tsdav` library
+- ✅ Fetches and parses vCard data (name and birthday fields)
+- ✅ Uses environment variables for credentials (`.envrc` with `direnv`)
+- ✅ Demonstrates authentication and data retrieval flow
 
-### 7. Connect Real CardDAV Data (Future Priority - After Iteration 6)
+### 7. Authentication Strategy Decision (✨ Current Focus)
+
+**Decision**: Session-based credentials for CardDAV authentication.
+
+**Rationale**:
+
+- CardDAV servers require authentication (username/password)
+- Privacy-first principle: avoid persistent credential storage
+- Balance security with user experience
+
+**Selected Approach**: Session-Based Credentials
+
+Store credentials in `sessionStorage` (not `localStorage`):
+
+- Username and password cleared when browser closes
+- User enters credentials once per browser session
+- Acceptable UX trade-off for privacy benefit
+- Browser password managers can still assist users
+
+**Implementation Plan**:
+
+- Extend FirstTimeSetup component to include username and password fields
+- Add clear help text: "Credentials will be deleted when you close the browser"
+- Store CardDAV URL and firstDayOfWeek in localStorage (persist across sessions)
+- Store username and password in sessionStorage (cleared on browser close)
+- Update storage module with new functions:
+  - `saveCredentials(username, password)` → sessionStorage
+  - `loadCredentials()` → returns credentials from sessionStorage
+  - `clearCredentials()` → removes credentials from sessionStorage
+  - `hasCredentials()` → checks if credentials exist in sessionStorage
+- Modify CardDAV data fetching to retrieve credentials from sessionStorage
+- Handle missing credentials case: redirect to FirstTimeSetup with appropriate message
+
+**User Experience**:
+
+- First time: Enter CardDAV URL, username, password, and firstDayOfWeek
+- Subsequent opens (same session): App works immediately with cached credentials
+- After browser close: App prompts for username/password again (URL and settings retained)
+
+**Alternative Approaches Considered**:
+
+- URL-embedded credentials: Still stores password (in localStorage)
+- Prompt every time: Poor UX, conflicts with "calm usage" goal
+- OAuth/tokens: Not widely supported by CardDAV servers
+
+### 8. Connect Real CardDAV Data (Next Priority)
 
 - Replace hardcoded birthday data with CardDAV integration:
   - Implement CardDAV client for fetching birthday data
@@ -338,14 +383,17 @@ If user testing reveals issues, consider alternative layouts:
 
 ## Next Steps (Implementation)
 
-- Immediate next step (CardDAV Client Implementation):
-  - **Completed**: ADR 002 approved. `tsdav` selected as CardDAV client library.
-  - **Next**: Install `tsdav` and implement CardDAV client for fetching birthday data (test-first approach).
+- Immediate next step (Authentication Integration):
+  - **Completed**: PoC script validates `tsdav` works with real CardDAV server.
+  - **Completed**: Authentication strategy decided (session-based credentials).
+  - **Next**: Extend FirstTimeSetup to collect username and password with help text.
 - Short-term (CardDAV Client Implementation):
+  - Implement session-based credential storage (sessionStorage)
+  - Extend storage module with credential functions
   - Implement CardDAV client for fetching birthday data (following TDD)
   - Parse vCard format to extract birthday information
   - Replace hardcoded birthday data with real CardDAV fetching
-  - Handle authentication if required
+  - Handle missing credentials case
   - Add error handling for connection failures
 - Medium-term (Data Sync and Polish):
   - Build data synchronization and caching layer

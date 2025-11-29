@@ -62,6 +62,12 @@
   - **Factories**: XML response factory implemented (`src/test/factories/`).
   - **Integration Test**: Validated data fetching (`src/test/integration/`).
   - **Metrics**: 49 tests passing (100%). Mutation score ~78% (infrastructure code excluded/not covered).
+  - **PoC Script**: Standalone proof of concept (`scripts/poc-carddav.js`) created and verified.
+- CardDAV authentication strategy (decided):
+  - **Decision**: Session-based credentials (sessionStorage)
+  - **Rationale**: Balance between privacy (cleared on browser close) and UX (once per session)
+  - **Implementation Plan**: Extend FirstTimeSetup with username/password fields, use sessionStorage for credentials
+  - **Alternative approaches evaluated**: URL-embedded credentials, prompt every time, OAuth/tokens
 
 ## Key Achievements So Far
 
@@ -130,6 +136,16 @@
   - Successfully implemented MSW-based mock server.
   - Created reusable XML response factories to ensure valid CardDAV data in tests.
   - Verified integration with a working "fetch" test case.
+- **CardDAV Proof of Concept**:
+  - Created standalone Node.js script (`scripts/poc-carddav.js`) using `tsdav` library.
+  - Successfully connected to real CardDAV server and fetched contacts.
+  - Parsed vCard data to extract names and birthdays.
+  - Implemented environment variable-based credential management (`.envrc` for `direnv`).
+  - Validated authentication flow and data retrieval patterns.
+- **Authentication Strategy Decision**:
+  - Evaluated three approaches: session-based, URL-embedded, and prompt-every-time.
+  - Selected session-based credentials (sessionStorage) for balance of privacy and UX.
+  - Planned implementation: extend FirstTimeSetup with username/password fields with clear privacy messaging.
 
 ## Assumptions and Risks
 
@@ -158,36 +174,42 @@
   - ✅ MSW installed and configured.
   - ✅ Test fixtures and XML factories created.
   - ✅ Integration test suite functioning.
-- Short term (CardDAV Client Implementation):
-  - **In Progress**: Research and select CardDAV client library (ADR 002).
-  - Implement CardDAV client for fetching birthday data (test-first approach).
-  - Parse vCard format to extract birthday information.
-  - Replace hardcoded birthday data in MainScreen with CardDAV data.
-  - Use stored configuration (carddavUrl, firstDayOfWeek) from localStorage.
-  - Handle authentication if required by CardDAV server.
-  - Add error handling for connection failures.
-  - Write comprehensive tests for all CardDAV data processing logic.
-  - Achieve target mutation score for new code (>90%).
+  - ✅ ADR 002 approved: `tsdav` selected as CardDAV client library.
+  - ✅ PoC script created and verified with real CardDAV server.
+  - ✅ Authentication strategy decided: session-based credentials.
+- Short term (Authentication Integration & CardDAV Client):
+  - Extend FirstTimeSetup component with username and password fields
+  - Add clear help text: "Credentials will be deleted when you close the browser"
+  - Implement session-based credential storage (sessionStorage)
+  - Extend storage module with credential management functions
+  - Install `tsdav` as production dependency in the main application
+  - Implement CardDAV client for fetching birthday data (test-first approach)
+  - Parse vCard format to extract birthday information
+  - Replace hardcoded birthday data in MainScreen with CardDAV data
+  - Handle missing credentials case: prompt user appropriately
+  - Add error handling for connection failures
+  - Write comprehensive tests for all CardDAV data processing logic
+  - Achieve target mutation score for new code (>90%)
 - Medium term (Data Sync and Error Handling):
   - Build data synchronization and caching layer:
-    - Local storage for birthday data cache.
-    - Background refresh on app open.
-    - Offline-first approach with cached data.
+    - Local storage for birthday data cache
+    - Background refresh on app open
+    - Offline-first approach with cached data
   - Add loading and empty states:
-    - Loading indicator during CardDAV fetch.
-    - Message when no birthdays in 14-day window.
-    - Error messages for connection failures.
+    - Loading indicator during CardDAV fetch
+    - Message when no birthdays in 14-day window
+    - Error messages for connection failures
   - Add comprehensive error handling:
-    - CardDAV connection failures.
-    - Authentication errors.
-    - Invalid or incomplete data.
-  - Maintain test coverage and mutation scores.
+    - CardDAV connection failures
+    - Authentication errors
+    - Invalid or incomplete data
+  - Maintain test coverage and mutation scores
 - Longer term (Polish and Release):
-  - Implement settings screen for updating configuration.
-  - Add comprehensive error states and messaging.
-  - Performance optimization and final polish.
-  - Conduct user testing with live deployment.
-  - Final documentation and release preparation.
+  - Implement settings screen for updating configuration
+  - Add comprehensive error states and messaging
+  - Performance optimization and final polish
+  - Conduct user testing with live deployment
+  - Final documentation and release preparation
 
 ## Memory Bank and Documentation Practices
 

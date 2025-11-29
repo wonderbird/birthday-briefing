@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { saveConfig } from '../utils/storage';
+import { saveConfig, saveCredentials } from '../utils/storage';
 
 function FirstTimeSetup({ onComplete, initialConfig }) {
   const [carddavUrl, setCarddavUrl] = useState(initialConfig?.carddavUrl || '');
@@ -10,6 +10,7 @@ function FirstTimeSetup({ onComplete, initialConfig }) {
   const handleSave = () => {
     const config = { carddavUrl, firstDayOfWeek };
     saveConfig(config);
+    saveCredentials(username, password);
     onComplete(config);
   };
 

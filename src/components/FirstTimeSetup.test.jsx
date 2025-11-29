@@ -7,6 +7,7 @@ import * as storage from '../utils/storage';
 describe('FirstTimeSetup', () => {
   beforeEach(() => {
     vi.spyOn(storage, 'saveConfig').mockImplementation(() => {});
+    vi.spyOn(storage, 'saveCredentials').mockImplementation(() => {});
   });
 
   it('should initialize with empty values when no initialConfig provided', () => {
@@ -115,6 +116,23 @@ describe('FirstTimeSetup', () => {
     
     const helpText = screen.getByText(/credentials will be deleted when you close the browser/i);
     expect(helpText).toBeInTheDocument();
+  });
+
+  it('should call saveCredentials with username and password when Save is clicked', async () => {
+    const user = userEvent.setup();
+    const onComplete = vi.fn();
+    render(<FirstTimeSetup onComplete={onComplete} />);
+    
+    const usernameInput = screen.getByLabelText(/Username/i);
+    await user.type(usernameInput, 'testuser');
+    
+    const passwordInput = screen.getByLabelText(/^Password$/i);
+    await user.type(passwordInput, 'testpass');
+    
+    const saveButton = screen.getByRole('button', { name: /save/i });
+    await user.click(saveButton);
+    
+    expect(storage.saveCredentials).toHaveBeenCalledWith('testuser', 'testpass');
   });
 });
 

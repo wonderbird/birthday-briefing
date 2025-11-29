@@ -19,6 +19,18 @@ The **Birthday Briefing** project is a privacy-centric web application designed 
 * **Browser Compatibility:** The library must function reliably across modern web browsers (handling CORS, XML parsing).
 * **License:** The library must have a permissive license compatible with the project's MIT license.
 
+## Decision Matrix & Recommendation
+
+| Option | Maintenance Status | Developer Experience | Bundle Size / Efficiency |
+| :--- | :---: | :---: | :---: |
+| **tsdav** | + | + | / |
+| **dav (npm)** | - | - | / |
+| **Custom Implementation** | / | - | + |
+
+### Recommendation
+
+We recommend **tsdav**. It is the only actively maintained library with native TypeScript support, which significantly improves developer experience and long-term viability. While it may have a larger bundle size than a custom implementation, this can be mitigated via tree-shaking and is a worthwhile trade-off to avoid the high maintenance burden and complexity of implementing the CardDAV protocol manually.
+
 ## Considered Options
 
 * tsdav

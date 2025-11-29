@@ -5,6 +5,7 @@ function FirstTimeSetup({ onComplete, initialConfig }) {
   const [carddavUrl, setCarddavUrl] = useState(initialConfig?.carddavUrl || '');
   const [firstDayOfWeek, setFirstDayOfWeek] = useState(initialConfig?.firstDayOfWeek || 'monday');
   const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSave = () => {
     const config = { carddavUrl, firstDayOfWeek };
@@ -54,6 +55,20 @@ function FirstTimeSetup({ onComplete, initialConfig }) {
                     placeholder="your-username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="password" className="form-label">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="password"
+                    placeholder="your-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
 

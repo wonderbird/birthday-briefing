@@ -99,5 +99,14 @@ describe('FirstTimeSetup', () => {
     expect(usernameInput).toBeInTheDocument();
     expect(usernameInput).toHaveAttribute('type', 'text');
   });
+
+  it('should render password input field', () => {
+    const onComplete = vi.fn();
+    render(<FirstTimeSetup onComplete={onComplete} />);
+    
+    const passwordInput = screen.getByLabelText(/^Password$/i);
+    expect(passwordInput).toBeInTheDocument();
+    expect(passwordInput).toHaveAttribute('type', 'password');
+  });
 });
 

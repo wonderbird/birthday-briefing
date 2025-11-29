@@ -12,6 +12,7 @@
   - Complete memory bank established: `projectbrief.md`, `productContext.md`, `activeContext.md`, `systemPatterns.md`, `techContext.md`, and `progress.md`.
   - All documentation correctly uses CardDAV (address book protocol) for birthday data access.
   - **New**: ADR 001 (Mock Service Worker) approved and documented.
+  - **In Progress**: ADR 002 (CardDAV Client Library) draft started.
 - Implementation progressing:
   - React 19.1 project initialized with Vite build tooling.
   - Bootstrap 5.3.2 integrated for UI styling.
@@ -157,8 +158,8 @@
   - ✅ MSW installed and configured.
   - ✅ Test fixtures and XML factories created.
   - ✅ Integration test suite functioning.
-- Short term (CardDAV Client Implementation - After PO Approval):
-  - Research and select CardDAV client library (tsdav, dav, or similar).
+- Short term (CardDAV Client Implementation):
+  - **In Progress**: Research and select CardDAV client library (ADR 002).
   - Implement CardDAV client for fetching birthday data (test-first approach).
   - Parse vCard format to extract birthday information.
   - Replace hardcoded birthday data in MainScreen with CardDAV data.

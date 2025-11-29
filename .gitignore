@@ -1,6 +1,7 @@
 # mutation testing
 reports
 .stryker-tmp
+.envrc
 
 # Created by https://www.toptal.com/developers/gitignore/api/react,node,webstorm+all,visualstudiocode,vim,macos,windows,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=react,node,webstorm+all,visualstudiocode,vim,macos,windows,linux

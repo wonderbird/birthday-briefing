@@ -25,6 +25,13 @@ The **Birthday Briefing** project is a privacy-centric web application designed 
 * dav (npm: dav)
 * Custom Implementation (fetch + XML parsing)
 
+## Links
+
+* [tsdav GitHub Repository](https://github.com/natelindev/tsdav)
+* [dav GitHub Repository](https://github.com/pimutils/dav)
+* [WebDAV RFC 4918](https://datatracker.ietf.org/doc/html/rfc4918)
+* [CardDAV RFC 6352](https://datatracker.ietf.org/doc/html/rfc6352)
+
 ## Decision Outcome
 
 Undecided.

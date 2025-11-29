@@ -59,3 +59,23 @@ Implementing a minimal CardDAV client using the browser's native `fetch` API and
 * **Bad, because** it increases the maintenance burden on the project team.
 * **Bad, because** edge cases in XML responses from different servers might be missed.
 
+## Mitigation of Negative Consequences
+
+### Mitigations for tsdav's Bundle Size and Novelty
+
+* **Tree Shaking:** Ensure that the build process (Vite) is configured to tree-shake unused exports from `tsdav` to minimize the final bundle size.
+* **Testing:** Implement comprehensive integration tests (using the already established MSW mock server) to verify behavior across different CardDAV response scenarios, mitigating the risk of undiscovered bugs in a newer library.
+
+### Mitigations for dav's Lack of Maintenance
+
+* **Forking:** If critical bugs are found or modern browser compatibility issues arise, the project could fork the repository to apply fixes, although this increases maintenance effort.
+* **Polyfills:** Use modern polyfills only where strictly necessary to support the older library code without importing heavy legacy dependencies.
+* **Type Definitions:** Create a `d.ts` declaration file for the specific subset of the API used by the project to ensure type safety in our codebase.
+
+### Mitigations for Custom Implementation Complexity
+
+* **Scope Limitation:** Strictly limit the implementation to the minimum required features (fetching birthdays for a date range), ignoring complex write operations or full sync protocols unless absolutely needed.
+* **Standard parsers:** Use the browser's built-in `DOMParser` to handle XML parsing safely and robustly, rather than writing custom regex or string parsing logic.
+* **Reference Implementation:** Use open-source libraries (like `tsdav` or `dav`) as reference implementations to understand the correct XML structures and request headers, without taking on their full codebase.
+
+

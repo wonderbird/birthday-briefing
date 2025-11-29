@@ -100,3 +100,10 @@ export function loadCredentials() {
   }
 }
 
+/**
+ * Clears credentials from sessionStorage.
+ */
+export function clearCredentials() {
+  sessionStorage.removeItem('birthday-briefing-credentials');
+}
+

@@ -3,73 +3,53 @@
 * Status: Proposed
 * Date: 2025-11-29
 
-## Context and Problem Statement
+## Summary
 
-The "Birthday Briefing" application relies on fetching birthday information from a user-provided CardDAV server. To ensure reliability and correctness of the application logic (parsing dates, handling 14-day windows, error states), we need a robust way to test this integration.
-
-We need a testing infrastructure that allows us to verify the client-side CardDAV fetching and parsing logic without:
-1. Depending on a live production CardDAV server (privacy/reliability issues).
-2. Requiring complex manual setup for every developer or CI run.
-3. Introducing excessive latency or flakiness into the test suite.
+We will use **Mock Service Worker (MSW)** to mock CardDAV server responses in our integration tests. This decision prioritizes CI/CD compatibility and ease of integration with our React/Vite stack, ensuring robust testing of our client-side parsing logic without external dependencies.
 
 ## Decision Drivers
 
-* **CI/CD Compatibility** (Priority 1): The solution must run headless in GitHub Actions without requiring complex service orchestration or introducing flakiness.
-* **Correctness & Reliability** (Priority 2): We value a reliable test signal. While we prefer speed, we are willing to accept slight delays if it ensures the test environment accurately reflects necessary behaviors.
-* **Test Framework Integration** (Priority 3): The solution should integrate seamlessly with Vitest to minimize developer friction.
-* **Control over Test Data** (Priority 4): We need precise control to simulate specific scenarios (past birthdays, today, future birthdays, edge cases) by returning custom vCard responses.
+1.  **CI/CD Compatibility** (Priority 1): Must run headless in GitHub Actions without complex orchestration.
+2.  **Correctness & Reliability** (Priority 2): We value a reliable test signal and are willing to trade some speed for it.
+3.  **Test Framework Integration** (Priority 3): Seamless integration with Vitest is preferred.
+4.  **Control over Test Data** (Priority 4): Need precise control to simulate specific edge cases.
 
 ## Considered Options
 
-* **Mock Service Worker (MSW)**
-* **WireMock**
-* **Docker-based CardDAV Server (e.g., Radicale)**
+*   **Mock Service Worker (MSW)**: A pure Node.js/browser API mocking library.
+*   **WireMock**: A powerful, Java-based mock server.
+*   **Radicale (Docker)**: A real CardDAV server running in a container.
 
 ## Decision Outcome
 
-Chosen option: **Mock Service Worker (MSW)**, because it offers the best balance of integration, speed, and simplicity for our client-side React application.
+Chosen option: **Mock Service Worker (MSW)**.
 
-### Positive Consequences
+It offers the best balance of integration, speed, and simplicity. It fulfills our top priority (CI/CD) by requiring zero external infrastructure, unlike WireMock (Java) or Radicale (Docker).
 
-* **Zero Infrastructure**: Runs entirely within the Node.js test process. No need for Docker containers or Java runtimes in the CI pipeline.
-* **Speed**: Request interception is immediate; no network latency.
-* **Integration**: Native integration with Vitest allows for easy setup and teardown in test files.
-* **Stack Alignment**: Uses JavaScript/TypeScript, aligning with the project's technology stack.
+### Consequences & Mitigation
 
-### Negative Consequences
+| Consequence | Description | Mitigation |
+|:---|:---|:---|
+| **Positive** | Zero Infrastructure | No Docker/Java needed in CI. |
+| **Positive** | Fast Execution | Runs in-process; no network latency. |
+| **Positive** | Stack Alignment | Uses JavaScript/TypeScript. |
+| **Negative** | Manual XML Handling | We must manually construct CardDAV XML responses. | **Response Factories**: Use helper functions to generate valid XML.<br>**Golden Master**: Validate factories against real server responses once. |
 
-* **Manual XML Handling**: MSW requires us to construct the CardDAV XML responses (e.g., `multistatus` bodies) manually. We are responsible for ensuring the mock response matches the CardDAV protocol specification.
-
-### Mitigation Strategies
-
-* **Response Factories**: To mitigate the risk of malformed XML, we will create re-usable helper functions (factories) that generate valid `multistatus` XML strings from simple JavaScript objects (the vCard fixtures). This centralizes the XML construction logic and reduces the chance of typos in individual tests.
-* **Golden Master**: We can optionally capture a real server's response once and use it as a template to ensure our factory output matches a compliant server.
-
-## Pros and Cons of the Options
+## Detailed Analysis
 
 ### Mock Service Worker (MSW)
-
-* **Good**: Runs in the same process as the tests; extremely fast.
-* **Good**: No extra system dependencies (like Docker or Java).
-* **Good**: Allows inspection of request details (headers, body) to verify correctness of client requests.
-* **Bad**: Does not "simulate" a server's logic (statefulness, protocol compliance) automatically; we return exactly what we tell it to.
+*   **Pros**: Extremely fast, runs in-process, inspects request details natively.
+*   **Cons**: Does not simulate server statefulness automatically.
 
 ### WireMock
-
-* **Good**: Powerful request matching and stateful behavior simulation.
-* **Good**: Can record and playback real server interactions.
-* **Bad**: Typically requires a Java runtime or a Docker container, adding complexity to the CI environment.
-* **Bad**: "Overkill" for a project that primarily needs to verify client-side parsing logic.
+*   **Pros**: Powerful request matching, stateful simulation.
+*   **Cons**: "Overkill" complexity; typically requires Java runtime or Docker.
 
 ### Docker-based CardDAV Server (e.g., Radicale)
-
-* **Good**: Tests against a real, compliant server implementation. Catches subtle protocol issues.
-* **Bad**: Requires Docker integration in CI/CD.
-* **Bad**: Slower startup and teardown times.
-* **Bad**: Managing state (resetting the database) between tests is complex.
+*   **Pros**: Tests against a compliant server implementation.
+*   **Cons**: Slower startup, complex CI/CD setup, state management issues.
 
 ## Links
-
 * [Mock Service Worker Documentation](https://mswjs.io/)
 * [WireMock Documentation](https://wiremock.org/)
 * [Radicale Documentation](https://radicale.org/)

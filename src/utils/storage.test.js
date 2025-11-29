@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { validateConfig, saveConfig, loadConfig, clearConfig, isConfigured, saveCredentials } from './storage.js';
+import { validateConfig, saveConfig, loadConfig, clearConfig, isConfigured, saveCredentials, loadCredentials } from './storage.js';
 
 describe('validateConfig', () => {
   it('should return true for valid configuration with monday', () => {
@@ -271,6 +271,34 @@ describe('saveCredentials', () => {
     const parsed = JSON.parse(stored);
     expect(parsed.username).toBe('testuser');
     expect(parsed.password).toBe('testpass');
+  });
+});
+
+describe('loadCredentials', () => {
+  beforeEach(() => {
+    sessionStorage.clear();
+  });
+
+  afterEach(() => {
+    sessionStorage.clear();
+  });
+
+  it('should load credentials from sessionStorage', () => {
+    const credentials = {
+      username: 'testuser',
+      password: 'testpass'
+    };
+    sessionStorage.setItem('birthday-briefing-credentials', JSON.stringify(credentials));
+
+    const loaded = loadCredentials();
+
+    expect(loaded).toEqual(credentials);
+  });
+
+  it('should return null when no credentials exist', () => {
+    const result = loadCredentials();
+
+    expect(result).toBeNull();
   });
 });
 

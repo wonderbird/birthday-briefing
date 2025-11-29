@@ -84,3 +84,19 @@ export function saveCredentials(username, password) {
   sessionStorage.setItem('birthday-briefing-credentials', json);
 }
 
+/**
+ * Loads credentials from sessionStorage.
+ * @returns {Object|null} - The loaded credentials, or null if not found
+ */
+export function loadCredentials() {
+  const json = sessionStorage.getItem('birthday-briefing-credentials');
+  if (!json) {
+    return null;
+  }
+  try {
+    return JSON.parse(json);
+  } catch {
+    return null;
+  }
+}
+

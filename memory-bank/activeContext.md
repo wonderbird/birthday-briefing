@@ -199,20 +199,23 @@ All commits follow conventional commit format with Co-authored-by trailers.
 
 ### 6. CardDAV Testing Infrastructure (✅ Completed)
 
-**Iteration Goal**: Establish mock CardDAV server environment with representative test data to enable reliable integration testing.
+**Iteration Goal**: Establish testing infrastructure that balances speed (for TDD) with reliability (for production confidence).
 
-**Product Value**: Enable the team to develop and test CardDAV integration reliably before connecting to real servers.
+**Product Value**: Enable rapid development with MSW while ensuring real-world compatibility with Docker-based E2E tests.
 
-**Deliverables**:
+**Decision Made (ADR 001)**:
+- **Hybrid Testing Strategy**: MSW for fast integration tests (~90%), Docker/Radicale for reliable E2E tests (~10%)
+- **Rationale**: MSW enables sub-second TDD feedback; Docker validates against real CardDAV implementation
+- **Implementation**: MSW in `src/test/integration/`, Docker E2E in `src/test/e2e/`
 
-- Research document comparing mock server options (Completed in ADR 001).
-- **Decision**: Use Mock Service Worker (MSW) for zero-infrastructure, fast integration tests.
-- Implemented mock CardDAV server using chosen approach:
-  - Runs reliably in test environment
+**Deliverables Completed**:
+- ADR 001 revised to document hybrid approach with clear usage guidelines
+- MSW mock server implemented:
+  - Runs in-process with zero infrastructure
   - Serves representative birthday data in vCard format
-  - Documented setup and usage
+  - Response factories ensure valid XML structure
 - Integration test suite with happy path test case:
-  - Test fetches birthday data from mock server
+  - Fetches birthday data from mock server
   - Validates correct parsing of birthday information
   - Confirms identification of past, today, and future birthdays
 - Representative test dataset:
@@ -220,28 +223,23 @@ All commits follow conventional commit format with Co-authored-by trailers.
   - Birthday today
   - Upcoming birthdays
 
-**Success Criteria**:
-
-- ✅ Mock server runs reliably in test environment
-- ✅ Integration test successfully fetches and validates birthday data
-- ✅ Test confirms correct categorization (past/today/future)
-- ✅ Documentation enables team to run tests and add scenarios
-- ✅ Ready for Product Owner approval before client implementation
-
 **Proof of Concept**:
-
 - ✅ Standalone PoC script (`scripts/poc-carddav.js`) created and verified
 - ✅ Successfully connects to real CardDAV server using `tsdav` library
 - ✅ Fetches and parses vCard data (name and birthday fields)
 - ✅ Uses environment variables for credentials (`.envrc` with `direnv`)
 - ✅ Demonstrates authentication and data retrieval flow
 
+**Next Steps for E2E**:
+- Create `compose.yaml` for Radicale service
+- Implement E2E tests in `src/test/e2e/`
+- Configure CI to run Docker service before E2E tests
+
 ### 7. Authentication Strategy Decision (✨ Current Focus)
 
 **Decision**: Session-based credentials for CardDAV authentication.
 
 **Rationale**:
-
 - CardDAV servers require authentication (username/password)
 - Privacy-first principle: avoid persistent credential storage
 - Balance security with user experience
@@ -249,14 +247,12 @@ All commits follow conventional commit format with Co-authored-by trailers.
 **Selected Approach**: Session-Based Credentials
 
 Store credentials in `sessionStorage` (not `localStorage`):
-
 - Username and password cleared when browser closes
 - User enters credentials once per browser session
 - Acceptable UX trade-off for privacy benefit
 - Browser password managers can still assist users
 
 **Implementation Plan**:
-
 - Extend FirstTimeSetup component to include username and password fields
 - Add clear help text: "Credentials will be deleted when you close the browser"
 - Store CardDAV URL and firstDayOfWeek in localStorage (persist across sessions)
@@ -269,14 +265,18 @@ Store credentials in `sessionStorage` (not `localStorage`):
 - Modify CardDAV data fetching to retrieve credentials from sessionStorage
 - Handle missing credentials case: redirect to FirstTimeSetup with appropriate message
 
-**User Experience**:
+**Testing Strategy (ADR 001)**:
+- **Hybrid approach** balances speed and reliability:
+  - **MSW** (~90% of tests): Fast integration tests for logic, UI flows, error handling, edge cases
+  - **Docker/Radicale** (~10% of tests): E2E verification of auth handshake and protocol compliance
+- **Workflow**: Use MSW during TDD cycles; run Docker E2E before commits/deployment
 
+**User Experience**:
 - First time: Enter CardDAV URL, username, password, and firstDayOfWeek
 - Subsequent opens (same session): App works immediately with cached credentials
 - After browser close: App prompts for username/password again (URL and settings retained)
 
 **Alternative Approaches Considered**:
-
 - URL-embedded credentials: Still stores password (in localStorage)
 - Prompt every time: Poor UX, conflicts with "calm usage" goal
 - OAuth/tokens: Not widely supported by CardDAV servers
@@ -386,13 +386,15 @@ If user testing reveals issues, consider alternative layouts:
 - Immediate next step (Authentication Integration):
   - **Completed**: PoC script validates `tsdav` works with real CardDAV server.
   - **Completed**: Authentication strategy decided (session-based credentials).
+  - **Completed**: Testing strategy revised to Hybrid (MSW + Docker).
   - **Next**: Extend FirstTimeSetup to collect username and password with help text.
 - Short-term (CardDAV Client Implementation):
   - Implement session-based credential storage (sessionStorage)
   - Extend storage module with credential functions
-  - Implement CardDAV client for fetching birthday data (following TDD)
+  - Install `tsdav` as production dependency in the main application
+  - Implement CardDAV client for fetching birthday data (test-first approach)
   - Parse vCard format to extract birthday information
-  - Replace hardcoded birthday data with real CardDAV fetching
+  - Replace hardcoded birthday data in MainScreen with real CardDAV fetching
   - Handle missing credentials case
   - Add error handling for connection failures
 - Medium-term (Data Sync and Polish):

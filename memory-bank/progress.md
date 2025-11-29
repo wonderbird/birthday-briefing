@@ -11,8 +11,8 @@
 - Documentation:
   - Complete memory bank established: `projectbrief.md`, `productContext.md`, `activeContext.md`, `systemPatterns.md`, `techContext.md`, and `progress.md`.
   - All documentation correctly uses CardDAV (address book protocol) for birthday data access.
-  - **New**: ADR 001 (Mock Service Worker) approved and documented.
-  - **New**: ADR 002 (CardDAV Client Library) approved: `tsdav` selected.
+  - **ADR 001**: Hybrid Testing Strategy (MSW + Docker/Radicale) documented and approved.
+  - **ADR 002**: CardDAV Client Library (`tsdav`) approved.
 - Implementation progressing:
   - React 19.1 project initialized with Vite build tooling.
   - Bootstrap 5.3.2 integrated for UI styling.
@@ -90,7 +90,7 @@
   - React 19.1 with Vite for development.
   - Bootstrap for UI framework (default theme via CDN).
   - Component-based architecture with separation of concerns.
-  - **Testing**: Use Mock Service Worker (MSW) for CardDAV integration tests (ADR 001).
+  - **Testing**: Hybrid Strategy (MSW for speed, Docker/Radicale for reliability) per ADR 001.
 - Made key UX decisions for birthday view:
   - Continuous list layout (not blocks or grid).
   - Birthday-only days (not full 14-day timeline).
@@ -133,9 +133,11 @@
   - Achieved 44 passing tests with 83.50% mutation score.
   - All code complies with clean code rules and git conventions.
 - **CardDAV Testing Infrastructure**:
-  - Successfully implemented MSW-based mock server.
+  - ADR 001 revised and approved: Hybrid Strategy (MSW + Docker/Radicale).
+  - MSW successfully implemented for fast integration tests.
   - Created reusable XML response factories to ensure valid CardDAV data in tests.
-  - Verified integration with a working "fetch" test case.
+  - Verified integration with working fetch test case.
+  - E2E infrastructure pending: Docker compose file and E2E test suite.
 - **CardDAV Proof of Concept**:
   - Created standalone Node.js script (`scripts/poc-carddav.js`) using `tsdav` library.
   - Successfully connected to real CardDAV server and fetched contacts.
@@ -170,13 +172,14 @@
 ## Next Milestones
 
 - **Completed** (CardDAV Testing Infrastructure):
-  - ✅ ADR 001 created and approved.
+  - ✅ ADR 001 revised to Hybrid Strategy (MSW + Docker).
   - ✅ MSW installed and configured.
   - ✅ Test fixtures and XML factories created.
   - ✅ Integration test suite functioning.
   - ✅ ADR 002 approved: `tsdav` selected as CardDAV client library.
   - ✅ PoC script created and verified with real CardDAV server.
   - ✅ Authentication strategy decided: session-based credentials.
+  - ⏳ E2E Docker infrastructure pending (compose.yaml, E2E tests).
 - Short term (Authentication Integration & CardDAV Client):
   - Extend FirstTimeSetup component with username and password fields
   - Add clear help text: "Credentials will be deleted when you close the browser"

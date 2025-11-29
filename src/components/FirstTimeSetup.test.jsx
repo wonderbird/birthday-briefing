@@ -108,5 +108,13 @@ describe('FirstTimeSetup', () => {
     expect(passwordInput).toBeInTheDocument();
     expect(passwordInput).toHaveAttribute('type', 'password');
   });
+
+  it('should display privacy help text about credentials', () => {
+    const onComplete = vi.fn();
+    render(<FirstTimeSetup onComplete={onComplete} />);
+    
+    const helpText = screen.getByText(/credentials will be deleted when you close the browser/i);
+    expect(helpText).toBeInTheDocument();
+  });
 });
 

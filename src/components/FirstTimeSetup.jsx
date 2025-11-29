@@ -70,6 +70,9 @@ function FirstTimeSetup({ onComplete, initialConfig }) {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
+                  <div className="form-text">
+                    Credentials will be deleted when you close the browser
+                  </div>
                 </div>
 
                 <div className="mb-4">

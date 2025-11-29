@@ -11,8 +11,7 @@ To enable robust integration testing of our client-side Birthday Briefing app, w
 
 1.  **CI/CD Compatibility** (Priority 1): The solution must run purely headless in GitHub Actions, avoiding complex service orchestration (like Docker Compose) to prevent flakiness.
 2.  **Correctness & Reliability** (Priority 2): We need a reliable test signal. We accept that mocking is "simulated" correctness, provided we mitigate the risk of bad mock data.
-3.  **Test Framework Integration** (Priority 3): The tool should integrate natively with Vitest to lower the barrier for developers writing tests.
-4.  **Control over Test Data** (Priority 4): We require precise control to inject specific vCard edge cases (e.g., leap years, bad data) that are hard to reproduce with a real server.
+3.  **Control over Test Data** (Priority 3): We require precise control to inject specific vCard edge cases (e.g., leap years, bad data) that are hard to reproduce with a real server.
 
 ## Considered Options
 

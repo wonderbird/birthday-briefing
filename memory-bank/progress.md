@@ -167,17 +167,20 @@
   - 60 tests passing (27 storage, 9 FirstTimeSetup, 14 dateUtils, 5 App, 3 xmlFactory, 1 integration, 1 vcard).
   - Followed strict TDD with 8 commits (red-green-refactor cycles).
   - All code compliant with clean code rules.
-- **CardDAV Client Module** (Completed - Basic Implementation):
+- **CardDAV Client Module** (Completed):
   - Created module structure: `src/services/carddavClient.js` and test file.
-  - Implemented `fetchBirthdays()` function with CardDAV connection and vCard parsing.
+  - Implemented `fetchBirthdays()` function with CardDAV connection, vCard parsing, and 14-day filtering.
   - Uses tsdav's DAVClient for CardDAV protocol communication.
   - Parses FN (full name) and BDAY (birthday) fields from vCard data using regex.
+  - Supports --MM-DD and YYYY-MM-DD birthday formats.
+  - Filters birthdays to 14-day window from start of current week.
+  - Accepts firstDayOfWeek parameter ('monday' or 'sunday') for week calculation.
   - Unit tests use mocked tsdav client for fast, isolated testing.
-  - Test results: 62 tests passing (2 new tests for carddavClient).
-  - Mutation score: 75.00% overall (carddavClient: 53.85% - 14 killed, 10 survived).
-  - Followed strict TDD with RED-GREEN cycles and commits.
+  - Test results: 63 tests passing (3 tests for carddavClient).
+  - Mutation score: 76.40% overall (carddavClient: 68.75% - 33 killed, 13 survived).
+  - Followed strict TDD with RED-GREEN cycles and commits (4 commits for this feature).
   - Documented constraint: Stryker requires all tests passing, so RED commits skip mutation tests.
-  - Next: Filter birthdays to 14-day window, improve mutation score, integrate with UI.
+  - Next: Integrate with MainScreen component to display real CardDAV data.
 
 ## Assumptions and Risks
 

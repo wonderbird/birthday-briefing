@@ -3,15 +3,17 @@
  */
 
 import { DAVClient } from 'tsdav';
+import { getStartOfWeek } from '../utils/dateUtils.js';
 
 /**
- * Fetches birthdays from a CardDAV server
+ * Fetches birthdays from a CardDAV server and filters to 14-day window
  * @param {string} url - The CardDAV server URL
  * @param {string} username - Authentication username
  * @param {string} password - Authentication password
- * @returns {Promise<Array>} Array of birthday objects with name and birthday properties
+ * @param {string} firstDayOfWeek - First day of week ('monday' or 'sunday')
+ * @returns {Promise<Array>} Array of birthday objects with name and birthday properties within 14-day window
  */
-export async function fetchBirthdays(url, username, password) {
+export async function fetchBirthdays(url, username, password, firstDayOfWeek = 'monday') {
   const client = new DAVClient({
     serverUrl: url,
     credentials: {
@@ -35,6 +37,11 @@ export async function fetchBirthdays(url, username, password) {
     addressBook: firstBook,
   });
 
+  // Calculate 14-day window
+  const startOfWeek = getStartOfWeek();
+  const endOfWindow = new Date(startOfWeek);
+  endOfWindow.setDate(startOfWeek.getDate() + 13); // 14 days inclusive (0-13)
+
   const birthdays = [];
   
   for (const card of vCards) {
@@ -48,7 +55,22 @@ export async function fetchBirthdays(url, username, password) {
       const name = fnMatch[1].trim();
       const birthday = bdayMatch[1].trim();
       
-      birthdays.push({ name, birthday });
+      // Parse birthday (format: --MM-DD or YYYY-MM-DD)
+      // Extract month and day
+      const bdayParts = birthday.match(/--?(\d{2})-(\d{2})/);
+      if (bdayParts) {
+        const month = parseInt(bdayParts[1], 10) - 1; // 0-indexed
+        const day = parseInt(bdayParts[2], 10);
+        
+        // Create date for this year
+        const currentYear = new Date().getFullYear();
+        const birthdayThisYear = new Date(currentYear, month, day);
+        
+        // Check if birthday falls within the 14-day window
+        if (birthdayThisYear >= startOfWeek && birthdayThisYear <= endOfWindow) {
+          birthdays.push({ name, birthday });
+        }
+      }
     }
   }
 

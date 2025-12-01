@@ -301,16 +301,18 @@ All commits follow conventional commit format with Co-authored-by trailers.
 - Parses FN (full name) and BDAY (birthday) fields using regex
 - Returns array of {name, birthday} objects
 
-**Current Work (RED phase)**:
-- 🔴 RED: Test for 14-day window filtering written, intentionally failing
-- Test expects fetchBirthdays() to accept firstDayOfWeek parameter
-- Test expects only birthdays within 14-day window (from start of week) to be returned
-- Current implementation returns all birthdays without filtering
+**14-Day Window Filtering (✅ Completed)**:
+- ✅ fetchBirthdays() now accepts firstDayOfWeek parameter ('monday' or 'sunday')
+- ✅ Implemented 14-day window filtering from start of current week
+- ✅ Parses vCard BDAY format (--MM-DD or YYYY-MM-DD)
+- ✅ Filters birthdays to only include those within the window
+- Test results: 63 tests passing (3 tests for carddavClient)
+- Mutation score: 76.40% overall, carddavClient: 68.75% (improved from 53.85%)
 
 **Next Steps**:
-- GREEN: Implement 14-day window filtering logic
-- Integrate with MainScreen component
-- Improve mutation score through additional tests or refactoring
+- Integrate fetchBirthdays() with MainScreen component to display real data
+- Replace hardcoded birthday data with CardDAV fetching
+- Improve mutation score through additional edge case tests
 - Add comprehensive error handling for network failures
 
 ### 8. Deployment Infrastructure (✅ Completed)

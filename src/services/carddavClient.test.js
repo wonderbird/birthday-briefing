@@ -19,12 +19,29 @@ describe('carddavClient', () => {
     mockFetchAddressBooks = vi.fn().mockResolvedValue([
       { displayName: 'Test Address Book', url: '/addressbooks/user/default/' }
     ]);
+    // Calculate dates within current 14-day window for reliable testing
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    const dayOfWeek = today.getDay();
+    const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    startOfWeek.setDate(today.getDate() - daysToMonday);
+    
+    const date1 = new Date(startOfWeek);
+    date1.setDate(startOfWeek.getDate() + 2); // Day 3 of window
+    const date2 = new Date(startOfWeek);
+    date2.setDate(startOfWeek.getDate() + 8); // Day 9 of window
+    
+    const month1 = String(date1.getMonth() + 1).padStart(2, '0');
+    const day1 = String(date1.getDate()).padStart(2, '0');
+    const month2 = String(date2.getMonth() + 1).padStart(2, '0');
+    const day2 = String(date2.getDate()).padStart(2, '0');
+    
     mockFetchVCards = vi.fn().mockResolvedValue([
       {
-        data: 'BEGIN:VCARD\nVERSION:3.0\nFN:Alice Smith\nBDAY:1990-05-15\nEND:VCARD'
+        data: `BEGIN:VCARD\nVERSION:3.0\nFN:Alice Smith\nBDAY:--${month1}-${day1}\nEND:VCARD`
       },
       {
-        data: 'BEGIN:VCARD\nVERSION:3.0\nFN:Bob Jones\nBDAY:1985-12-25\nEND:VCARD'
+        data: `BEGIN:VCARD\nVERSION:3.0\nFN:Bob Jones\nBDAY:--${month2}-${day2}\nEND:VCARD`
       }
     ]);
 
@@ -70,8 +87,11 @@ describe('carddavClient', () => {
       expect(Array.isArray(birthdays)).toBe(true);
       expect(birthdays.length).toBe(2);
       
-      expect(birthdays[0]).toEqual({ name: 'Alice Smith', birthday: '1990-05-15' });
-      expect(birthdays[1]).toEqual({ name: 'Bob Jones', birthday: '1985-12-25' });
+      // Birthdays should be filtered to 14-day window
+      expect(birthdays[0].name).toBe('Alice Smith');
+      expect(birthdays[0].birthday).toMatch(/--\d{2}-\d{2}/);
+      expect(birthdays[1].name).toBe('Bob Jones');
+      expect(birthdays[1].birthday).toMatch(/--\d{2}-\d{2}/);
     });
 
     it('should filter birthdays to 14-day window from start of current week', async () => {

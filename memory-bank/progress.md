@@ -31,6 +31,7 @@
   - TDD workflow, mutation testing guidelines, and pre-commit checks defined.
   - MIT License file properly added to repository.
   - Workflow orchestrator defines pre-commit process (tests, mutation tests, memory bank update).
+  - **Rule clarification (Jan 2025)**: Updated workflow orchestrator to be language-agnostic and integrated with TDD cycle.
 - Testing infrastructure (completed):
   - Vitest configured with jsdom environment and HTML coverage reporting
   - Stryker Mutator configured with JSON and HTML reporters
@@ -110,6 +111,8 @@
   - Pre-commit workflow orchestrator defined (tests → mutation tests → memory bank → commit).
   - MIT License formally added to repository.
   - Development principles and practices documented for consistency.
+  - **Rule clarification completed**: Made workflow orchestrator language-agnostic and explicitly integrated with TDD cycle.
+  - Pre-commit workflow now explicitly applies to every commit including TDD red/green/refactor steps.
 - Implemented comprehensive testing infrastructure:
   - Vitest unit testing framework with jsdom for React component testing.
   - Stryker Mutator for mutation testing to ensure test quality.

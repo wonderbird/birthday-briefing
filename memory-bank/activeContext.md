@@ -341,6 +341,12 @@ All commits follow conventional commit format with Co-authored-by trailers.
   - Quality targets (>80% coverage, >75% mutation score)
   - References to config files, ADRs, and package.json (avoids duplication)
   - Key principles and privacy guidelines
+- **Rule Clarification (Jan 2025)**:
+  - Updated `390-workflow-orchestrator.mdc` to be language-agnostic (removes `dotnet test` command)
+  - Updated `600-strict-tdd.mdc` to explicitly reference pre-commit workflow
+  - Clarified that pre-commit workflow applies to every commit including TDD micro-commits
+  - Acknowledged speed tradeoff of running mutation tests after every green/refactor step
+  - Current test results: 60 tests passing, 79.23% mutation score (103 killed, 22 survived)
 
 ### 10. Configuration and Error Handling (Future)
 

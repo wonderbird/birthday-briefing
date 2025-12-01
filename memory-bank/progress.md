@@ -167,13 +167,17 @@
   - 60 tests passing (27 storage, 9 FirstTimeSetup, 14 dateUtils, 5 App, 3 xmlFactory, 1 integration, 1 vcard).
   - Followed strict TDD with 8 commits (red-green-refactor cycles).
   - All code compliant with clean code rules.
-- **CardDAV Client Module** (In Progress):
+- **CardDAV Client Module** (Completed - Basic Implementation):
   - Created module structure: `src/services/carddavClient.js` and test file.
-  - Implemented `fetchBirthdays()` function stub.
-  - tsdav library already available as production dependency (v2.1.6).
-  - Test results: 61 tests passing (1 new basic structure test).
-  - Mutation score: 78.03% overall (dropped slightly due to new empty module).
-  - Next: Implement TDD cycles for CardDAV connection and vCard parsing.
+  - Implemented `fetchBirthdays()` function with CardDAV connection and vCard parsing.
+  - Uses tsdav's DAVClient for CardDAV protocol communication.
+  - Parses FN (full name) and BDAY (birthday) fields from vCard data using regex.
+  - Unit tests use mocked tsdav client for fast, isolated testing.
+  - Test results: 62 tests passing (2 new tests for carddavClient).
+  - Mutation score: 75.00% overall (carddavClient: 53.85% - 14 killed, 10 survived).
+  - Followed strict TDD with RED-GREEN cycles and commits.
+  - Documented constraint: Stryker requires all tests passing, so RED commits skip mutation tests.
+  - Next: Filter birthdays to 14-day window, improve mutation score, integrate with UI.
 
 ## Assumptions and Risks
 

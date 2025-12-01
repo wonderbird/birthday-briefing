@@ -287,18 +287,25 @@ All commits follow conventional commit format with Co-authored-by trailers.
 
 ### 8. Connect Real CardDAV Data (🔄 In Progress)
 
-**Module Structure Created**:
-- Created `src/services/carddavClient.js` with `fetchBirthdays()` function stub
-- Created `src/services/carddavClient.test.js` with initial test structure
-- tsdav dependency already installed (v2.1.6)
-- Test results: 61 tests passing (1 new), 78.03% mutation score
+**CardDAV Client Implementation**:
+- ✅ Created `src/services/carddavClient.js` with `fetchBirthdays()` function
+- ✅ Implemented CardDAV connection using tsdav library
+- ✅ Implemented vCard parsing to extract name and birthday fields
+- ✅ Created comprehensive unit tests with mocked tsdav client
+- Test results: 62 tests passing (2 new), 75.00% mutation score overall
+- carddavClient.js mutation score: 53.85% (14 killed, 10 survived) - needs improvement
+
+**Implementation Details**:
+- Uses DAVClient from tsdav with Basic auth
+- Fetches address books and vCards from CardDAV server
+- Parses FN (full name) and BDAY (birthday) fields using regex
+- Returns array of {name, birthday} objects
 
 **Next Steps**:
-- Implement CardDAV connection using tsdav
-- Parse vCard format to extract birthday information
-- Filter birthdays within 14-day window
-- Handle authentication using stored credentials
-- Add comprehensive error handling
+- Filter birthdays within 14-day window (currently returns all birthdays)
+- Integrate with MainScreen component
+- Improve mutation score through additional tests or refactoring
+- Add comprehensive error handling for network failures
 
 ### 8. Deployment Infrastructure (✅ Completed)
 

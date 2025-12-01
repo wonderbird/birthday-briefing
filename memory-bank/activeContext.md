@@ -349,6 +349,11 @@ All commits follow conventional commit format with Co-authored-by trailers.
   - Clarified that pre-commit workflow applies to every commit including TDD micro-commits
   - Acknowledged speed tradeoff of running mutation tests after every green/refactor step
   - Current test results: 60 tests passing, 79.23% mutation score (103 killed, 22 survived)
+- **TDD & Mutation Testing Constraint**:
+  - Stryker Mutator requires all tests to pass before running mutation tests
+  - During RED phase (intentionally failing test), mutation tests cannot run
+  - Pre-commit workflow adapted: RED commits report unit test failure, GREEN/refactor commits include mutation scores
+  - This is expected behavior and does not violate workflow requirements
 
 ### 10. Configuration and Error Handling (Future)
 

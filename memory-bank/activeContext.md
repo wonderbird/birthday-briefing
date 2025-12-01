@@ -285,18 +285,20 @@ All commits follow conventional commit format with Co-authored-by trailers.
 - Subsequent opens (same session): Credentials available in sessionStorage
 - After browser close: Credentials cleared, URL and settings retained
 
-### 8. Connect Real CardDAV Data (Next Priority)
+### 8. Connect Real CardDAV Data (🔄 In Progress)
 
-- Replace hardcoded birthday data with CardDAV integration:
-  - Implement CardDAV client for fetching birthday data
-  - Parse vCard format to extract birthday information
-  - Handle authentication if required
-- Use stored configuration from local storage:
-  - Retrieve CardDAV URL and firstDayOfWeek preference
-  - Use configuration to fetch birthday data
-- Add basic error handling:
-  - Handle connection failures
-  - Provide helpful error messages
+**Module Structure Created**:
+- Created `src/services/carddavClient.js` with `fetchBirthdays()` function stub
+- Created `src/services/carddavClient.test.js` with initial test structure
+- tsdav dependency already installed (v2.1.6)
+- Test results: 61 tests passing (1 new), 78.03% mutation score
+
+**Next Steps**:
+- Implement CardDAV connection using tsdav
+- Parse vCard format to extract birthday information
+- Filter birthdays within 14-day window
+- Handle authentication using stored credentials
+- Add comprehensive error handling
 
 ### 8. Deployment Infrastructure (✅ Completed)
 

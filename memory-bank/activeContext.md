@@ -334,6 +334,14 @@ All commits follow conventional commit format with Co-authored-by trailers.
   - Run mutation tests
   - Update memory bank
   - Create single commit with all changes
+- Comprehensive test strategy documented (docs/test-strategy.md):
+  - Test pyramid with distribution (60% unit, 30% integration, 10% E2E)
+  - Hybrid testing approach for CardDAV (MSW + Docker)
+  - TDD workflow integration
+  - Quality metrics and targets (>80% coverage, >75% mutation score)
+  - Tool documentation (Vitest, Stryker, MSW, Docker/Radicale)
+  - Privacy and security guidelines for test data
+  - CI/CD pipeline integration
 
 ### 10. Configuration and Error Handling (Future)
 

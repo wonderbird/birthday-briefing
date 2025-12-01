@@ -1,0 +1,14 @@
+---
+alwaysApply: true
+---
+## Test Strategy
+
+You MUST apply the test strategy docs/test-strategy.md during development.
+
+Use Acceptance Test Driven Development. Use Behavior Driven Development style when writing E2E Tests.
+
+You MUST propose the test approach to the user before starting to implement the next iteration goal.
+
+## Happiness
+
+🧾

@@ -8,6 +8,11 @@
 - V1 scope:
   - A 14-day view anchored to the first day of the current week (Monday or Sunday, user-configurable) has been chosen.
   - The app is intentionally limited to short-term planning and does not provide notifications.
+- **CRITICAL BLOCKER DISCOVERED (Dec 2025)**:
+  - ❌ Browser CORS policy blocks CardDAV access from web applications
+  - Implementation complete and tested, but non-functional in browser
+  - Architectural redesign required (see Next Milestones section)
+  - Product decision needed: privacy vs. functionality trade-off
 - Documentation:
   - Complete memory bank established: `projectbrief.md`, `productContext.md`, `activeContext.md`, `systemPatterns.md`, `techContext.md`, and `progress.md`.
   - All documentation correctly uses CardDAV (address book protocol) for birthday data access.
@@ -197,58 +202,64 @@
   - A birthday-only days list will feel faster to read than a full 14-day timeline, because it contains less information.
   - Bootstrap's default styling will provide a clean, professional appearance without extensive custom CSS.
   - Browser localStorage is available in most user environments (5-10MB per origin is sufficient for configuration data).
-  - Origin-based security provided by browsers is adequate protection for CardDAV URLs with embedded credentials in V1.
-  - Users will accept that private/incognito browsing mode requires reconfiguration each session (configuration not persisted).
+  - ~~Users will accept that private/incognito browsing mode requires reconfiguration each session (configuration not persisted).~~
+  - ~~Browser-based web apps can directly access CardDAV servers~~ **INVALIDATED: CORS blocks this**
 - Risks:
   - CardDAV configuration may be too technical or confusing for some users.
   - If birthdays are not reliably stored in the underlying address book or contacts, the 14-day view may appear incomplete or misleading.
   - Without notifications, some users may forget to open the app regularly, reducing its impact.
-  - CardDAV implementation complexity may be higher than anticipated (authentication, data parsing, error handling).
   - Users in private/incognito mode will have degraded experience (no persistence across sessions).
   - Storing CardDAV URLs with embedded credentials in localStorage could be exploited via XSS attacks (mitigated by React's built-in XSS protection).
   - Browser storage could become corrupted, requiring clear error messages and recovery path to FirstTimeSetup.
+  - **MATERIALIZED RISK - CRITICAL**: Browser CORS policy blocks direct CardDAV access from web apps
+    - CardDAV servers don't send CORS headers (designed for native apps, not browsers)
+    - Redirect responses in CORS preflight fail per specification
+    - Current "browser-based web app" architecture incompatible with security model
+    - Requires architectural redesign: backend proxy, browser extension, or native app
+    - Privacy promise ("no server-side storage") conflicts with technical requirements
 
 ## Next Milestones
 
-- **Completed** (CardDAV Testing Infrastructure):
-  - ✅ ADR 001 revised to Hybrid Strategy (MSW + Docker).
-  - ✅ MSW installed and configured.
-  - ✅ Test fixtures and XML factories created.
-  - ✅ Integration test suite functioning.
-  - ✅ ADR 002 approved: `tsdav` selected as CardDAV client library.
-  - ✅ PoC script created and verified with real CardDAV server.
-  - ✅ Authentication strategy decided: session-based credentials.
-  - ✅ Authentication integration completed with full UI and storage support.
-  - ⏳ E2E Docker infrastructure pending (compose.yaml, E2E tests).
-- Short term (CardDAV Client Implementation):
-  - Install `tsdav` as production dependency in the main application
-  - Implement CardDAV client for fetching birthday data (test-first approach)
-  - Parse vCard format to extract birthday information
-  - Replace hardcoded birthday data in MainScreen with CardDAV data
-  - Handle missing credentials case: prompt user appropriately
-  - Add error handling for connection failures
-  - Write comprehensive tests for all CardDAV data processing logic
-  - Achieve target mutation score for new code (>80%)
-- Medium term (Data Sync and Error Handling):
-  - Build data synchronization and caching layer:
-    - Local storage for birthday data cache
-    - Background refresh on app open
-    - Offline-first approach with cached data
-  - Add loading and empty states:
-    - Loading indicator during CardDAV fetch
-    - Message when no birthdays in 14-day window
-    - Error messages for connection failures
-  - Add comprehensive error handling:
-    - CardDAV connection failures
-    - Authentication errors
-    - Invalid or incomplete data
-  - Maintain test coverage and mutation scores
-- Longer term (Polish and Release):
-  - Implement settings screen for updating configuration
-  - Add comprehensive error states and messaging
-  - Performance optimization and final polish
-  - Conduct user testing with live deployment
-  - Final documentation and release preparation
+- **Completed** (CardDAV Client Implementation):
+  - ✅ ADR 001: Hybrid Testing Strategy (MSW + Docker/Radicale)
+  - ✅ ADR 002: CardDAV Client Library (`tsdav`)
+  - ✅ MSW mock server and test infrastructure
+  - ✅ PoC script validated with real CardDAV server
+  - ✅ Authentication strategy: session-based credentials
+  - ✅ `tsdav` installed as production dependency
+  - ✅ CardDAV client with connection, parsing, and 14-day filtering
+  - ✅ MainScreen integration with async data loading
+  - ✅ Comprehensive test coverage (64 tests, 76.40% mutation score)
+  - ✅ All code compliant with TDD workflow and rules
+  - ❌ **BLOCKED IN BROWSER**: CORS policy prevents CardDAV access
+
+- **IMMEDIATE PRIORITY** (Architecture Decision - CORS Solution):
+  - 🔴 **CRITICAL**: Research CORS solutions for browser-based CardDAV access
+  - Create ADR 003: CORS Solution Strategy
+  - Options to evaluate:
+    1. Backend proxy server (privacy trade-off)
+    2. Browser extension (platform change)
+    3. Native app - Electron/Tauri (not web app)
+    4. CORS proxy service (third-party privacy risk)
+    5. Server-side CardDAV fetching with API
+    6. Document limitation (CORS-enabled servers only)
+  - Analyze each option:
+    - Privacy implications
+    - Architectural complexity
+    - User experience impact
+    - Deployment requirements
+    - Maintenance burden
+  - Product decision required: privacy vs. functionality trade-off
+  - Implementation plan based on chosen solution
+
+- **DEFERRED** (Until architecture decided):
+  - E2E Docker infrastructure (compose.yaml, E2E tests)
+  - Data synchronization and caching layer
+  - Background refresh mechanisms
+  - Performance optimization
+  - Additional error handling scenarios
+  - Settings screen enhancements
+  - User testing with live deployment
 
 ## Memory Bank and Documentation Practices
 

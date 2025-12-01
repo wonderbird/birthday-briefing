@@ -313,24 +313,45 @@ All commits follow conventional commit format with Co-authored-by trailers.
 - Test results: 64 tests passing (1 new MainScreen test)
 - Mutation score: 76.40% overall (maintained)
 
-**Current Status (✅ All Complete)**:
-- ✅ CardDAV integration complete end-to-end
-- ✅ All UI components working with real data from CardDAV servers
+**Current Status**:
+- ✅ CardDAV integration complete in code (tests passing)
+- ✅ All UI components implemented
 - ✅ Comprehensive test coverage: 64 tests passing
 - ✅ Mutation score: 76.40% (exceeds >75% target)
-- ✅ Refactoring evaluation completed (no changes needed - keep it simple)
-- ✅ Final code review passed - all rules compliant
-- ✅ Ready for production use
+- ❌ **CRITICAL: CORS blocking browser-to-CardDAV communication**
 
-**Feature Summary**:
-Users can now:
-1. Configure CardDAV URL, username, password, and first day of week
-2. View birthdays from their CardDAV server in a 14-day window
-3. See loading states while data fetches
-4. See error messages if connection fails
-5. Edit configuration via settings gear icon
+**CRITICAL DISCOVERY: CORS Incompatibility**:
 
-**Next Iteration Goals** (Future):
+**Problem Identified (Dec 2025)**:
+- Browser security (CORS) blocks direct CardDAV access from web apps
+- Error: "Redirect is not allowed for a preflight request"
+- CardDAV servers don't send CORS headers (designed for native apps)
+- Current architecture violates browser same-origin policy
+
+**Impact**:
+- Current implementation works in tests (mocked) and Node.js (PoC)
+- Does NOT work in real browser environment
+- Contradicts core product promise: "browser-based web app"
+- Privacy goal ("no server-side storage") conflicts with technical reality
+
+**Root Cause**:
+- Browsers block cross-origin requests by default
+- CardDAV `.well-known/carddav` endpoint returns redirect
+- CORS preflight (OPTIONS) cannot follow redirects per spec
+- CardDAV protocol never designed for browser-based access
+
+**Next Steps (Immediate)**:
+1. Research suitable solutions for CORS problem
+2. Evaluate architectural alternatives:
+   - Backend proxy approach
+   - Browser extension approach
+   - Native app (Electron/Tauri) approach
+   - CORS proxy services
+   - Server-side CardDAV fetching
+3. Create ADR documenting options, trade-offs, and recommendation
+4. User decision required on privacy vs. functionality trade-off
+
+**Deferred Features** (Until architecture decided):
 - Error recovery and retry mechanisms
 - Multiple address book support
 - Birthday data caching and offline support

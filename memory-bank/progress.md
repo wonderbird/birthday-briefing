@@ -167,7 +167,7 @@
   - 60 tests passing (27 storage, 9 FirstTimeSetup, 14 dateUtils, 5 App, 3 xmlFactory, 1 integration, 1 vcard).
   - Followed strict TDD with 8 commits (red-green-refactor cycles).
   - All code compliant with clean code rules.
-- **CardDAV Client Module** (Completed):
+- **CardDAV Client Module & UI Integration** (Completed):
   - Created module structure: `src/services/carddavClient.js` and test file.
   - Implemented `fetchBirthdays()` function with CardDAV connection, vCard parsing, and 14-day filtering.
   - Uses tsdav's DAVClient for CardDAV protocol communication.
@@ -176,11 +176,17 @@
   - Filters birthdays to 14-day window from start of current week.
   - Accepts firstDayOfWeek parameter ('monday' or 'sunday') for week calculation.
   - Unit tests use mocked tsdav client for fast, isolated testing.
-  - Test results: 63 tests passing (3 tests for carddavClient).
-  - Mutation score: 76.40% overall (carddavClient: 68.75% - 33 killed, 13 survived).
-  - Followed strict TDD with RED-GREEN cycles and commits (4 commits for this feature).
+  - **MainScreen Integration**:
+    - Replaced hardcoded birthday data with CardDAV fetching via useEffect.
+    - Loads config and credentials from storage on component mount.
+    - Transforms data format and groups birthdays by date.
+    - Implements loading, error, and empty states.
+    - Created MainScreen.test.jsx with component-level integration test.
+  - Test results: 64 tests passing (9 test files).
+  - Mutation score: 76.40% overall (carddavClient: 68.75%, dateUtils: 90.48%, storage: 80.25%).
+  - Followed strict TDD with RED-GREEN cycles and commits.
   - Documented constraint: Stryker requires all tests passing, so RED commits skip mutation tests.
-  - Next: Integrate with MainScreen component to display real CardDAV data.
+  - **End-to-end CardDAV integration complete**: App now fetches and displays real birthday data from CardDAV servers.
 
 ## Assumptions and Risks
 

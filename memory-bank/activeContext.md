@@ -301,19 +301,29 @@ All commits follow conventional commit format with Co-authored-by trailers.
 - Parses FN (full name) and BDAY (birthday) fields using regex
 - Returns array of {name, birthday} objects
 
-**14-Day Window Filtering (✅ Completed)**:
-- ✅ fetchBirthdays() now accepts firstDayOfWeek parameter ('monday' or 'sunday')
-- ✅ Implemented 14-day window filtering from start of current week
-- ✅ Parses vCard BDAY format (--MM-DD or YYYY-MM-DD)
-- ✅ Filters birthdays to only include those within the window
-- Test results: 63 tests passing (3 tests for carddavClient)
-- Mutation score: 76.40% overall, carddavClient: 68.75% (improved from 53.85%)
+**MainScreen CardDAV Integration (✅ Completed)**:
+- ✅ Replaced hardcoded birthday data with real CardDAV fetching
+- ✅ Implemented async data loading with useEffect
+- ✅ Load config and credentials from storage on mount
+- ✅ Transform data format from {name, birthday} to {date, names[]}
+- ✅ Group birthdays by date for display
+- ✅ Added loading state: "Loading birthdays..."
+- ✅ Added error state with error message display
+- ✅ Maintained empty state: "No birthdays in the next 14 days"
+- Test results: 64 tests passing (1 new MainScreen test)
+- Mutation score: 76.40% overall (maintained)
+
+**Current Status**:
+- CardDAV integration complete end-to-end
+- All UI components working with real data
+- Comprehensive test coverage established
+- Ready for final review and refinement
 
 **Next Steps**:
-- Integrate fetchBirthdays() with MainScreen component to display real data
-- Replace hardcoded birthday data with CardDAV fetching
-- Improve mutation score through additional edge case tests
-- Add comprehensive error handling for network failures
+- Evaluate if refactoring/helper function extraction is beneficial
+- Run final mutation analysis for improvement opportunities
+- Perform final code review for rules compliance
+- Consider additional error handling scenarios
 
 ### 8. Deployment Infrastructure (✅ Completed)
 

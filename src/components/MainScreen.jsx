@@ -1,43 +1,70 @@
-import { formatDate, getDateClasses, getStartOfWeek } from '../utils/dateUtils';
+import { useState, useEffect } from 'react';
+import { formatDate, getDateClasses } from '../utils/dateUtils';
+import { loadConfig, loadCredentials } from '../utils/storage';
+import { fetchBirthdays } from '../services/carddavClient';
 
 function MainScreen({ onEditConfig }) {
-  // Hardcoded birthday data: 6 people with birthdays spread across the 14-day window
-  // Format: { name: string, month: number (1-12), day: number }
-  const hardcodedBirthdays = [
-    { name: 'Alice Johnson', month: 11, day: 22 },    // Past (2 days ago if today is Nov 24)
-    { name: 'Bob Smith', month: 11, day: 24 },        // Today (if today is Nov 24)
-    { name: 'Charlie Brown', month: 11, day: 26 },    // Upcoming
-    { name: 'Diana Prince', month: 11, day: 26 },     // Upcoming (same day as Charlie)
-    { name: 'Ethan Hunt', month: 11, day: 29 },       // Upcoming
-    { name: 'Fiona Green', month: 12, day: 2 },       // Upcoming (next week)
-  ];
+  const [birthdaysInWindow, setBirthdaysInWindow] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Calculate the 14-day window starting from Monday of current week
-  const startDate = getStartOfWeek();
-  
-  const endDate = new Date(startDate);
-  endDate.setDate(startDate.getDate() + 13); // 14 days total (0-13)
-  endDate.setHours(23, 59, 59, 999);
+  useEffect(() => {
+    async function loadBirthdays() {
+      try {
+        setLoading(true);
+        setError(null);
 
-  // Filter and group birthdays that fall within the 14-day window
-  const birthdaysInWindow = [];
-  
-  for (let i = 0; i < 14; i++) {
-    const currentDate = new Date(startDate);
-    currentDate.setDate(startDate.getDate() + i);
-    
-    const matchingBirthdays = hardcodedBirthdays.filter(birthday => {
-      return birthday.month === currentDate.getMonth() + 1 && 
-             birthday.day === currentDate.getDate();
-    });
-    
-    if (matchingBirthdays.length > 0) {
-      birthdaysInWindow.push({
-        date: new Date(currentDate),
-        names: matchingBirthdays.map(b => b.name),
-      });
+        // Load config and credentials from storage
+        const config = loadConfig();
+        const credentials = loadCredentials();
+
+        if (!config || !credentials) {
+          setError('Configuration or credentials not found');
+          setLoading(false);
+          return;
+        }
+
+        // Fetch birthdays from CardDAV
+        const birthdays = await fetchBirthdays(
+          config.carddavUrl,
+          credentials.username,
+          credentials.password,
+          config.firstDayOfWeek
+        );
+
+        // Transform data format: group birthdays by date
+        const birthdayMap = new Map();
+        
+        for (const birthday of birthdays) {
+          // Parse birthday format: --MM-DD
+          const match = birthday.birthday.match(/--(\d{2})-(\d{2})/);
+          if (match) {
+            const month = parseInt(match[1], 10) - 1; // 0-indexed
+            const day = parseInt(match[2], 10);
+            const currentYear = new Date().getFullYear();
+            const date = new Date(currentYear, month, day);
+            const dateKey = date.toISOString().split('T')[0];
+
+            if (!birthdayMap.has(dateKey)) {
+              birthdayMap.set(dateKey, { date, names: [] });
+            }
+            birthdayMap.get(dateKey).names.push(birthday.name);
+          }
+        }
+
+        // Convert map to array and sort by date
+        const grouped = Array.from(birthdayMap.values()).sort((a, b) => a.date - b.date);
+        
+        setBirthdaysInWindow(grouped);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message || 'Failed to fetch birthdays');
+        setLoading(false);
+      }
     }
-  }
+
+    loadBirthdays();
+  }, []);
 
   return (
     <div className="container">
@@ -58,7 +85,11 @@ function MainScreen({ onEditConfig }) {
 
           <div className="card shadow-sm">
             <div className="card-body p-4">
-              {birthdaysInWindow.length === 0 ? (
+              {loading ? (
+                <p className="text-muted text-center">Loading birthdays...</p>
+              ) : error ? (
+                <p className="text-danger text-center">Error: {error}</p>
+              ) : birthdaysInWindow.length === 0 ? (
                 <p className="text-muted text-center">No birthdays in the next 14 days</p>
               ) : (
                 <ul className="list-unstyled">

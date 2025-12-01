@@ -73,6 +73,38 @@ describe('carddavClient', () => {
       expect(birthdays[0]).toEqual({ name: 'Alice Smith', birthday: '1990-05-15' });
       expect(birthdays[1]).toEqual({ name: 'Bob Jones', birthday: '1985-12-25' });
     });
+
+    it('should filter birthdays to 14-day window from start of current week', async () => {
+      const today = new Date('2025-01-08'); // Wednesday
+      const mondayThisWeek = new Date('2025-01-06'); // Monday of current week
+      const dayBeforeWindow = new Date('2025-01-05'); // Sunday (before window)
+      const lastDayOfWindow = new Date('2025-01-19'); // 14 days from Monday
+      const dayAfterWindow = new Date('2025-01-20'); // After 14-day window
+
+      // Mock vCards with birthdays at different dates
+      mockFetchVCards.mockResolvedValue([
+        { data: 'BEGIN:VCARD\nVERSION:3.0\nFN:Before Window\nBDAY:--01-05\nEND:VCARD' },
+        { data: 'BEGIN:VCARD\nVERSION:3.0\nFN:First Day\nBDAY:--01-06\nEND:VCARD' },
+        { data: 'BEGIN:VCARD\nVERSION:3.0\nFN:Today\nBDAY:--01-08\nEND:VCARD' },
+        { data: 'BEGIN:VCARD\nVERSION:3.0\nFN:Last Day\nBDAY:--01-19\nEND:VCARD' },
+        { data: 'BEGIN:VCARD\nVERSION:3.0\nFN:After Window\nBDAY:--01-20\nEND:VCARD' },
+      ]);
+
+      // Mock Date.now() to return our test date
+      vi.setSystemTime(today);
+
+      const birthdays = await fetchBirthdays('https://carddav.example.com', 'user', 'pass', 'monday');
+
+      // Should only include birthdays from 01-06 to 01-19 (14 days from Monday)
+      expect(birthdays.length).toBe(3);
+      expect(birthdays.find(b => b.name === 'Before Window')).toBeUndefined();
+      expect(birthdays.find(b => b.name === 'First Day')).toBeDefined();
+      expect(birthdays.find(b => b.name === 'Today')).toBeDefined();
+      expect(birthdays.find(b => b.name === 'Last Day')).toBeDefined();
+      expect(birthdays.find(b => b.name === 'After Window')).toBeUndefined();
+
+      vi.useRealTimers();
+    });
   });
 });
 

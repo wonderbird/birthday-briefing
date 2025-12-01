@@ -301,8 +301,14 @@ All commits follow conventional commit format with Co-authored-by trailers.
 - Parses FN (full name) and BDAY (birthday) fields using regex
 - Returns array of {name, birthday} objects
 
+**Current Work (RED phase)**:
+- 🔴 RED: Test for 14-day window filtering written, intentionally failing
+- Test expects fetchBirthdays() to accept firstDayOfWeek parameter
+- Test expects only birthdays within 14-day window (from start of week) to be returned
+- Current implementation returns all birthdays without filtering
+
 **Next Steps**:
-- Filter birthdays within 14-day window (currently returns all birthdays)
+- GREEN: Implement 14-day window filtering logic
 - Integrate with MainScreen component
 - Improve mutation score through additional tests or refactoring
 - Add comprehensive error handling for network failures

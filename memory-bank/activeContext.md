@@ -354,12 +354,20 @@ All commits follow conventional commit format with Co-authored-by trailers.
 - Assumptions must be validated empirically before implementation
 
 **Next Steps (Immediate)**:
-1. Research browser-compatible CardDAV solutions:
+1. Update ADR 002 to reflect invalidated decision:
+   - Change status from "accepted" to "superseded by ADR-003"
+   - Add "Superseded" section documenting when/how flaw was discovered
+   - Explain why decision was invalid (Node.js built-in module dependencies)
+   - Rationale: Decision was fundamentally flawed and never worked in browsers
+2. Research browser-compatible CardDAV solutions:
    - Find alternative JavaScript CardDAV libraries designed for browsers
-   - Evaluate building a minimal CardDAV client using fetch API
+   - Evaluate building a minimal CardDAV client using fetch API and WebDAV standards
    - Consider architectural alternatives (proxy server, browser extension, native app)
-2. Create ADR 003 documenting options, trade-offs, and recommendation
-3. User decision required on architectural direction
+3. Create ADR 003 "Browser-Compatible CardDAV Solution Strategy":
+   - Document tsdav incompatibility discovery as context
+   - Evaluate true browser-compatible options
+   - Make new decision based on corrected understanding
+4. User decision required on architectural direction
 
 **Deferred Features** (Until architecture decided):
 - Error recovery and retry mechanisms

@@ -238,16 +238,21 @@
   - ❌ **BLOCKED IN BROWSER**: CORS policy prevents CardDAV access
 
 - **IMMEDIATE PRIORITY** (Architecture Decision - Library Incompatibility):
-  - 🔴 **CRITICAL**: Research browser-compatible CardDAV solutions
-  - Create ADR 003: Browser CardDAV Strategy
-  - Options to evaluate:
+  - 🔴 **CRITICAL**: Update ADR 002 and create ADR 003
+  - Step 1: Update ADR 002 (mark as "superseded by ADR-003")
+    - Document discovery of fundamental flaw (Node.js dependencies)
+    - Explain why decision never worked in browsers
+    - Preserves history and makes mistake transparent
+  - Step 2: Research browser-compatible CardDAV solutions
+  - Step 3: Create ADR 003 "Browser-Compatible CardDAV Solution Strategy"
+  - Options to evaluate in ADR 003:
     1. Alternative JavaScript CardDAV library (browser-compatible)
     2. Build minimal CardDAV client using fetch API and WebDAV standards
     3. Backend proxy server (privacy trade-off)
     4. Browser extension (platform change)
     5. Native app - Electron/Tauri (not web app)
     6. CORS proxy service (third-party privacy risk)
-  - Analyze each option:
+  - Analysis criteria for each option:
     - Browser compatibility (must work without Node.js modules)
     - Privacy implications
     - Architectural complexity

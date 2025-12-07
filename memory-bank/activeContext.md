@@ -335,11 +335,14 @@ All commits follow conventional commit format with Co-authored-by trailers.
 - Contradicts core product promise: "browser-based web app"
 - Privacy goal ("no server-side storage") conflicts with most alternative solutions
 
-**Root Cause**:
-- `tsdav` library was designed for Node.js server-side use, not browser environments
-- Depends on Node.js built-in modules (`stream`, possibly `http`, `https`, `url`, `buffer`)
-- Vite cannot polyfill Node.js built-in modules for browser compatibility
-- The library fundamentally assumes a Node.js runtime environment
+**Root Cause (Under Investigation)**:
+- `tsdav` library depends on Node.js built-in modules (`stream`, possibly `http`, `https`, `url`, `buffer`)
+- Vite's error message: "Module 'stream' has been externalized for browser compatibility"
+- **Key Question**: Is this a fundamental incompatibility or a missing polyfill configuration?
+- Two possibilities:
+  1. **Configuration issue**: Vite refuses to include Node.js polyfills by default (solvable via configuration)
+  2. **Fundamental incompatibility**: tsdav genuinely requires Node.js runtime (needs alternative solution)
+- ADR 002 states tsdav "is designed to work in both browser and Node.js environments" - this claim needs verification
 
 **Why This Wasn't Caught Earlier**:
 - All 64 unit/integration tests pass because they use mocked implementations
@@ -354,20 +357,23 @@ All commits follow conventional commit format with Co-authored-by trailers.
 - Assumptions must be validated empirically before implementation
 
 **Next Steps (Immediate)**:
-1. Update ADR 002 to reflect invalidated decision:
+1. Investigate polyfill approach for tsdav (FIRST - may resolve issue):
+   - Research tsdav documentation for browser usage instructions
+   - Check if tsdav has browser-specific entry points in package.json
+   - Investigate Vite polyfill plugins (e.g., `@esbuild-plugins/node-globals-polyfill`, `vite-plugin-node-polyfills`)
+   - Test if Node.js modules can be polyfilled (e.g., `stream-browserify`, `buffer`, `process`)
+   - Verify if tsdav uses conditional imports for browser vs Node.js
+   - **If successful**: Problem solved via configuration, no ADR changes needed
+   - **If unsuccessful**: Proceed to steps 2-4 below
+2. If polyfill approach fails, update ADR 002:
    - Change status from "accepted" to "superseded by ADR-003"
-   - Add "Superseded" section documenting when/how flaw was discovered
-   - Explain why decision was invalid (Node.js built-in module dependencies)
-   - Rationale: Decision was fundamentally flawed and never worked in browsers
-2. Research browser-compatible CardDAV solutions:
+   - Document discovery and investigation results
+   - Explain why decision was invalid
+3. If polyfill approach fails, research alternative solutions:
    - Find alternative JavaScript CardDAV libraries designed for browsers
    - Evaluate building a minimal CardDAV client using fetch API and WebDAV standards
    - Consider architectural alternatives (proxy server, browser extension, native app)
-3. Create ADR 003 "Browser-Compatible CardDAV Solution Strategy":
-   - Document tsdav incompatibility discovery as context
-   - Evaluate true browser-compatible options
-   - Make new decision based on corrected understanding
-4. User decision required on architectural direction
+4. If polyfill approach fails, create ADR 003 "Browser-Compatible CardDAV Solution Strategy"
 
 **Deferred Features** (Until architecture decided):
 - Error recovery and retry mechanisms

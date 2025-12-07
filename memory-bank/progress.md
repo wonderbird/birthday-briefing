@@ -9,11 +9,11 @@
   - A 14-day view anchored to the first day of the current week (Monday or Sunday, user-configurable) has been chosen.
   - The app is intentionally limited to short-term planning and does not provide notifications.
 - **CRITICAL BLOCKER DISCOVERED (December 2025)**:
-  - ❌ `tsdav` library incompatible with browser environments
-  - Uses Node.js-specific modules (`stream`) unavailable in browsers
+  - ❌ `tsdav` library fails in browser environments with Node.js module errors
+  - Vite error: "Module 'stream' has been externalized for browser compatibility"
+  - Root cause under investigation: missing polyfills vs fundamental incompatibility
   - Implementation complete and tested (with mocks), but non-functional in real browsers
-  - Architectural redesign required (see Next Milestones section)
-  - Product decision needed: library replacement or architecture change
+  - Next step: Investigate polyfill approach before considering architectural redesign
 - Documentation:
   - Complete memory bank established: `projectbrief.md`, `productContext.md`, `activeContext.md`, `systemPatterns.md`, `techContext.md`, and `progress.md`.
   - All documentation correctly uses CardDAV (address book protocol) for birthday data access.
@@ -213,14 +213,14 @@
   - Users in private/incognito mode will have degraded experience (no persistence across sessions).
   - Storing CardDAV URLs with embedded credentials in localStorage could be exploited via XSS attacks (mitigated by React's built-in XSS protection).
   - Browser storage could become corrupted, requiring clear error messages and recovery path to FirstTimeSetup.
-  - **MATERIALIZED RISK - CRITICAL**: `tsdav` library incompatible with browser environments
-    - Library uses Node.js built-in modules (`stream`) that don't exist in browsers
+  - **MATERIALIZED RISK - CRITICAL**: `tsdav` library fails with Node.js module errors in browsers
+    - Library depends on Node.js built-in modules (`stream`) not available in browser by default
     - Error in dev: "Module 'stream' has been externalized for browser compatibility"
     - Error in production: "Failed to construct 'URL': Invalid URL"
-    - Both errors stem from same root cause: Node.js module dependencies
-    - Current "browser-based web app" architecture incompatible with chosen library
-    - Requires library replacement or architectural redesign
-    - Privacy promise ("no server-side storage") may conflict with alternative solutions
+    - Root cause unclear: Vite configuration issue (missing polyfills) vs fundamental incompatibility
+    - ADR 002 claims tsdav "works in both browser and Node.js" - needs verification
+    - Investigation of polyfill approach required before concluding library is incompatible
+    - If polyfills fail, requires library replacement or architectural redesign
 
 ## Next Milestones
 
@@ -237,15 +237,22 @@
   - ✅ All code compliant with TDD workflow and rules
   - ❌ **BLOCKED IN BROWSER**: CORS policy prevents CardDAV access
 
-- **IMMEDIATE PRIORITY** (Architecture Decision - Library Incompatibility):
-  - 🔴 **CRITICAL**: Update ADR 002 and create ADR 003
-  - Step 1: Update ADR 002 (mark as "superseded by ADR-003")
-    - Document discovery of fundamental flaw (Node.js dependencies)
-    - Explain why decision never worked in browsers
-    - Preserves history and makes mistake transparent
-  - Step 2: Research browser-compatible CardDAV solutions
-  - Step 3: Create ADR 003 "Browser-Compatible CardDAV Solution Strategy"
-  - Options to evaluate in ADR 003:
+- **IMMEDIATE PRIORITY** (Investigation - Polyfill Approach):
+  - 🔴 **CRITICAL**: Investigate polyfill solution before architectural changes
+  - Step 1: Research and test polyfill approach for tsdav
+    - Review tsdav documentation for browser usage patterns
+    - Identify required Node.js polyfills (`stream`, `buffer`, `process`, etc.)
+    - Test Vite polyfill plugins (`vite-plugin-node-polyfills`, `@esbuild-plugins/node-globals-polyfill`)
+    - Verify ADR 002's claim that tsdav "works in both browser and Node.js environments"
+    - Measure bundle size impact of polyfills
+  - **If polyfills work**: Update memory bank, document configuration, continue development
+  - **If polyfills fail**: Proceed to steps 2-4 below
+  - Step 2: Update ADR 002 (only if polyfills fail)
+    - Mark as "superseded by ADR-003"
+    - Document investigation results and why tsdav cannot work in browsers
+  - Step 3: Research alternative solutions (only if polyfills fail)
+  - Step 4: Create ADR 003 (only if polyfills fail)
+  - Options to evaluate if new ADR needed:
     1. Alternative JavaScript CardDAV library (browser-compatible)
     2. Build minimal CardDAV client using fetch API and WebDAV standards
     3. Backend proxy server (privacy trade-off)

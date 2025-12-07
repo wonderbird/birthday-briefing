@@ -8,11 +8,12 @@
 - V1 scope:
   - A 14-day view anchored to the first day of the current week (Monday or Sunday, user-configurable) has been chosen.
   - The app is intentionally limited to short-term planning and does not provide notifications.
-- **CRITICAL BLOCKER DISCOVERED (Dec 2025)**:
-  - ❌ Browser CORS policy blocks CardDAV access from web applications
-  - Implementation complete and tested, but non-functional in browser
+- **CRITICAL BLOCKER DISCOVERED (December 2025)**:
+  - ❌ `tsdav` library incompatible with browser environments
+  - Uses Node.js-specific modules (`stream`) unavailable in browsers
+  - Implementation complete and tested (with mocks), but non-functional in real browsers
   - Architectural redesign required (see Next Milestones section)
-  - Product decision needed: privacy vs. functionality trade-off
+  - Product decision needed: library replacement or architecture change
 - Documentation:
   - Complete memory bank established: `projectbrief.md`, `productContext.md`, `activeContext.md`, `systemPatterns.md`, `techContext.md`, and `progress.md`.
   - All documentation correctly uses CardDAV (address book protocol) for birthday data access.
@@ -203,7 +204,8 @@
   - Bootstrap's default styling will provide a clean, professional appearance without extensive custom CSS.
   - Browser localStorage is available in most user environments (5-10MB per origin is sufficient for configuration data).
   - ~~Users will accept that private/incognito browsing mode requires reconfiguration each session (configuration not persisted).~~
-  - ~~Browser-based web apps can directly access CardDAV servers~~ **INVALIDATED: CORS blocks this**
+  - ~~Browser-based web apps can directly access CardDAV servers~~ **INVALIDATED: Node.js dependencies prevent browser use**
+  - ~~JavaScript libraries are browser-compatible by default~~ **INVALIDATED: Must verify runtime requirements**
 - Risks:
   - CardDAV configuration may be too technical or confusing for some users.
   - If birthdays are not reliably stored in the underlying address book or contacts, the 14-day view may appear incomplete or misleading.
@@ -211,12 +213,14 @@
   - Users in private/incognito mode will have degraded experience (no persistence across sessions).
   - Storing CardDAV URLs with embedded credentials in localStorage could be exploited via XSS attacks (mitigated by React's built-in XSS protection).
   - Browser storage could become corrupted, requiring clear error messages and recovery path to FirstTimeSetup.
-  - **MATERIALIZED RISK - CRITICAL**: Browser CORS policy blocks direct CardDAV access from web apps
-    - CardDAV servers don't send CORS headers (designed for native apps, not browsers)
-    - Redirect responses in CORS preflight fail per specification
-    - Current "browser-based web app" architecture incompatible with security model
-    - Requires architectural redesign: backend proxy, browser extension, or native app
-    - Privacy promise ("no server-side storage") conflicts with technical requirements
+  - **MATERIALIZED RISK - CRITICAL**: `tsdav` library incompatible with browser environments
+    - Library uses Node.js built-in modules (`stream`) that don't exist in browsers
+    - Error in dev: "Module 'stream' has been externalized for browser compatibility"
+    - Error in production: "Failed to construct 'URL': Invalid URL"
+    - Both errors stem from same root cause: Node.js module dependencies
+    - Current "browser-based web app" architecture incompatible with chosen library
+    - Requires library replacement or architectural redesign
+    - Privacy promise ("no server-side storage") may conflict with alternative solutions
 
 ## Next Milestones
 
@@ -233,23 +237,24 @@
   - ✅ All code compliant with TDD workflow and rules
   - ❌ **BLOCKED IN BROWSER**: CORS policy prevents CardDAV access
 
-- **IMMEDIATE PRIORITY** (Architecture Decision - CORS Solution):
-  - 🔴 **CRITICAL**: Research CORS solutions for browser-based CardDAV access
-  - Create ADR 003: CORS Solution Strategy
+- **IMMEDIATE PRIORITY** (Architecture Decision - Library Incompatibility):
+  - 🔴 **CRITICAL**: Research browser-compatible CardDAV solutions
+  - Create ADR 003: Browser CardDAV Strategy
   - Options to evaluate:
-    1. Backend proxy server (privacy trade-off)
-    2. Browser extension (platform change)
-    3. Native app - Electron/Tauri (not web app)
-    4. CORS proxy service (third-party privacy risk)
-    5. Server-side CardDAV fetching with API
-    6. Document limitation (CORS-enabled servers only)
+    1. Alternative JavaScript CardDAV library (browser-compatible)
+    2. Build minimal CardDAV client using fetch API and WebDAV standards
+    3. Backend proxy server (privacy trade-off)
+    4. Browser extension (platform change)
+    5. Native app - Electron/Tauri (not web app)
+    6. CORS proxy service (third-party privacy risk)
   - Analyze each option:
+    - Browser compatibility (must work without Node.js modules)
     - Privacy implications
     - Architectural complexity
     - User experience impact
     - Deployment requirements
     - Maintenance burden
-  - Product decision required: privacy vs. functionality trade-off
+  - Product decision required on architectural direction
   - Implementation plan based on chosen solution
 
 - **DEFERRED** (Until architecture decided):

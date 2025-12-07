@@ -318,38 +318,48 @@ All commits follow conventional commit format with Co-authored-by trailers.
 - ✅ All UI components implemented
 - ✅ Comprehensive test coverage: 64 tests passing
 - ✅ Mutation score: 76.40% (exceeds >75% target)
-- ❌ **CRITICAL: CORS blocking browser-to-CardDAV communication**
+- ❌ **CRITICAL: tsdav library incompatible with browser environments**
 
-**CRITICAL DISCOVERY: CORS Incompatibility**:
+**CRITICAL DISCOVERY: Library Incompatibility (December 2025)**:
 
-**Problem Identified (Dec 2025)**:
-- Browser security (CORS) blocks direct CardDAV access from web apps
-- Error: "Redirect is not allowed for a preflight request"
-- CardDAV servers don't send CORS headers (designed for native apps)
-- Current architecture violates browser same-origin policy
+**Problem Identified**:
+- `tsdav` library uses Node.js-specific modules (`stream`) that don't exist in browsers
+- Error in development: "Module 'stream' has been externalized for browser compatibility"
+- Error in production: "Failed to construct 'URL': Invalid URL"
+- Both errors are symptoms of the same root cause: Node.js module dependencies
+- Discovered through empirical testing in both production (https://demos.boos.systems) and development (http://localhost:5173) environments
 
 **Impact**:
-- Current implementation works in tests (mocked) and Node.js (PoC)
-- Does NOT work in real browser environment
+- Current implementation works in tests (mocked with MSW) and Node.js (PoC script)
+- Does NOT work in real browser environment (neither dev nor production)
 - Contradicts core product promise: "browser-based web app"
-- Privacy goal ("no server-side storage") conflicts with technical reality
+- Privacy goal ("no server-side storage") conflicts with most alternative solutions
 
 **Root Cause**:
-- Browsers block cross-origin requests by default
-- CardDAV `.well-known/carddav` endpoint returns redirect
-- CORS preflight (OPTIONS) cannot follow redirects per spec
-- CardDAV protocol never designed for browser-based access
+- `tsdav` library was designed for Node.js server-side use, not browser environments
+- Depends on Node.js built-in modules (`stream`, possibly `http`, `https`, `url`, `buffer`)
+- Vite cannot polyfill Node.js built-in modules for browser compatibility
+- The library fundamentally assumes a Node.js runtime environment
+
+**Why This Wasn't Caught Earlier**:
+- All 64 unit/integration tests pass because they use mocked implementations
+- No browser-based end-to-end testing was performed
+- PoC script testing only occurred in Node.js environment
+- Assumption that "JavaScript library" meant "browser-compatible"
+
+**Lessons Learned**:
+- Mocked tests are insufficient to verify browser compatibility
+- Library runtime requirements must be verified before architectural decisions
+- Browser-based E2E testing should happen earlier in development cycle
+- Assumptions must be validated empirically before implementation
 
 **Next Steps (Immediate)**:
-1. Research suitable solutions for CORS problem
-2. Evaluate architectural alternatives:
-   - Backend proxy approach
-   - Browser extension approach
-   - Native app (Electron/Tauri) approach
-   - CORS proxy services
-   - Server-side CardDAV fetching
-3. Create ADR documenting options, trade-offs, and recommendation
-4. User decision required on privacy vs. functionality trade-off
+1. Research browser-compatible CardDAV solutions:
+   - Find alternative JavaScript CardDAV libraries designed for browsers
+   - Evaluate building a minimal CardDAV client using fetch API
+   - Consider architectural alternatives (proxy server, browser extension, native app)
+2. Create ADR 003 documenting options, trade-offs, and recommendation
+3. User decision required on architectural direction
 
 **Deferred Features** (Until architecture decided):
 - Error recovery and retry mechanisms

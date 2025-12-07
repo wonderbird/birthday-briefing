@@ -17,4 +17,11 @@ export default defineConfig({
       },
     }),
   ],
+  resolve: {
+    alias: {
+      // Fix cross-fetch "Illegal invocation" error by using the polyfill version
+      // which properly binds fetch to the window object
+      'cross-fetch': 'cross-fetch/dist/browser-polyfill.js',
+    },
+  },
 })

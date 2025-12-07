@@ -43,23 +43,43 @@ Chosen option: "tsdav", because it offers the best balance of active maintenance
 
 ### Browser Compatibility Implementation (Updated: 2025-12-07)
 
-While tsdav is designed for both browser and Node.js environments, it depends on Node.js built-in modules (`stream`, `buffer`, `util`, `process`) that require polyfilling in browser environments. This was discovered during production testing when Vite externalized these modules.
+While tsdav is designed for both browser and Node.js environments, it requires specific configuration in Vite to work properly in browsers. Two issues were discovered and resolved during production testing:
+
+#### Issue 1: Node.js Module Polyfills
+
+**Problem:** tsdav depends on Node.js built-in modules (`stream`, `buffer`, `util`, `process`) that don't exist in browsers by default. Vite externalized these modules, causing "Module has been externalized" errors.
 
 **Solution Implemented:**
 - Added `vite-plugin-node-polyfills` as a development dependency
 - Configured Vite to polyfill required Node.js modules: `stream`, `buffer`, `util`, `process`
 - Enabled global shims for `Buffer`, `global`, and `process`
 
+#### Issue 2: cross-fetch "Illegal Invocation" Error
+
+**Problem:** tsdav uses the `cross-fetch` library, which exports `window.fetch` as a named export. When imported as `{ fetch }`, the function loses its binding to the `window` object, causing "Failed to execute 'fetch' on 'Window': Illegal invocation" errors when connecting to real CardDAV servers.
+
+**Root Cause:** The default `cross-fetch` build (ponyfill) exports a reference to `window.fetch` without proper binding. Native browser APIs like `fetch` require `this` to be the `window` object.
+
+**Solution Implemented:**
+- Added `resolve.alias` configuration in `vite.config.js`
+- Explicitly aliased `cross-fetch` to `cross-fetch/dist/browser-polyfill.js`
+- The polyfill version properly patches the global object and maintains correct `this` context
+
 **Bundle Size Impact:**
-- Without polyfills: 318 KB raw / 98 KB gzipped
-- With polyfills: 430 KB raw / 132 KB gzipped
-- Impact: +112 KB raw / +34 KB gzipped (~35% increase)
+- Final bundle: 429.28 KB raw / 132.00 KB gzipped
+- The polyfill and cross-fetch configurations add minimal overhead compared to alternatives
 
 **Trade-off Assessment:**
-The 34 KB gzipped increase is acceptable for a privacy-first, client-side-only architecture that avoids proxy servers. The polyfills enable full CardDAV functionality while maintaining the zero-server-side-storage constraint.
+The bundle size is acceptable for a privacy-first, client-side-only architecture that avoids proxy servers. The polyfills enable full CardDAV functionality while maintaining the zero-server-side-storage constraint.
 
 **Configuration Details:**
-See `vite.config.js` for the complete polyfill configuration. The implementation uses selective polyfilling (only required modules) to minimize bundle size impact.
+See `vite.config.js` for the complete polyfill and module resolution configuration. The implementation uses selective polyfilling (only required modules) to minimize bundle size impact.
+
+**Lessons Learned:**
+- Mocked tests cannot catch context binding issues with native browser APIs
+- Module resolution matters for libraries that provide multiple build targets
+- "Illegal invocation" errors indicate loss of proper `this` context for native APIs
+- `cross-fetch` ponyfill vs polyfill distinction is critical for browser compatibility
 
 ## Pros and Cons of the Options
 

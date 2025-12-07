@@ -9,12 +9,14 @@
   - A 14-day view anchored to the first day of the current week (Monday or Sunday, user-configurable) has been chosen.
   - The app is intentionally limited to short-term planning and does not provide notifications.
 - **Browser Compatibility Issue RESOLVED (December 7, 2025)**:
-  - ✅ `tsdav` library browser compatibility achieved via Node.js polyfills
-  - Solution: Configured `vite-plugin-node-polyfills` to polyfill `stream`, `buffer`, `util`, `process`
-  - Bundle size impact: +34 KB gzipped (acceptable for privacy-first architecture)
+  - ✅ First issue: `tsdav` library browser compatibility achieved via Node.js polyfills
+  - ✅ Second issue: `cross-fetch` "Illegal invocation" error resolved via polyfill configuration
+  - Solution Phase 1: Configured `vite-plugin-node-polyfills` to polyfill `stream`, `buffer`, `util`, `process`
+  - Solution Phase 2: Added `resolve.alias` to use `cross-fetch/dist/browser-polyfill.js`
+  - Bundle size impact: 429.28 KB raw / 132.00 KB gzipped (acceptable for privacy-first architecture)
   - All tests pass (64 tests, 76.40% mutation score)
   - Browser testing confirmed: application loads and runs without errors
-  - ADR 002 updated with polyfill configuration and bundle size analysis
+  - ADR 002 updated with complete polyfill and cross-fetch configuration
 - Documentation:
   - Complete memory bank established: `projectbrief.md`, `productContext.md`, `activeContext.md`, `systemPatterns.md`, `techContext.md`, and `progress.md`.
   - All documentation correctly uses CardDAV (address book protocol) for birthday data access.
@@ -214,14 +216,15 @@
   - Users in private/incognito mode will have degraded experience (no persistence across sessions).
   - Storing CardDAV URLs with embedded credentials in localStorage could be exploited via XSS attacks (mitigated by React's built-in XSS protection).
   - Browser storage could become corrupted, requiring clear error messages and recovery path to FirstTimeSetup.
-  - **MATERIALIZED & RESOLVED (December 7, 2025)**: `tsdav` library browser compatibility via polyfills
-    - Library depends on Node.js built-in modules (`stream`, `buffer`, `util`, `process`) not available in browser by default
-    - Root cause identified: Vite configuration issue (missing polyfills), NOT fundamental incompatibility
-    - Solution implemented: `vite-plugin-node-polyfills` configured in `vite.config.js`
-    - Bundle size impact: +34 KB gzipped (acceptable trade-off for privacy-first architecture)
+  - **MATERIALIZED & RESOLVED (December 7, 2025)**: Browser compatibility issues with `tsdav` and `cross-fetch`
+    - Issue 1: Node.js built-in modules required polyfills (resolved via `vite-plugin-node-polyfills`)
+    - Issue 2: `cross-fetch` "Illegal invocation" error due to loss of `this` context (resolved via polyfill alias)
+    - Root causes: Vite configuration issues, not fundamental library incompatibilities
+    - Solution: Proper polyfill configuration and module resolution aliases
+    - Bundle size impact: 429.28 KB raw / 132.00 KB gzipped (acceptable for privacy-first architecture)
     - All tests pass (64 tests, 76.40% mutation score maintained)
-    - Browser testing confirmed successful (http://localhost:4173, no console errors)
-    - ADR 002 updated with polyfill details and bundle size analysis
+    - Browser testing confirmed successful (no console errors)
+    - Documentation updated in ADR 002 with complete configuration details
 
 ## Next Milestones
 

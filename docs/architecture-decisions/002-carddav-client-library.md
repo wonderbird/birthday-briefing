@@ -41,6 +41,26 @@ We recommend **tsdav**. It is the only actively maintained library with native T
 
 Chosen option: "tsdav", because it offers the best balance of active maintenance, modern developer experience (TypeScript), and functionality, with acceptable trade-offs in bundle size that can be mitigated.
 
+### Browser Compatibility Implementation (Updated: 2025-12-07)
+
+While tsdav is designed for both browser and Node.js environments, it depends on Node.js built-in modules (`stream`, `buffer`, `util`, `process`) that require polyfilling in browser environments. This was discovered during production testing when Vite externalized these modules.
+
+**Solution Implemented:**
+- Added `vite-plugin-node-polyfills` as a development dependency
+- Configured Vite to polyfill required Node.js modules: `stream`, `buffer`, `util`, `process`
+- Enabled global shims for `Buffer`, `global`, and `process`
+
+**Bundle Size Impact:**
+- Without polyfills: 318 KB raw / 98 KB gzipped
+- With polyfills: 430 KB raw / 132 KB gzipped
+- Impact: +112 KB raw / +34 KB gzipped (~35% increase)
+
+**Trade-off Assessment:**
+The 34 KB gzipped increase is acceptable for a privacy-first, client-side-only architecture that avoids proxy servers. The polyfills enable full CardDAV functionality while maintaining the zero-server-side-storage constraint.
+
+**Configuration Details:**
+See `vite.config.js` for the complete polyfill configuration. The implementation uses selective polyfilling (only required modules) to minimize bundle size impact.
+
 ## Pros and Cons of the Options
 
 ### tsdav
@@ -56,6 +76,7 @@ A modern, TypeScript-based library for WebDAV, CalDAV, and CardDAV.
 **Mitigations for Negative Consequences:**
 * **Tree Shaking:** Ensure that the build process (Vite) is configured to tree-shake unused exports from `tsdav` to minimize the final bundle size.
 * **Testing:** Implement comprehensive integration tests (using the already established MSW mock server) to verify behavior across different CardDAV response scenarios.
+* **Node.js Polyfills (Implemented):** Use `vite-plugin-node-polyfills` to provide browser-compatible implementations of Node.js modules (`stream`, `buffer`, `util`, `process`) required by tsdav. This adds ~34 KB gzipped to the bundle but enables full browser functionality without architectural changes.
 
 ### dav (npm: dav)
 

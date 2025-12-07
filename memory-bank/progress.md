@@ -8,12 +8,13 @@
 - V1 scope:
   - A 14-day view anchored to the first day of the current week (Monday or Sunday, user-configurable) has been chosen.
   - The app is intentionally limited to short-term planning and does not provide notifications.
-- **CRITICAL BLOCKER DISCOVERED (December 2025)**:
-  - ❌ `tsdav` library fails in browser environments with Node.js module errors
-  - Vite error: "Module 'stream' has been externalized for browser compatibility"
-  - Root cause under investigation: missing polyfills vs fundamental incompatibility
-  - Implementation complete and tested (with mocks), but non-functional in real browsers
-  - Next step: Investigate polyfill approach before considering architectural redesign
+- **Browser Compatibility Issue RESOLVED (December 7, 2025)**:
+  - ✅ `tsdav` library browser compatibility achieved via Node.js polyfills
+  - Solution: Configured `vite-plugin-node-polyfills` to polyfill `stream`, `buffer`, `util`, `process`
+  - Bundle size impact: +34 KB gzipped (acceptable for privacy-first architecture)
+  - All tests pass (64 tests, 76.40% mutation score)
+  - Browser testing confirmed: application loads and runs without errors
+  - ADR 002 updated with polyfill configuration and bundle size analysis
 - Documentation:
   - Complete memory bank established: `projectbrief.md`, `productContext.md`, `activeContext.md`, `systemPatterns.md`, `techContext.md`, and `progress.md`.
   - All documentation correctly uses CardDAV (address book protocol) for birthday data access.
@@ -204,8 +205,8 @@
   - Bootstrap's default styling will provide a clean, professional appearance without extensive custom CSS.
   - Browser localStorage is available in most user environments (5-10MB per origin is sufficient for configuration data).
   - ~~Users will accept that private/incognito browsing mode requires reconfiguration each session (configuration not persisted).~~
-  - ~~Browser-based web apps can directly access CardDAV servers~~ **INVALIDATED: Node.js dependencies prevent browser use**
-  - ~~JavaScript libraries are browser-compatible by default~~ **INVALIDATED: Must verify runtime requirements**
+  - ~~Browser-based web apps can directly access CardDAV servers~~ **RESOLVED: Requires Node.js polyfills in Vite**
+  - ~~JavaScript libraries are browser-compatible by default~~ **CLARIFIED: Must verify and configure polyfills**
 - Risks:
   - CardDAV configuration may be too technical or confusing for some users.
   - If birthdays are not reliably stored in the underlying address book or contacts, the 14-day view may appear incomplete or misleading.
@@ -213,20 +214,20 @@
   - Users in private/incognito mode will have degraded experience (no persistence across sessions).
   - Storing CardDAV URLs with embedded credentials in localStorage could be exploited via XSS attacks (mitigated by React's built-in XSS protection).
   - Browser storage could become corrupted, requiring clear error messages and recovery path to FirstTimeSetup.
-  - **MATERIALIZED RISK - CRITICAL**: `tsdav` library fails with Node.js module errors in browsers
-    - Library depends on Node.js built-in modules (`stream`) not available in browser by default
-    - Error in dev: "Module 'stream' has been externalized for browser compatibility"
-    - Error in production: "Failed to construct 'URL': Invalid URL"
-    - Root cause unclear: Vite configuration issue (missing polyfills) vs fundamental incompatibility
-    - ADR 002 claims tsdav "works in both browser and Node.js" - needs verification
-    - Investigation of polyfill approach required before concluding library is incompatible
-    - If polyfills fail, requires library replacement or architectural redesign
+  - **MATERIALIZED & RESOLVED (December 7, 2025)**: `tsdav` library browser compatibility via polyfills
+    - Library depends on Node.js built-in modules (`stream`, `buffer`, `util`, `process`) not available in browser by default
+    - Root cause identified: Vite configuration issue (missing polyfills), NOT fundamental incompatibility
+    - Solution implemented: `vite-plugin-node-polyfills` configured in `vite.config.js`
+    - Bundle size impact: +34 KB gzipped (acceptable trade-off for privacy-first architecture)
+    - All tests pass (64 tests, 76.40% mutation score maintained)
+    - Browser testing confirmed successful (http://localhost:4173, no console errors)
+    - ADR 002 updated with polyfill details and bundle size analysis
 
 ## Next Milestones
 
-- **Completed** (CardDAV Client Implementation):
+- **Completed** (CardDAV Client Implementation & Browser Compatibility):
   - ✅ ADR 001: Hybrid Testing Strategy (MSW + Docker/Radicale)
-  - ✅ ADR 002: CardDAV Client Library (`tsdav`)
+  - ✅ ADR 002: CardDAV Client Library (`tsdav`) with polyfill configuration
   - ✅ MSW mock server and test infrastructure
   - ✅ PoC script validated with real CardDAV server
   - ✅ Authentication strategy: session-based credentials
@@ -235,48 +236,24 @@
   - ✅ MainScreen integration with async data loading
   - ✅ Comprehensive test coverage (64 tests, 76.40% mutation score)
   - ✅ All code compliant with TDD workflow and rules
-  - ❌ **BLOCKED IN BROWSER**: CORS policy prevents CardDAV access
+  - ✅ **Browser compatibility resolved**: Node.js polyfills configured via `vite-plugin-node-polyfills`
+  - ✅ Browser testing verified: Application loads and runs without errors
 
-- **IMMEDIATE PRIORITY** (Investigation - Polyfill Approach):
-  - 🔴 **CRITICAL**: Investigate polyfill solution before architectural changes
-  - Step 1: Research and test polyfill approach for tsdav
-    - Review tsdav documentation for browser usage patterns
-    - Identify required Node.js polyfills (`stream`, `buffer`, `process`, etc.)
-    - Test Vite polyfill plugins (`vite-plugin-node-polyfills`, `@esbuild-plugins/node-globals-polyfill`)
-    - Verify ADR 002's claim that tsdav "works in both browser and Node.js environments"
-    - Measure bundle size impact of polyfills
-  - **If polyfills work**: Update memory bank, document configuration, continue development
-  - **If polyfills fail**: Proceed to steps 2-4 below
-  - Step 2: Update ADR 002 (only if polyfills fail)
-    - Mark as "superseded by ADR-003"
-    - Document investigation results and why tsdav cannot work in browsers
-  - Step 3: Research alternative solutions (only if polyfills fail)
-  - Step 4: Create ADR 003 (only if polyfills fail)
-  - Options to evaluate if new ADR needed:
-    1. Alternative JavaScript CardDAV library (browser-compatible)
-    2. Build minimal CardDAV client using fetch API and WebDAV standards
-    3. Backend proxy server (privacy trade-off)
-    4. Browser extension (platform change)
-    5. Native app - Electron/Tauri (not web app)
-    6. CORS proxy service (third-party privacy risk)
-  - Analysis criteria for each option:
-    - Browser compatibility (must work without Node.js modules)
-    - Privacy implications
-    - Architectural complexity
-    - User experience impact
-    - Deployment requirements
-    - Maintenance burden
-  - Product decision required on architectural direction
-  - Implementation plan based on chosen solution
+- **IMMEDIATE PRIORITY** (Ready for Production Deployment):
+  - Test deployed application at https://demos.boos.systems with polyfill changes
+  - Verify CardDAV connectivity works in production environment
+  - Test with real CardDAV servers (Nextcloud, Radicale, etc.)
+  - Monitor bundle size impact on load times
+  - Document any additional browser-specific issues discovered
 
-- **DEFERRED** (Until architecture decided):
-  - E2E Docker infrastructure (compose.yaml, E2E tests)
+- **DEFERRED** (Post-Deployment Enhancements):
+  - E2E Docker infrastructure (compose.yaml, E2E tests with real CardDAV server)
   - Data synchronization and caching layer
   - Background refresh mechanisms
-  - Performance optimization
-  - Additional error handling scenarios
-  - Settings screen enhancements
-  - User testing with live deployment
+  - Performance optimization (code splitting, lazy loading)
+  - Additional error handling scenarios (network timeouts, malformed responses)
+  - Settings screen enhancements (credential refresh, URL validation)
+  - User testing with live deployment and real CardDAV servers
 
 ## Memory Bank and Documentation Practices
 

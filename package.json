@@ -38,6 +38,7 @@
     "jsdom": "^27.2.0",
     "msw": "^2.12.3",
     "vite": "^6.3.5",
+    "vite-plugin-node-polyfills": "^0.24.0",
     "vitest": "^4.0.13"
   }
 }

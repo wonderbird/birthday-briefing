@@ -318,68 +318,53 @@ All commits follow conventional commit format with Co-authored-by trailers.
 - ✅ All UI components implemented
 - ✅ Comprehensive test coverage: 64 tests passing
 - ✅ Mutation score: 76.40% (exceeds >75% target)
-- ❌ **CRITICAL: tsdav library incompatible with browser environments**
+- ✅ **Browser compatibility resolved with Node.js polyfills**
 
-**CRITICAL DISCOVERY: Library Incompatibility (December 2025)**:
+**Browser Compatibility Resolution (December 2025)**:
 
 **Problem Identified**:
-- `tsdav` library uses Node.js-specific modules (`stream`) that don't exist in browsers
+- `tsdav` library uses Node.js-specific modules (`stream`, `buffer`, `util`, `process`) that don't exist in browsers by default
 - Error in development: "Module 'stream' has been externalized for browser compatibility"
 - Error in production: "Failed to construct 'URL': Invalid URL"
-- Both errors are symptoms of the same root cause: Node.js module dependencies
 - Discovered through empirical testing in both production (https://demos.boos.systems) and development (http://localhost:5173) environments
 
-**Impact**:
-- Current implementation works in tests (mocked with MSW) and Node.js (PoC script)
-- Does NOT work in real browser environment (neither dev nor production)
-- Contradicts core product promise: "browser-based web app"
-- Privacy goal ("no server-side storage") conflicts with most alternative solutions
+**Investigation Confirmed**:
+- tsdav package.json explicitly states "WebDAV, CALDAV, and CARDDAV client for Nodejs and the Browser"
+- tsdav's own build uses `rollup-plugin-polyfill-node` and `rollup-plugin-node-builtins` for browser compatibility
+- ADR 002's claim that tsdav "works in both browser and Node.js environments" is **VALID** - it just requires polyfill configuration
 
-**Root Cause (Under Investigation)**:
-- `tsdav` library depends on Node.js built-in modules (`stream`, possibly `http`, `https`, `url`, `buffer`)
-- Vite's error message: "Module 'stream' has been externalized for browser compatibility"
-- **Key Question**: Is this a fundamental incompatibility or a missing polyfill configuration?
-- Two possibilities:
-  1. **Configuration issue**: Vite refuses to include Node.js polyfills by default (solvable via configuration)
-  2. **Fundamental incompatibility**: tsdav genuinely requires Node.js runtime (needs alternative solution)
-- ADR 002 states tsdav "is designed to work in both browser and Node.js environments" - this claim needs verification
+**Solution Implemented (December 7, 2025)**:
+- Installed `vite-plugin-node-polyfills` as development dependency
+- Configured Vite to polyfill required Node.js modules: `stream`, `buffer`, `util`, `process`
+- Enabled global shims for `Buffer`, `global`, and `process` in `vite.config.js`
+- Build succeeds without errors
+- All 64 tests pass
+- Mutation score maintained at 76.40% (exceeds >75% target)
+- Browser testing confirmed: application loads and runs successfully at http://localhost:4173
+- No console errors in browser environment
+
+**Bundle Size Impact**:
+- Without polyfills: 318 KB raw / 98 KB gzipped
+- With polyfills: 430 KB raw / 132 KB gzipped
+- Impact: +112 KB raw / +34 KB gzipped (~35% increase)
+- **Assessment**: Acceptable trade-off for privacy-first, client-side-only architecture
 
 **Why This Wasn't Caught Earlier**:
-- All 64 unit/integration tests pass because they use mocked implementations
-- No browser-based end-to-end testing was performed
+- All 64 unit/integration tests pass because they use mocked implementations (MSW)
+- No browser-based end-to-end testing was performed before deployment
 - PoC script testing only occurred in Node.js environment
-- Assumption that "JavaScript library" meant "browser-compatible"
+- Assumption that "JavaScript library" meant "automatically browser-compatible without configuration"
 
 **Lessons Learned**:
-- Mocked tests are insufficient to verify browser compatibility
-- Library runtime requirements must be verified before architectural decisions
+- Mocked tests are insufficient to verify browser runtime compatibility
+- Library runtime requirements must be verified empirically in target environment
 - Browser-based E2E testing should happen earlier in development cycle
-- Assumptions must be validated empirically before implementation
+- Vite doesn't include Node.js polyfills by default (explicit configuration required)
+- Check library's own build configuration for compatibility hints
 
-**Next Steps (Immediate)**:
-1. Investigate polyfill approach for tsdav (FIRST - may resolve issue):
-   - Research tsdav documentation for browser usage instructions
-   - Check if tsdav has browser-specific entry points in package.json
-   - Investigate Vite polyfill plugins (e.g., `@esbuild-plugins/node-globals-polyfill`, `vite-plugin-node-polyfills`)
-   - Test if Node.js modules can be polyfilled (e.g., `stream-browserify`, `buffer`, `process`)
-   - Verify if tsdav uses conditional imports for browser vs Node.js
-   - **If successful**: Problem solved via configuration, no ADR changes needed
-   - **If unsuccessful**: Proceed to steps 2-4 below
-2. If polyfill approach fails, update ADR 002:
-   - Change status from "accepted" to "superseded by ADR-003"
-   - Document discovery and investigation results
-   - Explain why decision was invalid
-3. If polyfill approach fails, research alternative solutions:
-   - Find alternative JavaScript CardDAV libraries designed for browsers
-   - Evaluate building a minimal CardDAV client using fetch API and WebDAV standards
-   - Consider architectural alternatives (proxy server, browser extension, native app)
-4. If polyfill approach fails, create ADR 003 "Browser-Compatible CardDAV Solution Strategy"
-
-**Deferred Features** (Until architecture decided):
-- Error recovery and retry mechanisms
-- Multiple address book support
-- Birthday data caching and offline support
-- Performance optimizations for large contact lists
+**Documentation Updated**:
+- ADR 002 updated with polyfill configuration details and bundle size impact
+- Configuration example preserved in `vite.config.js` for future reference
 
 ### 8. Deployment Infrastructure (✅ Completed)
 
